@@ -618,6 +618,9 @@
         </div>
       </header>
 
+      <!-- connection status -->
+      <div id="connStatus" style="padding:10px 14px;margin-bottom:14px;border-radius:var(--radius);background:var(--surface-2);border:1px solid var(--line);font-size:0.85rem;color:var(--muted);display:none;"></div>
+
       <!-- stats -->
       <div class="stats-grid" id="statsGrid">
         <div class="stat-card"><div class="label">Total orders</div><div class="value" id="statTotal">—</div></div>
@@ -729,6 +732,7 @@
         const statusFilter = $('#statusFilter');
         const searchFilter = $('#searchFilter');
         const refreshBtn = $('#refreshBtn');
+        const connStatus = $('#connStatus');
 
         const modalBackdrop = $('#modalBackdrop');
         const modalClose = $('#modalClose');
@@ -891,11 +895,18 @@
         // ── fetch orders ──
         async function fetchOrders() {
           if (!supabase) {
-            showToast('Supabase not initialized');
+            connStatus.style.display = 'block';
+            connStatus.style.background = '#fde0e0';
+            connStatus.style.color = '#b33939';
+            connStatus.textContent = 'Supabase not initialized. Check config.js';
             return;
           }
 
           isLoading = true;
+          connStatus.style.display = 'block';
+          connStatus.style.background = '#fff3e0';
+          connStatus.style.color = '#a8641a';
+          connStatus.textContent = 'Connecting to Supabase...';
           renderOrders([]);
           try {
             const { data, error } = await supabase
@@ -907,10 +918,18 @@
 
             allOrders = data || [];
             applyFilters();
+            connStatus.style.display = 'block';
+            connStatus.style.background = '#e6f7e6';
+            connStatus.style.color = '#1a7a3a';
+            connStatus.textContent = `Connected. ${allOrders.length} orders loaded.`;
             showToast(`Loaded ${allOrders.length} orders`);
           } catch (err) {
             console.error('Fetch error:', err);
-            showToast('Failed to load orders: ' + (err.message || 'unknown error'));
+            connStatus.style.display = 'block';
+            connStatus.style.background = '#fde0e0';
+            connStatus.style.color = '#b33939';
+            connStatus.textContent = 'Error: ' + (err.message || err.code || 'unknown');
+            showToast('Failed to load orders');
             allOrders = [];
             filteredOrders = [];
             isLoading = false;
@@ -994,15 +1013,29 @@
         // ── init supabase ──
         function initSupabase() {
           if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-            showToast('Supabase config missing. Check config.js');
+            connStatus.style.display = 'block';
+            connStatus.style.background = '#fde0e0';
+            connStatus.style.color = '#b33939';
+            connStatus.textContent = 'Supabase config missing. Check config.js';
+            return false;
+          }
+          if (!window.supabase) {
+            connStatus.style.display = 'block';
+            connStatus.style.background = '#fde0e0';
+            connStatus.style.color = '#b33939';
+            connStatus.textContent = 'Supabase SDK not loaded (CDN blocked?).';
             return false;
           }
           try {
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client created, URL:', SUPABASE_URL);
             return true;
           } catch (e) {
             console.error('Supabase init error:', e);
-            showToast('Failed to init Supabase client');
+            connStatus.style.display = 'block';
+            connStatus.style.background = '#fde0e0';
+            connStatus.style.color = '#b33939';
+            connStatus.textContent = 'Failed to init Supabase client: ' + e.message;
             return false;
           }
         }
