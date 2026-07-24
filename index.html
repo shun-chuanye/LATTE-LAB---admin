@@ -498,40 +498,6 @@
         transform: translateX(-50%) translateY(0);
       }
 
-      /* ── auth section ── */
-      #authSection {
-        margin-bottom: 16px;
-        background: var(--surface);
-        padding: 16px;
-        border-radius: var(--radius);
-        border: 1px solid var(--line);
-      }
-      #authSection .auth-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        align-items: center;
-      }
-      #authSection .auth-row input {
-        flex: 1 1 160px;
-        height: 40px;
-        padding: 0 12px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--bg);
-        color: var(--ink);
-      }
-      #authSection .auth-row button {
-        flex: 0 0 auto;
-        min-height: 40px;
-        padding: 0 20px;
-      }
-      .auth-status {
-        margin-top: 6px;
-        font-size: 0.85rem;
-        color: var(--muted);
-      }
-
       /* ── responsive ── */
       @media (max-width: 720px) {
         body {
@@ -652,22 +618,6 @@
         </div>
       </header>
 
-      <!-- Authentication Section -->
-      <div id="authSection">
-        <div id="loginForm">
-          <div class="auth-row">
-            <input type="email" id="loginEmail" placeholder="Email" />
-            <input type="password" id="loginPassword" placeholder="Password" />
-            <button class="primary-button" id="loginBtn">Login</button>
-          </div>
-          <div class="auth-status" id="loginStatus"></div>
-        </div>
-        <div id="loggedInInfo" style="display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-          <span>Logged in as <strong id="userEmailDisplay"></strong></span>
-          <button class="icon-btn" id="logoutBtn" style="width:auto;padding:0 16px;height:36px;">Logout</button>
-        </div>
-      </div>
-
       <!-- stats -->
       <div class="stats-grid" id="statsGrid">
         <div class="stat-card"><div class="label">Total orders</div><div class="value" id="statTotal">—</div></div>
@@ -764,7 +714,6 @@
         let filteredOrders = [];
         let isLoading = false;
         let supabase = null;
-        let currentUser = null;
 
         // ── DOM refs ──
         const $ = (sel) => document.querySelector(sel);
@@ -789,16 +738,6 @@
 
         const toastEl = $('#toast');
         let toastTimer = null;
-
-        // Auth elements
-        const loginForm = $('#loginForm');
-        const loggedInInfo = $('#loggedInInfo');
-        const userEmailDisplay = $('#userEmailDisplay');
-        const loginEmail = $('#loginEmail');
-        const loginPassword = $('#loginPassword');
-        const loginBtn = $('#loginBtn');
-        const logoutBtn = $('#logoutBtn');
-        const loginStatus = $('#loginStatus');
 
         // ── helpers ──
         function showToast(msg) {
@@ -955,10 +894,6 @@
             showToast('Supabase not initialized');
             return;
           }
-          if (!currentUser) {
-            showToast('Please login first');
-            return;
-          }
 
           isLoading = true;
           renderOrders([]);
@@ -1043,77 +978,10 @@
           document.body.style.overflow = '';
         }
 
-        // ── Auth functions ──
-        function updateUIForAuth() {
-          if (currentUser) {
-            loginForm.style.display = 'none';
-            loggedInInfo.style.display = 'flex';
-            userEmailDisplay.textContent = currentUser.email;
-            loginStatus.textContent = '';
-          } else {
-            loginForm.style.display = 'block';
-            loggedInInfo.style.display = 'none';
-            // Clear any displayed orders
-            allOrders = [];
-            filteredOrders = [];
-            renderOrders([]);
-            updateStats([]);
-            filterResult.textContent = '0 of 0';
-          }
-        }
-
-        async function login(email, password) {
-          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error) throw error;
-          currentUser = data.user;
-          updateUIForAuth();
-          await fetchOrders();
-          return data.user;
-        }
-
-        async function logout() {
-          await supabase.auth.signOut();
-          currentUser = null;
-          updateUIForAuth();
-          showToast('Logged out');
-        }
-
-        async function checkSession() {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session) {
-            currentUser = session.user;
-            updateUIForAuth();
-            await fetchOrders();
-          } else {
-            updateUIForAuth();
-          }
-        }
-
-        // ── init supabase ──
-        function initSupabase() {
-          if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-            showToast('Supabase config missing. Check config.js');
-            return false;
-          }
-          try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-              auth: { persistSession: true, autoRefreshToken: true }
-            });
-            return true;
-          } catch (e) {
-            console.error('Supabase init error:', e);
-            showToast('Failed to init Supabase client');
-            return false;
-          }
-        }
-
         // ── events ──
         statusFilter.addEventListener('change', applyFilters);
         searchFilter.addEventListener('input', applyFilters);
-        refreshBtn.addEventListener('click', () => {
-          if (currentUser) fetchOrders();
-          else showToast('Please login first');
-        });
+        refreshBtn.addEventListener('click', fetchOrders);
 
         modalClose.addEventListener('click', closeModal);
         modalBackdrop.addEventListener('click', (e) => {
@@ -1123,27 +991,21 @@
           if (e.key === 'Escape') closeModal();
         });
 
-        loginBtn.addEventListener('click', async () => {
-          const email = loginEmail.value.trim();
-          const password = loginPassword.value.trim();
-          if (!email || !password) {
-            loginStatus.textContent = 'Please enter email and password';
-            return;
+        // ── init supabase ──
+        function initSupabase() {
+          if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+            showToast('Supabase config missing. Check config.js');
+            return false;
           }
-          loginStatus.textContent = 'Logging in...';
           try {
-            await login(email, password);
-            loginStatus.textContent = 'Login successful';
-            loginEmail.value = '';
-            loginPassword.value = '';
-          } catch (err) {
-            loginStatus.textContent = 'Login failed: ' + (err.message || 'unknown error');
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            return true;
+          } catch (e) {
+            console.error('Supabase init error:', e);
+            showToast('Failed to init Supabase client');
+            return false;
           }
-        });
-
-        logoutBtn.addEventListener('click', async () => {
-          await logout();
-        });
+        }
 
         // ── start ──
         async function start() {
@@ -1157,11 +1019,11 @@
             return;
           }
 
-          await checkSession();
+          await fetchOrders();
 
-          // auto-refresh every 60s if logged in
+          // auto-refresh every 60s
           setInterval(() => {
-            if (!document.hidden && currentUser) fetchOrders();
+            if (!document.hidden) fetchOrders();
           }, 60000);
         }
 

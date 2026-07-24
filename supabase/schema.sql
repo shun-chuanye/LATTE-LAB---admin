@@ -31,9 +31,16 @@ create index if not exists orders_status_idx on public.orders (status, created_a
 alter table public.orders enable row level security;
 
 revoke all on table public.orders from anon, authenticated;
-grant insert on table public.orders to anon, authenticated;
+grant select, insert on table public.orders to anon, authenticated;
 grant select, insert, update, delete on table public.orders to service_role;
 grant usage, select on sequence public.orders_id_seq to anon, authenticated, service_role;
+
+drop policy if exists "Anyone can view orders" on public.orders;
+create policy "Anyone can view orders"
+on public.orders
+for select
+to anon, authenticated
+using (true);
 
 drop policy if exists "Guests can place orders" on public.orders;
 create policy "Guests can place orders"
