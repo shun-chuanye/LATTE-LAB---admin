@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>LATTE LAB · Order Dashboard</title>
+    <title>LATTE LAB · Admin Dashboard</title>
     <link rel="icon" href="image/logo.JPG" />
     <style>
-      /* ── reset & variables ── */
+      /* ── reset & variables (same as original) ── */
       :root {
         --bg: #f7f8f4;
         --surface: #ffffff;
@@ -498,6 +498,40 @@
         transform: translateX(-50%) translateY(0);
       }
 
+      /* ── auth section ── */
+      #authSection {
+        margin-bottom: 16px;
+        background: var(--surface);
+        padding: 16px;
+        border-radius: var(--radius);
+        border: 1px solid var(--line);
+      }
+      #authSection .auth-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+      #authSection .auth-row input {
+        flex: 1 1 160px;
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--bg);
+        color: var(--ink);
+      }
+      #authSection .auth-row button {
+        flex: 0 0 auto;
+        min-height: 40px;
+        padding: 0 20px;
+      }
+      .auth-status {
+        margin-top: 6px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
       /* ── responsive ── */
       @media (max-width: 720px) {
         body {
@@ -572,7 +606,6 @@
         }
       }
 
-      /* ── loading shimmer ── */
       .loading-shimmer {
         animation: shimmer 1.2s ease-in-out infinite;
         background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%);
@@ -597,46 +630,6 @@
         border-radius: 4px;
         background: var(--surface-2);
       }
-
-      /* ── config error ── */
-      .config-error {
-        padding: 28px 24px;
-        border: 1px solid #fde0e0;
-        border-radius: var(--radius);
-        background: #fff8f8;
-        margin-bottom: 20px;
-      }
-      .config-error h3 {
-        color: var(--danger);
-        margin: 0 0 8px;
-      }
-      .config-error code {
-        display: block;
-        padding: 12px 14px;
-        background: #17211d;
-        color: #e6f7e6;
-        border-radius: var(--radius);
-        font-size: 0.8rem;
-        overflow-x: auto;
-        white-space: pre-wrap;
-        word-break: break-all;
-        margin: 8px 0;
-      }
-      .config-error .btn-secondary {
-        display: inline-block;
-        padding: 8px 18px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--surface);
-        color: var(--brand);
-        font-weight: 700;
-        font-size: 0.82rem;
-        text-decoration: none;
-        margin-top: 6px;
-      }
-      .config-error .btn-secondary:hover {
-        background: var(--surface-2);
-      }
     </style>
   </head>
   <body>
@@ -658,6 +651,22 @@
           <span style="font-size:0.78rem;color:var(--muted);font-weight:600;" id="orderCount">0 orders</span>
         </div>
       </header>
+
+      <!-- Authentication Section -->
+      <div id="authSection">
+        <div id="loginForm">
+          <div class="auth-row">
+            <input type="email" id="loginEmail" placeholder="Email" />
+            <input type="password" id="loginPassword" placeholder="Password" />
+            <button class="primary-button" id="loginBtn">Login</button>
+          </div>
+          <div class="auth-status" id="loginStatus"></div>
+        </div>
+        <div id="loggedInInfo" style="display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <span>Logged in as <strong id="userEmailDisplay"></strong></span>
+          <button class="icon-btn" id="logoutBtn" style="width:auto;padding:0 16px;height:36px;">Logout</button>
+        </div>
+      </div>
 
       <!-- stats -->
       <div class="stats-grid" id="statsGrid">
@@ -755,6 +764,7 @@
         let filteredOrders = [];
         let isLoading = false;
         let supabase = null;
+        let currentUser = null;
 
         // ── DOM refs ──
         const $ = (sel) => document.querySelector(sel);
@@ -779,6 +789,16 @@
 
         const toastEl = $('#toast');
         let toastTimer = null;
+
+        // Auth elements
+        const loginForm = $('#loginForm');
+        const loggedInInfo = $('#loggedInInfo');
+        const userEmailDisplay = $('#userEmailDisplay');
+        const loginEmail = $('#loginEmail');
+        const loginPassword = $('#loginPassword');
+        const loginBtn = $('#loginBtn');
+        const logoutBtn = $('#logoutBtn');
+        const loginStatus = $('#loginStatus');
 
         // ── helpers ──
         function showToast(msg) {
@@ -932,6 +952,10 @@
             showToast('Supabase not initialized');
             return;
           }
+          if (!currentUser) {
+            showToast('Please login first');
+            return;
+          }
 
           isLoading = true;
           renderOrders([]);
@@ -954,194 +978,203 @@
             renderOrders([]);
             updateStats([]);
             filterResult.textContent = '0 of 0';
-
-            // if RLS error, show helpful message
-            if (err.message && err.message.includes('permission denied')) {
-              showConfigHelp();
-            }
           } finally {
             isLoading = false;
           }
         }
 
-        // ── config help ──
-        function showConfigHelp() {
-          const help = document.createElement('div');
-          help.className = 'config-error';
-          help.innerHTML = `
-              <h3>⚠️ Permission denied</h3>
-              <p>The current Supabase anon key does not have <strong>SELECT</strong> permission on the <code>orders</code> table.</p>
-              <p>To fix this, run this SQL in your Supabase SQL Editor:</p>
-              <code>-- Allow authenticated users to view orders (recommended for admin tools)
-        create policy "Allow authenticated users to view orders"
-        on public.orders
-        for select
-        to authenticated
-        using (true);
+        // ── modal ──
+        function openModal(order) {
+          const items = order.items || [];
+          const customer = order.customer_name || order.telegram_username || order.telegram_first_name || 'Anonymous';
+          const phone = order.phone || '—';
+          const address = order.address || '—';
+          const note = order.note || '—';
 
-        -- Or if you want to allow public access (less secure):
-        -- create policy "Allow public to view orders"
-        -- on public.orders
-        -- for select
-        -- to anon
-        -- using (true);</code>
-        <p style="margin-top:8px;">After adding the policy, click <strong>Refresh</strong>.</p>
-        <p style="font-size:0.82rem;color:var(--muted);">
-        Alternatively, you can use a <strong>service_role</strong> key in the URL parameter:
-        <br><code>?key=YOUR_SERVICE_ROLE_KEY</code> (not recommended for public sites)
-      </p>
-      <button class="btn-secondary" id="dismissHelp">Dismiss</button>
-    `;
-    const existing = document.querySelector('.config-error');
-    if (existing) existing.remove();
+          modalTitle.textContent = `Order ${order.client_order_id || ''}`;
+          modalSub.textContent = `${order.status || 'unknown'} · ${formatDate(order.created_at)}`;
 
-    const tableWrap = document.querySelector('.table-wrap');
-    tableWrap.parentNode.insertBefore(help, tableWrap);
+          let itemsHtml = '';
+          if (items.length) {
+            itemsHtml = `<div class="modal-items">`;
+            for (const it of items) {
+              const name = it.name || it.product_id || 'Item';
+              const qty = it.quantity || 1;
+              const price = it.unit_price_usd || it.unit_price_khr || 0;
+              const cur = order.currency === 'KHR' ? 'KHR' : 'USD';
+              const total = (it.line_total_usd || it.line_total_khr || price * qty);
+              itemsHtml += `
+                  <div class="item-row">
+                    <span><span class="qty">${qty}×</span> ${truncate(name, 30)}</span>
+                    <span class="price">${formatCurrency(total, cur)}</span>
+                  </div>
+                `;
+            }
+            itemsHtml += `</div>`;
+          } else {
+            itemsHtml = `<p style="color:var(--muted);font-size:0.85rem;">No items recorded.</p>`;
+          }
 
-    const dismiss = help.querySelector('#dismissHelp');
-    if (dismiss) dismiss.addEventListener('click', () => help.remove());
-  }
+          const totalAmount = order.currency === 'KHR' ? order.subtotal_khr : order.subtotal_usd;
 
-  // ── modal ──
-  function openModal(order) {
-    const items = order.items || [];
-    const customer = order.customer_name || order.telegram_username || order.telegram_first_name || 'Anonymous';
-    const phone = order.phone || '—';
-    const address = order.address || '—';
-    const note = order.note || '—';
+          modalBody.innerHTML = `
+              <div class="row"><span class="label">Customer</span><span class="value">${safe(customer)}</span></div>
+              <div class="row"><span class="label">Phone</span><span class="value">${safe(phone)}</span></div>
+              <div class="row"><span class="label">Fulfillment</span><span class="value">${safe(order.fulfillment_method)}</span></div>
+              <div class="row"><span class="label">Address</span><span class="value">${safe(address)}</span></div>
+              <div class="row"><span class="label">Note</span><span class="value">${safe(note)}</span></div>
+              <div class="row"><span class="label">Total</span><span class="value"><strong>${formatCurrency(totalAmount, order.currency || 'USD')}</strong></span></div>
+              <div class="row"><span class="label">Items (${items.length})</span><span class="value">${itemsHtml}</span></div>
+              <div class="row"><span class="label">Source</span><span class="value">${safe(order.source)}</span></div>
+              <div class="row"><span class="label">Order ID</span><span class="value" style="font-size:0.8rem;color:var(--muted);">${safe(order.client_order_id)}</span></div>
+            `;
 
-    modalTitle.textContent = `Order ${order.client_order_id || ''}`;
-    modalSub.textContent = `${order.status || 'unknown'} · ${formatDate(order.created_at)}`;
+          modalBackdrop.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+          lucide.createIcons();
+        }
 
-    let itemsHtml = '';
-    if (items.length) {
-      itemsHtml = `<div class="modal-items">`;
-      for (const it of items) {
-        const name = it.name || it.product_id || 'Item';
-        const qty = it.quantity || 1;
-        const price = it.unit_price_usd || it.unit_price_khr || 0;
-        const cur = order.currency === 'KHR' ? 'KHR' : 'USD';
-        const total = (it.line_total_usd || it.line_total_khr || price * qty);
-        itemsHtml += `
-            <div class="item-row">
-              <span><span class="qty">${qty}×</span> ${truncate(name, 30)}</span>
-              <span class="price">${formatCurrency(total, cur)}</span>
-            </div>
-          `;
-      }
-      itemsHtml += `</div>`;
-    } else {
-      itemsHtml = `<p style="color:var(--muted);font-size:0.85rem;">No items recorded.</p>`;
-    }
+        function closeModal() {
+          modalBackdrop.classList.remove('is-open');
+          document.body.style.overflow = '';
+        }
 
-    const totalAmount = order.currency === 'KHR' ? order.subtotal_khr : order.subtotal_usd;
+        // ── Auth functions ──
+        function updateUIForAuth() {
+          if (currentUser) {
+            loginForm.style.display = 'none';
+            loggedInInfo.style.display = 'flex';
+            userEmailDisplay.textContent = currentUser.email;
+            loginStatus.textContent = '';
+          } else {
+            loginForm.style.display = 'block';
+            loggedInInfo.style.display = 'none';
+            // Clear any displayed orders
+            allOrders = [];
+            filteredOrders = [];
+            renderOrders([]);
+            updateStats([]);
+            filterResult.textContent = '0 of 0';
+          }
+        }
 
-    modalBody.innerHTML = `
-        <div class="row"><span class="label">Customer</span><span class="value">${safe(customer)}</span></div>
-        <div class="row"><span class="label">Phone</span><span class="value">${safe(phone)}</span></div>
-        <div class="row"><span class="label">Fulfillment</span><span class="value">${safe(order.fulfillment_method)}</span></div>
-        <div class="row"><span class="label">Address</span><span class="value">${safe(address)}</span></div>
-        <div class="row"><span class="label">Note</span><span class="value">${safe(note)}</span></div>
-        <div class="row"><span class="label">Total</span><span class="value"><strong>${formatCurrency(totalAmount, order.currency || 'USD')}</strong></span></div>
-        <div class="row"><span class="label">Items (${items.length})</span><span class="value">${itemsHtml}</span></div>
-        <div class="row"><span class="label">Source</span><span class="value">${safe(order.source)}</span></div>
-        <div class="row"><span class="label">Order ID</span><span class="value" style="font-size:0.8rem;color:var(--muted);">${safe(order.client_order_id)}</span></div>
-      `;
+        async function login(email, password) {
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          currentUser = data.user;
+          updateUIForAuth();
+          await fetchOrders();
+          return data.user;
+        }
 
-    modalBackdrop.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-    lucide.createIcons();
-  }
+        async function logout() {
+          await supabase.auth.signOut();
+          currentUser = null;
+          updateUIForAuth();
+          showToast('Logged out');
+        }
 
-  function closeModal() {
-    modalBackdrop.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
+        async function checkSession() {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            currentUser = session.user;
+            updateUIForAuth();
+            await fetchOrders();
+          } else {
+            updateUIForAuth();
+          }
+        }
 
-  // ── init supabase ──
-  function initSupabase() {
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      showToast('Supabase config missing. Check config.js');
-      return false;
-    }
-    try {
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: { persistSession: false, autoRefreshToken: false },
-      });
-      return true;
-    } catch (e) {
-      console.error('Supabase init error:', e);
-      showToast('Failed to init Supabase client');
-      return false;
-    }
-  }
+        // ── init supabase ──
+        function initSupabase() {
+          if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+            showToast('Supabase config missing. Check config.js');
+            return false;
+          }
+          try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+              auth: { persistSession: true, autoRefreshToken: true }
+            });
+            return true;
+          } catch (e) {
+            console.error('Supabase init error:', e);
+            showToast('Failed to init Supabase client');
+            return false;
+          }
+        }
 
-  // ── check URL for service_role key override ──
-  function checkUrlKey() {
-    const params = new URLSearchParams(window.location.search);
-    const key = params.get('key');
-    if (key && SUPABASE_URL) {
-      try {
-        supabase = window.supabase.createClient(SUPABASE_URL, key, {
-          auth: { persistSession: false, autoRefreshToken: false },
+        // ── events ──
+        statusFilter.addEventListener('change', applyFilters);
+        searchFilter.addEventListener('input', applyFilters);
+        refreshBtn.addEventListener('click', () => {
+          if (currentUser) fetchOrders();
+          else showToast('Please login first');
         });
-        showToast('Using service_role key from URL');
-        return true;
-      } catch { /* ignore */ }
-    }
-    return false;
-  }
 
-  // ── events ──
-  statusFilter.addEventListener('change', applyFilters);
-  searchFilter.addEventListener('input', applyFilters);
-  refreshBtn.addEventListener('click', fetchOrders);
-  modalClose.addEventListener('click', closeModal);
-  modalBackdrop.addEventListener('click', (e) => {
-    if (e.target === modalBackdrop) closeModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
+        modalClose.addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', (e) => {
+          if (e.target === modalBackdrop) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeModal();
+        });
 
-  // ── start ──
-  async function start() {
-    if (!initSupabase()) {
-      document.querySelector('.table-wrap').innerHTML = `
-          <div style="padding:40px 20px;text-align:center;color:var(--muted);">
-            <strong style="display:block;color:var(--danger);">Configuration missing</strong>
-            <p style="margin-top:6px;">Please set <code>supabaseUrl</code> and <code>supabaseAnonKey</code> in <code>config.js</code>.</p>
-          </div>
-        `;
-      return;
-    }
+        loginBtn.addEventListener('click', async () => {
+          const email = loginEmail.value.trim();
+          const password = loginPassword.value.trim();
+          if (!email || !password) {
+            loginStatus.textContent = 'Please enter email and password';
+            return;
+          }
+          loginStatus.textContent = 'Logging in...';
+          try {
+            await login(email, password);
+            loginStatus.textContent = 'Login successful';
+            loginEmail.value = '';
+            loginPassword.value = '';
+          } catch (err) {
+            loginStatus.textContent = 'Login failed: ' + (err.message || 'unknown error');
+          }
+        });
 
-    // check URL override
-    checkUrlKey();
+        logoutBtn.addEventListener('click', async () => {
+          await logout();
+        });
 
-    await fetchOrders();
+        // ── start ──
+        async function start() {
+          if (!initSupabase()) {
+            document.querySelector('.table-wrap').innerHTML = `
+                <div style="padding:40px 20px;text-align:center;color:var(--muted);">
+                  <strong style="display:block;color:var(--danger);">Configuration missing</strong>
+                  <p style="margin-top:6px;">Please set <code>supabaseUrl</code> and <code>supabaseAnonKey</code> in <code>config.js</code>.</p>
+                </div>
+              `;
+            return;
+          }
 
-    // auto-refresh every 60s
-    setInterval(() => {
-      if (!document.hidden) fetchOrders();
-    }, 60000);
-  }
+          await checkSession();
 
-  // ── go ──
-  start();
+          // auto-refresh every 60s if logged in
+          setInterval(() => {
+            if (!document.hidden && currentUser) fetchOrders();
+          }, 60000);
+        }
 
-  // re-run lucide after any DOM change
-  const observer = new MutationObserver(() => {
-    if (window.lucide) lucide.createIcons();
-  });
-  observer.observe(document.body, { childList: true, subtree: true });
+        // ── go ──
+        start();
 
-  // also run on load
-  window.addEventListener('load', () => {
-    if (window.lucide) lucide.createIcons();
-  });
+        // re-run lucide after any DOM change
+        const observer = new MutationObserver(() => {
+          if (window.lucide) lucide.createIcons();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
 
-})();
-</script>
-</body>
+        window.addEventListener('load', () => {
+          if (window.lucide) lucide.createIcons();
+        });
+
+      })();
+    </script>
+  </body>
 </html>
