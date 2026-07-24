@@ -233,7 +233,8 @@
     const no = Number(cell(row, indexes.no)) || offset + 1;
     const listPriceUsd = numberCell(row, indexes.listPriceUsd);
     const priceUsd = numberCell(row, indexes.shopPriceUsd) || listPriceUsd || 0;
-    const priceKhr = Math.round(numberCell(row, indexes.shopPriceKhr) || priceUsd * 4000);
+    const shopKhrRaw = cell(row, indexes.shopPriceKhr);
+    const priceKhr = shopKhrRaw !== '' ? Math.round(numberCell(row, indexes.shopPriceKhr)) : Math.round(priceUsd * 4000);
     const promotion = Boolean(cell(row, indexes.promotion));
 
     return {

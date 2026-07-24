@@ -886,7 +886,7 @@
                   <td>${o.item_count ?? 0}</td>
                   <td class="order-time">${formatDate(o.created_at)}</td>
                   <td style="text-align:right;">
-                    <button class="detail-btn" data-order='${JSON.stringify(o).replace(/'/g,"&#39;")}' type="button">
+                    <button class="detail-btn" data-order-id="${safe(o.client_order_id)}" type="button">
                       <i data-lucide="eye"></i> Detail
                     </button>
                   </td>
@@ -898,10 +898,13 @@
           // bind detail buttons
           body.querySelectorAll('.detail-btn').forEach((btn) => {
             btn.addEventListener('click', () => {
-              try {
-                const data = JSON.parse(btn.dataset.order);
-                openModal(data);
-              } catch { showToast('Error loading order detail'); }
+              const orderId = btn.dataset.orderId;
+              const order = allOrders.find(o => o.client_order_id === orderId);
+              if (order) {
+                openModal(order);
+              } else {
+                showToast('Order not found');
+              }
             });
           });
 
@@ -975,6 +978,7 @@
             showToast('Failed to load orders: ' + (err.message || 'unknown error'));
             allOrders = [];
             filteredOrders = [];
+            isLoading = false;
             renderOrders([]);
             updateStats([]);
             filterResult.textContent = '0 of 0';
