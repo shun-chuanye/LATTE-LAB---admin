@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>LATTE LAB · Admin Dashboard</title>
+    <title>LATTE LAB · Admin</title>
     <link rel="icon" href="image/logo.JPG" />
     <style>
-      /* ── reset & variables (same as original) ── */
       :root {
         --bg: #f7f8f4;
         --surface: #ffffff;
@@ -15,593 +14,150 @@
         --muted: #66746c;
         --line: #dce5dd;
         --brand: #0f5c4d;
-        --brand-2: #146f5c;
         --accent: #d86f45;
-        --gold: #f5c75d;
         --danger: #b33939;
-        --shadow: 0 18px 50px rgba(23, 33, 29, 0.12);
         --radius: 8px;
         color-scheme: light;
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
-      html {
-        min-height: 100%;
-        background: var(--bg);
-      }
+      html { min-height: 100%; background: var(--bg); }
 
       body {
-        min-height: 100%;
-        margin: 0;
-        background: linear-gradient(180deg, rgba(15, 92, 77, 0.06), transparent 360px), var(--bg);
-        color: var(--ink);
-        padding: 18px 18px 48px;
+        min-height: 100%; margin: 0;
+        background: linear-gradient(180deg, rgba(15,92,77,0.06), transparent 360px), var(--bg);
+        color: var(--ink); padding: 18px 18px 48px;
       }
 
-      button,
-      input,
-      select,
-      textarea {
-        font: inherit;
-      }
-      button {
-        cursor: pointer;
-      }
+      button, input, select { font: inherit; }
+      button { cursor: pointer; }
 
-      .app-shell {
-        width: min(1280px, 100%);
-        margin: 0 auto;
-      }
+      .app-shell { width: min(1280px, 100%); margin: 0 auto; }
 
-      /* ── header ── */
+      /* header */
       .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 8px 0 18px;
-        flex-wrap: wrap;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 16px; padding: 8px 0 18px; flex-wrap: wrap;
       }
-
-      .brand-lockup {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
+      .brand-lockup { display: flex; align-items: center; gap: 12px; }
       .brand-logo {
-        width: 50px;
-        height: 50px;
-        border-radius: var(--radius);
-        object-fit: cover;
-        border: 1px solid rgba(23, 33, 29, 0.12);
-        background: var(--surface);
+        width: 50px; height: 50px; border-radius: var(--radius);
+        object-fit: cover; border: 1px solid rgba(23,33,29,0.12); background: var(--surface);
       }
-
-      .brand-lockup h1 {
-        margin: 0;
-        font-size: 1.5rem;
-        line-height: 1;
-        letter-spacing: -0.02em;
-      }
+      .brand-lockup h1 { margin: 0; font-size: 1.5rem; line-height: 1; }
       .brand-lockup .eyebrow {
-        margin: 0 0 2px;
-        color: var(--accent);
-        font-size: 0.7rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        margin: 0 0 2px; color: var(--accent); font-size: 0.7rem;
+        font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
       }
-
-      .topbar-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
+      .topbar-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
       .icon-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 42px;
-        height: 42px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--surface);
-        color: var(--brand);
-        box-shadow: 0 4px 14px rgba(23, 33, 29, 0.06);
-        transition: background 0.15s;
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 42px; height: 42px; border: 1px solid var(--line); border-radius: var(--radius);
+        background: var(--surface); color: var(--brand);
+        box-shadow: 0 4px 14px rgba(23,33,29,0.06);
       }
-      .icon-btn:hover {
-        background: var(--surface-2);
-      }
-      .icon-btn svg {
-        width: 18px;
-        height: 18px;
-      }
+      .icon-btn:hover { background: var(--surface-2); }
+      .icon-btn svg { width: 18px; height: 18px; }
 
-      /* ── stats ── */
+      /* stats */
       .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 12px;
-        margin-bottom: 20px;
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px; margin-bottom: 20px;
       }
-
       .stat-card {
-        padding: 14px 16px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--surface);
-        box-shadow: 0 4px 14px rgba(23, 33, 29, 0.04);
+        padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius);
+        background: var(--surface); box-shadow: 0 4px 14px rgba(23,33,29,0.04);
       }
       .stat-card .label {
-        color: var(--muted);
-        font-size: 0.72rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        color: var(--muted); font-size: 0.72rem; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 0.04em;
       }
-      .stat-card .value {
-        font-size: 1.5rem;
-        font-weight: 900;
-        line-height: 1.2;
-        margin-top: 2px;
-        color: var(--brand);
-      }
-      .stat-card .value .sub {
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--muted);
-        margin-left: 4px;
-      }
+      .stat-card .value { font-size: 1.5rem; font-weight: 900; line-height: 1.2; margin-top: 2px; color: var(--brand); }
 
-      /* ── filters ── */
+      /* filters */
       .filters {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 18px;
-        padding: 12px 14px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--surface);
+        display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+        margin-bottom: 18px; padding: 12px 14px; border: 1px solid var(--line);
+        border-radius: var(--radius); background: var(--surface);
       }
+      .filters label { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 700; color: var(--muted); }
+      .filters select, .filters input[type="text"] {
+        height: 34px; padding: 0 10px; border: 1px solid var(--line);
+        border-radius: var(--radius); background: var(--bg); color: var(--ink);
+        font-weight: 500; min-width: 100px;
+      }
+      .filters input[type="text"] { min-width: 160px; }
+      .filters .spacer { flex: 1; min-width: 20px; }
 
-      .filters label {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: var(--muted);
-      }
-      .filters select,
-      .filters input[type="text"] {
-        height: 34px;
-        padding: 0 10px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--bg);
-        color: var(--ink);
-        font-weight: 500;
-        min-width: 100px;
-      }
-      .filters input[type="text"] {
-        min-width: 160px;
-      }
-      .filters .spacer {
-        flex: 1;
-        min-width: 20px;
-      }
-
+      /* status badge */
       .badge-status {
-        display: inline-block;
-        padding: 2px 10px;
-        border-radius: 999px;
-        font-size: 0.7rem;
-        font-weight: 800;
-        text-transform: capitalize;
-        letter-spacing: 0.02em;
-        background: var(--surface-2);
-        color: var(--muted);
+        display: inline-block; padding: 2px 10px; border-radius: 999px;
+        font-size: 0.7rem; font-weight: 800; text-transform: capitalize;
+        letter-spacing: 0.02em; background: var(--surface-2); color: var(--muted);
       }
-      .badge-status.new {
-        background: #e6f0ff;
-        color: #1a4b8c;
-      }
-      .badge-status.accepted {
-        background: #e6f7e6;
-        color: #1a7a3a;
-      }
-      .badge-status.preparing {
-        background: #fff3e0;
-        color: #a8641a;
-      }
-      .badge-status.ready {
-        background: #e8f5e9;
-        color: #2e7d32;
-      }
-      .badge-status.completed {
-        background: #e0e0e0;
-        color: #424242;
-      }
-      .badge-status.cancelled {
-        background: #fde0e0;
-        color: #b33939;
-      }
+      .badge-status.new { background: #e6f0ff; color: #1a4b8c; }
+      .badge-status.accepted { background: #e6f7e6; color: #1a7a3a; }
+      .badge-status.preparing { background: #fff3e0; color: #a8641a; }
+      .badge-status.ready { background: #e8f5e9; color: #2e7d32; }
+      .badge-status.completed { background: #e0e0e0; color: #424242; }
+      .badge-status.cancelled { background: #fde0e0; color: #b33939; }
 
-      /* ── table ── */
+      /* table */
       .table-wrap {
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--surface);
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(23, 33, 29, 0.05);
+        border: 1px solid var(--line); border-radius: var(--radius);
+        background: var(--surface); overflow: hidden;
+        box-shadow: 0 4px 20px rgba(23,33,29,0.05);
       }
+      .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-      .table-scroll {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.88rem;
-        min-width: 720px;
-      }
-
-      thead {
-        background: var(--surface-2);
-        border-bottom: 1px solid var(--line);
-      }
+      table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 640px; }
+      thead { background: var(--surface-2); border-bottom: 1px solid var(--line); }
       th {
-        padding: 12px 14px;
-        text-align: left;
-        font-size: 0.72rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: var(--muted);
-        white-space: nowrap;
+        padding: 12px 14px; text-align: left; font-size: 0.72rem; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); white-space: nowrap;
       }
-      td {
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--line);
-        vertical-align: middle;
-      }
-      tr:last-child td {
-        border-bottom: 0;
-      }
-      tr:hover td {
-        background: #fafbf9;
-      }
+      td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+      tr:last-child td { border-bottom: 0; }
+      tr:hover td { background: #fafbf9; }
 
-      .order-id {
-        font-weight: 700;
-        font-size: 0.8rem;
-        color: var(--brand);
-        word-break: break-all;
-      }
-      .order-customer {
-        font-weight: 600;
-      }
-      .order-customer .sub {
-        display: block;
-        font-weight: 400;
-        font-size: 0.75rem;
-        color: var(--muted);
-      }
-      .order-amount {
-        font-weight: 700;
-        white-space: nowrap;
-      }
-      .order-amount .khr {
-        font-weight: 400;
-        font-size: 0.75rem;
-        color: var(--muted);
-        display: block;
-      }
-      .order-time {
-        font-size: 0.8rem;
-        color: var(--muted);
-        white-space: nowrap;
-      }
+      .order-id { font-weight: 700; font-size: 0.8rem; color: var(--brand); word-break: break-all; }
+      .order-customer { font-weight: 600; }
+      .order-customer .sub { display: block; font-weight: 400; font-size: 0.75rem; color: var(--muted); }
+      .order-amount { font-weight: 700; white-space: nowrap; }
+      .order-amount .khr { font-weight: 400; font-size: 0.75rem; color: var(--muted); display: block; }
+      .order-time { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
 
-      .detail-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 12px 4px 8px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: var(--surface);
-        color: var(--brand);
-        font-size: 0.75rem;
-        font-weight: 700;
-        transition: background 0.15s;
-      }
-      .detail-btn:hover {
-        background: var(--surface-2);
-      }
-      .detail-btn svg {
-        width: 14px;
-        height: 14px;
-      }
+      .empty-state { padding: 48px 20px; text-align: center; color: var(--muted); }
+      .empty-state strong { display: block; color: var(--ink); font-size: 1.05rem; }
 
-      .empty-state {
-        padding: 48px 20px;
-        text-align: center;
-        color: var(--muted);
-      }
-      .empty-state svg {
-        width: 48px;
-        height: 48px;
-        color: var(--line);
-        margin-bottom: 12px;
-      }
-      .empty-state strong {
-        display: block;
-        color: var(--ink);
-        font-size: 1.05rem;
-      }
-
-      /* ── modal ── */
-      .modal-backdrop {
-        position: fixed;
-        inset: 0;
-        z-index: 40;
-        background: rgba(23, 33, 29, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.2s;
-      }
-      .modal-backdrop.is-open {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .modal {
-        width: min(560px, 100%);
-        max-height: 90vh;
-        background: var(--surface);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        padding: 24px 24px 28px;
-        overflow-y: auto;
-        transform: scale(0.96) translateY(10px);
-        transition: transform 0.2s;
-      }
-      .modal-backdrop.is-open .modal {
-        transform: scale(1) translateY(0);
-      }
-
-      .modal-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 16px;
-      }
-      .modal-header h2 {
-        margin: 0;
-        font-size: 1.2rem;
-      }
-      .modal-header .sub {
-        color: var(--muted);
-        font-size: 0.82rem;
-        font-weight: 500;
-        margin-top: 2px;
-      }
-      .modal-close {
-        flex: 0 0 auto;
-        width: 36px;
-        height: 36px;
-        border: 0;
-        border-radius: 50%;
-        background: var(--surface-2);
-        color: var(--ink);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .modal-close svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      .modal-body {
-        display: grid;
-        gap: 12px;
-      }
-      .modal-body .row {
-        display: grid;
-        grid-template-columns: 100px 1fr;
-        gap: 8px;
-        font-size: 0.9rem;
-        padding: 6px 0;
-        border-bottom: 1px solid var(--line);
-      }
-      .modal-body .row .label {
-        font-weight: 700;
-        color: var(--muted);
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-      }
-      .modal-body .row .value {
-        word-break: break-word;
-      }
-
-      .modal-items {
-        margin-top: 8px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        overflow: hidden;
-      }
-      .modal-items .item-row {
-        display: grid;
-        grid-template-columns: 1fr auto auto;
-        gap: 8px;
-        padding: 8px 12px;
-        border-bottom: 1px solid var(--line);
-        font-size: 0.85rem;
-        background: #fbfcfa;
-      }
-      .modal-items .item-row:last-child {
-        border-bottom: 0;
-      }
-      .modal-items .item-row .qty {
-        font-weight: 700;
-        color: var(--muted);
-        margin-right: 4px;
-      }
-      .modal-items .item-row .price {
-        font-weight: 700;
-        color: var(--brand);
-        white-space: nowrap;
-      }
-
-      /* ── toast ── */
-      .toast {
-        position: fixed;
-        bottom: 28px;
-        left: 50%;
-        transform: translateX(-50%) translateY(12px);
-        z-index: 60;
-        padding: 12px 22px;
-        border-radius: var(--radius);
-        background: #17211d;
-        color: #fff;
-        font-weight: 700;
-        font-size: 0.9rem;
-        box-shadow: var(--shadow);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.2s, transform 0.2s;
-        max-width: 90vw;
-        text-align: center;
-      }
-      .toast.is-visible {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
-
-      /* ── responsive ── */
+      /* responsive */
       @media (max-width: 720px) {
-        body {
-          padding: 12px 12px 32px;
-        }
-        .topbar {
-          flex-direction: column;
-          align-items: stretch;
-        }
-        .topbar-actions {
-          justify-content: flex-start;
-        }
-        .stats-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .stat-card .value {
-          font-size: 1.2rem;
-        }
-        .filters {
-          flex-direction: column;
-          align-items: stretch;
-        }
-        .filters label {
-          flex-wrap: wrap;
-        }
-        .filters select,
-        .filters input[type="text"] {
-          min-width: 0;
-          width: 100%;
-        }
-        .filters .spacer {
-          display: none;
-        }
-        table {
-          font-size: 0.8rem;
-          min-width: 600px;
-        }
-        th,
-        td {
-          padding: 8px 10px;
-        }
-        .modal {
-          padding: 16px;
-        }
-        .modal-body .row {
-          grid-template-columns: 1fr;
-          gap: 2px;
-        }
-        .modal-items .item-row {
-          grid-template-columns: 1fr;
-          gap: 2px;
-        }
+        body { padding: 12px 12px 32px; }
+        .topbar { flex-direction: column; align-items: stretch; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .stat-card .value { font-size: 1.2rem; }
+        .filters { flex-direction: column; align-items: stretch; }
+        .filters select, .filters input[type="text"] { min-width: 0; width: 100%; }
+        .filters .spacer { display: none; }
+        table { font-size: 0.8rem; min-width: 600px; }
+        th, td { padding: 8px 10px; }
       }
 
       @media (max-width: 420px) {
-        .stats-grid {
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-        }
-        .stat-card {
-          padding: 10px 12px;
-        }
-        .stat-card .value {
-          font-size: 1rem;
-        }
-        .brand-lockup h1 {
-          font-size: 1.2rem;
-        }
-        .brand-logo {
-          width: 40px;
-          height: 40px;
-        }
-      }
-
-      .loading-shimmer {
-        animation: shimmer 1.2s ease-in-out infinite;
-        background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%);
-        background-size: 200% 100%;
-        border-radius: var(--radius);
-      }
-      @keyframes shimmer {
-        0% {
-          background-position: 200% 0;
-        }
-        100% {
-          background-position: -200% 0;
-        }
-      }
-
-      .loading-row td {
-        height: 48px;
-        padding: 0 14px;
-      }
-      .loading-row td > div {
-        height: 20px;
-        border-radius: 4px;
-        background: var(--surface-2);
+        .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+        .stat-card { padding: 10px 12px; }
+        .stat-card .value { font-size: 1rem; }
+        .brand-lockup h1 { font-size: 1.2rem; }
+        .brand-logo { width: 40px; height: 40px; }
       }
     </style>
   </head>
   <body>
 
-    <div class="app-shell" id="app">
-      <!-- header -->
+    <div class="app-shell">
       <header class="topbar">
         <div class="brand-lockup">
           <img class="brand-logo" src="image/logo.JPG" alt="LATTE LAB" />
@@ -611,25 +167,20 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <button class="icon-btn" id="refreshBtn" type="button" aria-label="Refresh" title="Refresh orders">
+          <button class="icon-btn" id="refreshBtn" type="button" aria-label="Refresh">
             <i data-lucide="rotate-ccw"></i>
           </button>
           <span style="font-size:0.78rem;color:var(--muted);font-weight:600;" id="orderCount">0 orders</span>
         </div>
       </header>
 
-      <!-- connection status -->
-      <div id="connStatus" style="padding:10px 14px;margin-bottom:14px;border-radius:var(--radius);background:var(--surface-2);border:1px solid var(--line);font-size:0.85rem;color:var(--muted);display:none;"></div>
-
-      <!-- stats -->
-      <div class="stats-grid" id="statsGrid">
-        <div class="stat-card"><div class="label">Total orders</div><div class="value" id="statTotal">—</div></div>
-        <div class="stat-card"><div class="label">Total (USD)</div><div class="value" id="statUsd">—</div></div>
-        <div class="stat-card"><div class="label">Total (KHR)</div><div class="value" id="statKhr">—</div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="label">Total</div><div class="value" id="statTotal">—</div></div>
+        <div class="stat-card"><div class="label">USD</div><div class="value" id="statUsd">—</div></div>
+        <div class="stat-card"><div class="label">KHR</div><div class="value" id="statKhr">—</div></div>
         <div class="stat-card"><div class="label">Pending</div><div class="value" id="statPending">—</div></div>
       </div>
 
-      <!-- filters -->
       <div class="filters">
         <label>
           Status
@@ -651,7 +202,6 @@
         <span style="font-size:0.75rem;color:var(--muted);font-weight:600;" id="filterResult">—</span>
       </div>
 
-      <!-- table -->
       <div class="table-wrap">
         <div class="table-scroll">
           <table>
@@ -663,64 +213,28 @@
                 <th>Amount</th>
                 <th>Items</th>
                 <th>Time</th>
-                <th style="text-align:right;">Action</th>
               </tr>
             </thead>
-            <tbody id="ordersBody">
-              <!-- rows rendered by JS -->
-            </tbody>
+            <tbody id="ordersBody"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- modal -->
-    <div class="modal-backdrop" id="modalBackdrop">
-      <div class="modal" role="dialog" aria-label="Order details">
-        <div class="modal-header">
-          <div>
-            <h2 id="modalTitle">Order</h2>
-            <div class="sub" id="modalSub">Details</div>
-          </div>
-          <button class="modal-close" id="modalClose" type="button" aria-label="Close">
-            <i data-lucide="x"></i>
-          </button>
-        </div>
-        <div class="modal-body" id="modalBody">
-          <!-- rendered by JS -->
-        </div>
-      </div>
-    </div>
-
-    <!-- toast -->
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-    <!-- scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/dist/umd/supabase.min.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js">
-    </script>
-    <script src="config.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+    <script src="config.js"></script>
 
     <script>
       (function() {
         "use strict";
 
-        // ── config ──
         const CFG = window.LATTE_LAB_CONFIG || {};
-        const SUPABASE_URL = CFG.supabaseUrl || '';
-        const SUPABASE_ANON_KEY = CFG.supabaseAnonKey || '';
 
-        // ── state ──
         let allOrders = [];
-        let filteredOrders = [];
-        let isLoading = false;
         let supabase = null;
 
-        // ── DOM refs ──
         const $ = (sel) => document.querySelector(sel);
-        const $$ = (sel) => document.querySelectorAll(sel);
 
         const body = $('#ordersBody');
         const statTotal = $('#statTotal');
@@ -732,37 +246,16 @@
         const statusFilter = $('#statusFilter');
         const searchFilter = $('#searchFilter');
         const refreshBtn = $('#refreshBtn');
-        const connStatus = $('#connStatus');
-
-        const modalBackdrop = $('#modalBackdrop');
-        const modalClose = $('#modalClose');
-        const modalTitle = $('#modalTitle');
-        const modalSub = $('#modalSub');
-        const modalBody = $('#modalBody');
-
-        const toastEl = $('#toast');
-        let toastTimer = null;
-
-        // ── helpers ──
-        function showToast(msg) {
-          clearTimeout(toastTimer);
-          toastEl.textContent = msg;
-          toastEl.classList.add('is-visible');
-          toastTimer = setTimeout(() => toastEl.classList.remove('is-visible'), 2800);
-        }
 
         function formatDate(iso) {
           if (!iso) return '—';
           try {
-            const d = new Date(iso);
-            return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            return new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
           } catch { return iso; }
         }
 
         function formatCurrency(amount, currency) {
-          if (currency === 'KHR') {
-            return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(amount) + ' KHR';
-          }
+          if (currency === 'KHR') return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(amount) + ' KHR';
           return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
         }
 
@@ -770,32 +263,19 @@
           return `<span class="badge-status ${status || ''}">${status || 'unknown'}</span>`;
         }
 
-        function truncate(str, len = 28) {
+        function truncate(str, len) {
           if (!str) return '—';
           return str.length > len ? str.slice(0, len) + '…' : str;
         }
 
-        function safe(val) { return val == null ? '—' : String(val); }
-
-        // ── render orders table ──
         function renderOrders(orders) {
-          if (isLoading) {
-            body.innerHTML = Array.from({ length: 5 }, () =>
-              `<tr class="loading-row"><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div style="width:60px;"></div></td></tr>`
-            ).join('');
-            return;
-          }
-
-          if (!orders || orders.length === 0) {
-            body.innerHTML = `
-                <tr><td colspan="7">
-                  <div class="empty-state">
-                    <i data-lucide="inbox" style="display:block;width:48px;height:48px;margin:0 auto 12px;color:var(--line);"></i>
-                    <strong>No orders found</strong>
-                    <span style="font-size:0.85rem;">Try adjusting your filters or refresh.</span>
-                  </div>
-                </td></tr>
-              `;
+          if (!orders || !orders.length) {
+            body.innerHTML = `<tr><td colspan="6">
+              <div class="empty-state">
+                <strong>No orders</strong>
+                <span style="font-size:0.85rem;">Adjust filters or refresh.</span>
+              </div>
+            </td></tr>`;
             lucide.createIcons();
             return;
           }
@@ -803,276 +283,132 @@
           let html = '';
           for (const o of orders) {
             const customer = o.customer_name || o.telegram_username || o.telegram_first_name || 'Anonymous';
-            const phone = o.phone ? ` · ${o.phone}` : '';
+            const phone = o.phone ? ' · ' + o.phone : '';
             const amount = o.currency === 'KHR' ? o.subtotal_khr : o.subtotal_usd;
             const amountStr = formatCurrency(amount, o.currency || 'USD');
-            const khrStr = o.currency === 'USD' && o.subtotal_khr ?
-              new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(o.subtotal_khr) + ' KHR' :
-              null;
+            const khrStr = o.currency === 'USD' && o.subtotal_khr
+              ? new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(o.subtotal_khr) + ' KHR'
+              : null;
 
-            html += `
-                <tr>
-                  <td><span class="order-id">${safe(o.client_order_id)}</span></td>
-                  <td>
-                    <div class="order-customer">
-                      ${truncate(customer, 20)}
-                      <span class="sub">${safe(o.fulfillment_method)}${phone}</span>
-                    </div>
-                  </td>
-                  <td>${statusBadge(o.status)}</td>
-                  <td>
-                    <div class="order-amount">
-                      ${amountStr}
-                      ${khrStr ? `<span class="khr">${khrStr}</span>` : ''}
-                    </div>
-                  </td>
-                  <td>${o.item_count ?? 0}</td>
-                  <td class="order-time">${formatDate(o.created_at)}</td>
-                  <td style="text-align:right;">
-                    <button class="detail-btn" data-order-id="${safe(o.client_order_id)}" type="button">
-                      <i data-lucide="eye"></i> Detail
-                    </button>
-                  </td>
-                </tr>
-              `;
+            html += `<tr>
+              <td><span class="order-id">${o.client_order_id || '—'}</span></td>
+              <td>
+                <div class="order-customer">
+                  ${truncate(customer, 20)}
+                  <span class="sub">${o.fulfillment_method || '—'}${phone}</span>
+                </div>
+              </td>
+              <td>${statusBadge(o.status)}</td>
+              <td>
+                <div class="order-amount">
+                  ${amountStr}
+                  ${khrStr ? '<span class="khr">' + khrStr + '</span>' : ''}
+                </div>
+              </td>
+              <td>${o.item_count ?? 0}</td>
+              <td class="order-time">${formatDate(o.created_at)}</td>
+            </tr>`;
           }
           body.innerHTML = html;
-
-          // bind detail buttons
-          body.querySelectorAll('.detail-btn').forEach((btn) => {
-            btn.addEventListener('click', () => {
-              const orderId = btn.dataset.orderId;
-              const order = allOrders.find(o => o.client_order_id === orderId);
-              if (order) {
-                openModal(order);
-              } else {
-                showToast('Order not found');
-              }
-            });
-          });
-
           lucide.createIcons();
         }
 
-        // ── stats ──
         function updateStats(orders) {
-          const total = orders.length;
-          let sumUsd = 0,
-            sumKhr = 0,
-            pending = 0;
+          let sumUsd = 0, sumKhr = 0, pending = 0;
           for (const o of orders) {
             sumUsd += Number(o.subtotal_usd) || 0;
             sumKhr += Number(o.subtotal_khr) || 0;
             if (['new', 'accepted', 'preparing', 'ready'].includes(o.status)) pending++;
           }
-          statTotal.textContent = total;
+          statTotal.textContent = orders.length;
           statUsd.textContent = formatCurrency(sumUsd, 'USD');
           statKhr.textContent = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(sumKhr) + ' KHR';
           statPending.textContent = pending;
-          orderCount.textContent = `${total} order${total !== 1 ? 's' : ''}`;
+          orderCount.textContent = orders.length + ' order' + (orders.length !== 1 ? 's' : '');
         }
 
-        // ── filtering ──
         function applyFilters() {
           const status = statusFilter.value;
           const search = searchFilter.value.trim().toLowerCase();
 
-          filteredOrders = allOrders.filter((o) => {
+          const filtered = allOrders.filter(function(o) {
             if (status && o.status !== status) return false;
             if (search) {
-              const id = (o.client_order_id || '').toLowerCase();
-              const name = (o.customer_name || o.telegram_username || o.telegram_first_name || '').toLowerCase();
-              if (!id.includes(search) && !name.includes(search)) return false;
+              var id = (o.client_order_id || '').toLowerCase();
+              var name = (o.customer_name || o.telegram_username || o.telegram_first_name || '').toLowerCase();
+              if (id.indexOf(search) === -1 && name.indexOf(search) === -1) return false;
             }
             return true;
           });
 
-          filterResult.textContent = `${filteredOrders.length} of ${allOrders.length}`;
-          renderOrders(filteredOrders);
-          updateStats(filteredOrders);
+          filterResult.textContent = filtered.length + ' of ' + allOrders.length;
+          renderOrders(filtered);
+          updateStats(filtered);
         }
 
-        // ── fetch orders ──
         async function fetchOrders() {
           if (!supabase) {
-            connStatus.style.display = 'block';
-            connStatus.style.background = '#fde0e0';
-            connStatus.style.color = '#b33939';
-            connStatus.textContent = 'Supabase not initialized. Check config.js';
+            body.innerHTML = `<tr><td colspan="6">
+              <div class="empty-state">
+                <strong>Supabase not configured</strong>
+                <span style="font-size:0.85rem;">Check config.js</span>
+              </div>
+            </td></tr>`;
             return;
           }
 
-          isLoading = true;
-          connStatus.style.display = 'block';
-          connStatus.style.background = '#fff3e0';
-          connStatus.style.color = '#a8641a';
-          connStatus.textContent = 'Connecting to Supabase...';
-          renderOrders([]);
           try {
-            const { data, error } = await supabase
-              .from('orders')
-              .select('*')
-              .order('created_at', { ascending: false });
+            var _a = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+            var data = _a.data, error = _a.error;
 
             if (error) throw error;
 
             allOrders = data || [];
             applyFilters();
-            connStatus.style.display = 'block';
-            connStatus.style.background = '#e6f7e6';
-            connStatus.style.color = '#1a7a3a';
-            connStatus.textContent = `Connected. ${allOrders.length} orders loaded.`;
-            showToast(`Loaded ${allOrders.length} orders`);
           } catch (err) {
-            console.error('Fetch error:', err);
-            connStatus.style.display = 'block';
-            connStatus.style.background = '#fde0e0';
-            connStatus.style.color = '#b33939';
-            connStatus.textContent = 'Error: ' + (err.message || err.code || 'unknown');
-            showToast('Failed to load orders');
-            allOrders = [];
-            filteredOrders = [];
-            isLoading = false;
-            renderOrders([]);
-            updateStats([]);
+            console.error(err);
+            body.innerHTML = `<tr><td colspan="6">
+              <div class="empty-state">
+                <strong>Failed to load</strong>
+                <span style="font-size:0.85rem;">${err.message || err.code || 'Unknown error'}</span>
+              </div>
+            </td></tr>`;
+            statTotal.textContent = '—';
+            statUsd.textContent = '—';
+            statKhr.textContent = '—';
+            statPending.textContent = '—';
+            orderCount.textContent = '0 orders';
             filterResult.textContent = '0 of 0';
-          } finally {
-            isLoading = false;
+            allOrders = [];
           }
         }
 
-        // ── modal ──
-        function openModal(order) {
-          const items = order.items || [];
-          const customer = order.customer_name || order.telegram_username || order.telegram_first_name || 'Anonymous';
-          const phone = order.phone || '—';
-          const address = order.address || '—';
-          const note = order.note || '—';
+        function initSupabase() {
+          var url = CFG.supabaseUrl || '';
+          var key = CFG.supabaseAnonKey || '';
 
-          modalTitle.textContent = `Order ${order.client_order_id || ''}`;
-          modalSub.textContent = `${order.status || 'unknown'} · ${formatDate(order.created_at)}`;
+          if (!url || !key || !window.supabase) return false;
 
-          let itemsHtml = '';
-          if (items.length) {
-            itemsHtml = `<div class="modal-items">`;
-            for (const it of items) {
-              const name = it.name || it.product_id || 'Item';
-              const qty = it.quantity || 1;
-              const price = it.unit_price_usd || it.unit_price_khr || 0;
-              const cur = order.currency === 'KHR' ? 'KHR' : 'USD';
-              const total = (it.line_total_usd || it.line_total_khr || price * qty);
-              itemsHtml += `
-                  <div class="item-row">
-                    <span><span class="qty">${qty}×</span> ${truncate(name, 30)}</span>
-                    <span class="price">${formatCurrency(total, cur)}</span>
-                  </div>
-                `;
-            }
-            itemsHtml += `</div>`;
-          } else {
-            itemsHtml = `<p style="color:var(--muted);font-size:0.85rem;">No items recorded.</p>`;
+          try {
+            supabase = window.supabase.createClient(url, key);
+            return true;
+          } catch (e) {
+            console.error(e);
+            return false;
           }
-
-          const totalAmount = order.currency === 'KHR' ? order.subtotal_khr : order.subtotal_usd;
-
-          modalBody.innerHTML = `
-              <div class="row"><span class="label">Customer</span><span class="value">${safe(customer)}</span></div>
-              <div class="row"><span class="label">Phone</span><span class="value">${safe(phone)}</span></div>
-              <div class="row"><span class="label">Fulfillment</span><span class="value">${safe(order.fulfillment_method)}</span></div>
-              <div class="row"><span class="label">Address</span><span class="value">${safe(address)}</span></div>
-              <div class="row"><span class="label">Note</span><span class="value">${safe(note)}</span></div>
-              <div class="row"><span class="label">Total</span><span class="value"><strong>${formatCurrency(totalAmount, order.currency || 'USD')}</strong></span></div>
-              <div class="row"><span class="label">Items (${items.length})</span><span class="value">${itemsHtml}</span></div>
-              <div class="row"><span class="label">Source</span><span class="value">${safe(order.source)}</span></div>
-              <div class="row"><span class="label">Order ID</span><span class="value" style="font-size:0.8rem;color:var(--muted);">${safe(order.client_order_id)}</span></div>
-            `;
-
-          modalBackdrop.classList.add('is-open');
-          document.body.style.overflow = 'hidden';
-          lucide.createIcons();
         }
 
-        function closeModal() {
-          modalBackdrop.classList.remove('is-open');
-          document.body.style.overflow = '';
-        }
-
-        // ── events ──
         statusFilter.addEventListener('change', applyFilters);
         searchFilter.addEventListener('input', applyFilters);
         refreshBtn.addEventListener('click', fetchOrders);
 
-        modalClose.addEventListener('click', closeModal);
-        modalBackdrop.addEventListener('click', (e) => {
-          if (e.target === modalBackdrop) closeModal();
-        });
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') closeModal();
-        });
-
-        // ── init supabase ──
-        function initSupabase() {
-          if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-            connStatus.style.display = 'block';
-            connStatus.style.background = '#fde0e0';
-            connStatus.style.color = '#b33939';
-            connStatus.textContent = 'Supabase config missing. Check config.js';
-            return false;
-          }
-          if (!window.supabase) {
-            connStatus.style.display = 'block';
-            connStatus.style.background = '#fde0e0';
-            connStatus.style.color = '#b33939';
-            connStatus.textContent = 'Supabase SDK not loaded (CDN blocked?).';
-            return false;
-          }
-          try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase client created, URL:', SUPABASE_URL);
-            return true;
-          } catch (e) {
-            console.error('Supabase init error:', e);
-            connStatus.style.display = 'block';
-            connStatus.style.background = '#fde0e0';
-            connStatus.style.color = '#b33939';
-            connStatus.textContent = 'Failed to init Supabase client: ' + e.message;
-            return false;
-          }
+        if (initSupabase()) {
+          fetchOrders();
         }
 
-        // ── start ──
-        async function start() {
-          if (!initSupabase()) {
-            document.querySelector('.table-wrap').innerHTML = `
-                <div style="padding:40px 20px;text-align:center;color:var(--muted);">
-                  <strong style="display:block;color:var(--danger);">Configuration missing</strong>
-                  <p style="margin-top:6px;">Please set <code>supabaseUrl</code> and <code>supabaseAnonKey</code> in <code>config.js</code>.</p>
-                </div>
-              `;
-            return;
-          }
-
-          await fetchOrders();
-
-          // auto-refresh every 60s
-          setInterval(() => {
-            if (!document.hidden) fetchOrders();
-          }, 60000);
-        }
-
-        // ── go ──
-        start();
-
-        // re-run lucide after any DOM change
-        const observer = new MutationObserver(() => {
-          if (window.lucide) lucide.createIcons();
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        window.addEventListener('load', () => {
-          if (window.lucide) lucide.createIcons();
-        });
-
+        setInterval(function() {
+          if (!document.hidden) fetchOrders();
+        }, 60000);
       })();
     </script>
   </body>
