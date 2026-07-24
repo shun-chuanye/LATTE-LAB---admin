@@ -202,10 +202,15 @@
           </select>
         </label>
         <label>
+          Date
+          <input type="text" id="dateFilter" placeholder="M/D  e.g. 7/24" style="min-width:90px;" />
+        </label>
+        <label>
           Search
           <input type="text" id="searchFilter" placeholder="Customer or order ID" />
         </label>
         <div class="spacer"></div>
+        <button type="button" id="clearFiltersBtn" style="height:34px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--muted);font-size:0.78rem;font-weight:700;">Clear</button>
         <span style="font-size:0.75rem;color:var(--muted);font-weight:600;" id="filterResult">—</span>
       </div>
 
@@ -253,12 +258,17 @@
         const filterResult = $('#filterResult');
         const statusFilter = $('#statusFilter');
         const searchFilter = $('#searchFilter');
+        const dateFilter = $('#dateFilter');
+        const clearFiltersBtn = $('#clearFiltersBtn');
         const refreshBtn = $('#refreshBtn');
 
         function formatDate(iso) {
           if (!iso) return '—';
           try {
-            return new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            var d = new Date(iso);
+            var h = d.getHours();
+            var m = String(d.getMinutes()).padStart(2, '0');
+            return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + h + ':' + m;
           } catch { return iso; }
         }
 
@@ -350,6 +360,15 @@
         function applyFilters() {
           const status = statusFilter.value;
           const search = searchFilter.value.trim().toLowerCase();
+          const dateTerm = dateFilter.value.trim();
+
+          var dateMatch = null;
+          if (dateTerm) {
+            var parts = dateTerm.split('/');
+            if (parts.length === 2) {
+              dateMatch = { month: parseInt(parts[0], 10), day: parseInt(parts[1], 10) };
+            }
+          }
 
           const filtered = allOrders.filter(function(o) {
             if (status && o.status !== status) return false;
@@ -357,6 +376,10 @@
               var id = (o.client_order_id || '').toLowerCase();
               var name = (o.customer_name || o.telegram_username || o.telegram_first_name || '').toLowerCase();
               if (id.indexOf(search) === -1 && name.indexOf(search) === -1) return false;
+            }
+            if (dateMatch) {
+              var d = new Date(o.created_at);
+              if (d.getMonth() + 1 !== dateMatch.month || d.getDate() !== dateMatch.day) return false;
             }
             return true;
           });
@@ -443,6 +466,13 @@
 
         statusFilter.addEventListener('change', applyFilters);
         searchFilter.addEventListener('input', applyFilters);
+        dateFilter.addEventListener('input', applyFilters);
+        clearFiltersBtn.addEventListener('click', function() {
+          statusFilter.value = '';
+          searchFilter.value = '';
+          dateFilter.value = '';
+          applyFilters();
+        });
         refreshBtn.addEventListener('click', fetchOrders);
 
         if (initSupabase()) {
