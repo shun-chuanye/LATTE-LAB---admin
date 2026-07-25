@@ -129,7 +129,7 @@
       .order-amount { font-weight: 700; white-space: nowrap; }
       .order-amount .khr { font-weight: 400; font-size: 0.75rem; color: var(--muted); display: block; }
       .order-time { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
-      .order-items { font-size: 0.8rem; max-width: 200px; }
+      .order-items { font-size: 0.8rem; min-width: 140px; line-height: 1.5; }
 
       .complete-btn {
         padding: 4px 12px; border: 0; border-radius: var(--radius);
@@ -310,7 +310,7 @@
               : null;
 
             const itemsDisplay = o.items && o.items.length
-              ? o.items.map(function(it) { return (it.quantity || 0) + 'x ' + (it.name || '—'); }).join(', ')
+              ? o.items.map(function(it) { return (it.quantity || 0) + 'x ' + (it.name || '—'); }).join('<br>')
               : '—';
 
             const actionBtn = o.status === 'new'
