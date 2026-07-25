@@ -488,6 +488,8 @@
           try {
             var _a = await supabase.from('order_items').update({ status: 'completed' }).eq('client_order_id', orderId);
             if (_a.error) throw _a.error;
+            var _b = await supabase.from('orders').update({ status: 'completed' }).eq('client_order_id', orderId);
+            if (_b.error) throw _b.error;
             fetchOrders();
           } catch (e) {
             console.error(e);
@@ -514,6 +516,8 @@
           try {
             var _a = await supabase.from('order_items').delete().eq('client_order_id', orderId);
             if (_a.error) throw _a.error;
+            var _b = await supabase.from('orders').delete().eq('client_order_id', orderId);
+            if (_b.error) throw _b.error;
             fetchOrders();
           } catch (e) {
             console.error(e);
