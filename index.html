@@ -141,7 +141,7 @@
       .delete-btn {
         padding: 4px 10px; border: 0; border-radius: var(--radius);
         background: var(--danger); color: #fff; font-size: 0.75rem;
-        font-weight: 700; white-space: nowrap; margin-top: 6px;
+        font-weight: 700; white-space: nowrap;
       }
       .delete-btn:hover { opacity: 0.85; }
 
@@ -236,6 +236,7 @@
                 <th>Items</th>
                 <th>Time</th>
                 <th>Action</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody id="ordersBody"></tbody>
@@ -298,7 +299,7 @@
 
         function renderOrders(orders) {
           if (!orders || !orders.length) {
-            body.innerHTML = `<tr><td colspan="7">
+            body.innerHTML = `<tr><td colspan="8">
               <div class="empty-state">
                 <strong>No orders</strong>
                 <span style="font-size:0.85rem;">Adjust filters or refresh.</span>
@@ -322,11 +323,11 @@
               ? o.items.map(function(it) { return '<b style="color:var(--brand)">' + (it.quantity || 0) + '</b>x ' + (it.name || '—'); }).join('<br>')
               : '—';
 
-            const actionBtns = ''
-              + (o.status === 'new'
-                ? `<button type="button" class="complete-btn" data-order-id="${o.client_order_id || ''}">Complete</button>`
-                : '')
-              + `<button type="button" class="delete-btn" data-order-id="${o.client_order_id || ''}">Delete</button>`;
+            const actionBtn = o.status === 'new'
+              ? `<button type="button" class="complete-btn" data-order-id="${o.client_order_id || ''}">Complete</button>`
+              : '';
+
+            const deleteBtn = `<button type="button" class="delete-btn" data-order-id="${o.client_order_id || ''}">Delete</button>`;
 
             html += `<tr>
               <td><span class="order-id">${o.client_order_id || '—'}</span></td>
@@ -345,7 +346,8 @@
               </td>
               <td class="order-items">${itemsDisplay}</td>
               <td class="order-time">${formatDate(o.created_at)}</td>
-              <td><span class="action-cell">${actionBtns}</span></td>
+              <td>${actionBtn}</td>
+              <td>${deleteBtn}</td>
             </tr>`;
           }
           body.innerHTML = html;
@@ -443,7 +445,7 @@
 
         async function fetchOrders() {
           if (!supabase) {
-            body.innerHTML = `<tr><td colspan="7">
+            body.innerHTML = `<tr><td colspan="8">
               <div class="empty-state">
                 <strong>Supabase not configured</strong>
                 <span style="font-size:0.85rem;">Check config.js</span>
@@ -462,7 +464,7 @@
             applyFilters();
           } catch (err) {
             console.error(err);
-            body.innerHTML = `<tr><td colspan="7">
+            body.innerHTML = `<tr><td colspan="8">
               <div class="empty-state">
                 <strong>Failed to load</strong>
                 <span style="font-size:0.85rem;">${err.message || err.code || 'Unknown error'}</span>
