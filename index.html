@@ -134,16 +134,18 @@
       .complete-btn {
         padding: 4px 12px; border: 0; border-radius: var(--radius);
         background: var(--brand); color: #fff; font-size: 0.75rem;
-        font-weight: 700; white-space: nowrap; transition: font-size 0.15s;
+        font-weight: 700; white-space: nowrap;
       }
-      .complete-btn:hover { font-size: 0.85rem; }
+      .complete-btn:hover { opacity: 0.85; }
 
       .delete-btn {
         padding: 4px 10px; border: 0; border-radius: var(--radius);
         background: var(--danger); color: #fff; font-size: 0.75rem;
-        font-weight: 700; white-space: nowrap; margin-left: 6px;
+        font-weight: 700; white-space: nowrap; margin-top: 6px;
       }
       .delete-btn:hover { opacity: 0.85; }
+
+      .action-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 
       .empty-state { padding: 48px 20px; text-align: center; color: var(--muted); }
       .empty-state strong { display: block; color: var(--ink); font-size: 1.05rem; }
@@ -343,7 +345,7 @@
               </td>
               <td class="order-items">${itemsDisplay}</td>
               <td class="order-time">${formatDate(o.created_at)}</td>
-              <td>${actionBtns}</td>
+              <td><span class="action-cell">${actionBtns}</span></td>
             </tr>`;
           }
           body.innerHTML = html;
