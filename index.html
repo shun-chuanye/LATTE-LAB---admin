@@ -480,7 +480,8 @@
               btn.disabled = false;
               btn.textContent = 'Complete';
             }
-            alert('Update failed: ' + (e.message || e.code || 'Unknown error'));
+            var detail = JSON.stringify({ code: e.code, message: e.message, details: e.details, hint: e.hint }, null, 2);
+            alert('Update failed:\n' + detail);
           }
         }
 
