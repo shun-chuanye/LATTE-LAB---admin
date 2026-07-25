@@ -129,6 +129,7 @@
       .order-amount { font-weight: 700; white-space: nowrap; }
       .order-amount .khr { font-weight: 400; font-size: 0.75rem; color: var(--muted); display: block; }
       .order-time { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+      .order-items { font-size: 0.8rem; max-width: 200px; }
 
       .complete-btn {
         padding: 4px 12px; border: 0; border-radius: var(--radius);
@@ -308,6 +309,10 @@
               ? new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(o.subtotal_khr) + ' KHR'
               : null;
 
+            const itemsDisplay = o.items && o.items.length
+              ? o.items.map(function(it) { return (it.quantity || 0) + 'x ' + (it.name || '—'); }).join(', ')
+              : '—';
+
             const actionBtn = o.status === 'new'
               ? `<button type="button" class="complete-btn" data-order-id="${o.client_order_id || ''}">Complete</button>`
               : '';
@@ -327,7 +332,7 @@
                   ${khrStr ? '<span class="khr">' + khrStr + '</span>' : ''}
                 </div>
               </td>
-              <td>${o.item_count ?? 0}</td>
+              <td class="order-items">${itemsDisplay}</td>
               <td class="order-time">${formatDate(o.created_at)}</td>
               <td>${actionBtn}</td>
             </tr>`;
@@ -389,6 +394,36 @@
           updateStats(filtered);
         }
 
+        function groupOrderItems(rows) {
+          if (!rows || !rows.length) return [];
+          var map = {};
+          for (var i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var key = r.client_order_id;
+            if (!map[key]) {
+              map[key] = {
+                client_order_id: r.client_order_id,
+                created_at: r.created_at,
+                status: r.status,
+                customer_name: r.customer_name,
+                telegram_user_id: r.telegram_user_id,
+                telegram_username: r.telegram_username,
+                telegram_first_name: r.telegram_first_name,
+                phone: r.phone,
+                fulfillment_method: r.fulfillment_method,
+                currency: r.currency,
+                subtotal_usd: Number(r.subtotal_usd) || 0,
+                subtotal_khr: Number(r.subtotal_khr) || 0,
+                item_count: 0,
+                items: []
+              };
+            }
+            map[key].item_count += Number(r.quantity) || 0;
+            map[key].items.push({ name: r.name, quantity: r.quantity });
+          }
+          return Object.values(map);
+        }
+
         async function fetchOrders() {
           if (!supabase) {
             body.innerHTML = `<tr><td colspan="7">
@@ -401,12 +436,12 @@
           }
 
           try {
-            var _a = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+            var _a = await supabase.from('order_items').select('*').order('created_at', { ascending: false });
             var data = _a.data, error = _a.error;
 
             if (error) throw error;
 
-            allOrders = data || [];
+            allOrders = groupOrderItems(data || []);
             applyFilters();
           } catch (err) {
             console.error(err);
@@ -436,7 +471,7 @@
           }
 
           try {
-            var _a = await supabase.from('orders').update({ status: 'completed' }).eq('client_order_id', orderId);
+            var _a = await supabase.from('order_items').update({ status: 'completed' }).eq('client_order_id', orderId);
             if (_a.error) throw _a.error;
             fetchOrders();
           } catch (e) {
