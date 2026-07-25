@@ -8,7 +8,7 @@ alter table public.order_items enable row level security;
 
 -- 授予 anon 和 authenticated 角色的基础权限
 revoke all on table public.order_items from anon, authenticated;
-grant select, insert, update on table public.order_items to anon, authenticated;
+grant select, insert, update, delete on table public.order_items to anon, authenticated;
 grant select, insert, update, delete on table public.order_items to service_role;
 grant usage, select on sequence public.order_items_id_seq to anon, authenticated, service_role;
 
@@ -43,3 +43,11 @@ using (true)
 with check (
   status in ('new', 'accepted', 'preparing', 'ready', 'completed', 'cancelled')
 );
+
+-- 策略4: 访客可以删除订单项
+drop policy if exists "Guests can delete order_items" on public.order_items;
+create policy "Guests can delete order_items"
+on public.order_items
+for delete
+to anon, authenticated
+using (true);
