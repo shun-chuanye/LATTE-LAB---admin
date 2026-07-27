@@ -34,9 +34,12 @@ body {
 .back-btn:hover { background: var(--surface-2); }
 
 .filter-bar {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 0;
   margin-bottom: 16px; padding: 10px 14px; border: 1px solid var(--line);
   border-radius: var(--radius); background: var(--surface);
+}
+.filter-scroll {
+  display: flex; align-items: center; gap: 8px;
 }
 .filter-bar label { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
 .filter-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
@@ -190,10 +193,10 @@ body {
   .status-card .value { font-size: 1.2rem; }
   .brand-lockup h1 { font-size: 1.2rem; }
   .brand-logo { width: 40px; height: 40px; }
-  .filter-bar { flex-direction: column; align-items: stretch; }
-  .filter-bar select { min-width: 0; width: 100%; }
+  .filter-scroll { flex-wrap: wrap; }
   .filter-bar .spacer { display: none; }
   .chart-card .chart-wrap { height: 250px; }
+  .day-calendar { width: 220px; }
 }
 </style>
 </head>
@@ -211,6 +214,7 @@ body {
   </header>
 
   <div class="filter-bar">
+    <div class="filter-scroll">
     <div class="filter-dropdown">
       <button class="product-toggle-btn" id="dayToggle">Day ▾</button>
       <div id="dayCalendar" class="day-calendar cal-drop" style="display:none;">
@@ -237,6 +241,7 @@ body {
       <div id="productCheckboxes" class="period-checkboxes product-menu"></div>
     </div>
     <button class="product-toggle-btn clear-filter-btn" id="clearFilterBtn">Clear</button>
+    </div>
     <div class="spacer"></div>
   </div>
 
