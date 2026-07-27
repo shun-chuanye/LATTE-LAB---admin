@@ -24,7 +24,6 @@ body {
 .brand-lockup { display: flex; align-items: center; gap: 12px; }
 .brand-logo { width: 50px; height: 50px; border-radius: var(--radius); object-fit: cover; border: 1px solid rgba(23,33,29,0.12); background: var(--surface); }
 .brand-lockup h1 { margin: 0; font-size: 1.5rem; line-height: 1; }
-.brand-lockup .eyebrow { margin: 0 0 2px; color: var(--accent); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
 .back-btn {
   display: inline-flex; align-items: center; justify-content: center;
   height: 42px; padding: 0 18px; border: 1px solid var(--line); border-radius: var(--radius);
@@ -32,33 +31,49 @@ body {
   font-size: 0.82rem; font-weight: 800; box-shadow: 0 4px 14px rgba(23,33,29,0.06);
 }
 .back-btn:hover { background: var(--surface-2); }
-
 .filter-bar {
   display: flex; align-items: center; gap: 0;
   margin-bottom: 16px; padding: 10px 14px; border: 1px solid var(--line);
   border-radius: var(--radius); background: var(--surface);
 }
-.filter-scroll {
-  display: flex; align-items: center; gap: 8px;
+.filter-scroll { display: flex; align-items: center; gap: 8px; }
+.filter-dropdown { position: relative; }
+.product-toggle-btn {
+  height: 34px; padding: 0 14px; border: 1px solid var(--line);
+  border-radius: var(--radius); background: var(--surface); color: var(--ink);
+  font-size: 0.78rem; font-weight: 700; cursor: pointer;
 }
-.filter-bar label { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
-.filter-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
-.filter-bar select {
-  height: 34px; padding: 0 10px; border: 1px solid var(--line);
-  border-radius: var(--radius); background: var(--bg); color: var(--ink); font-weight: 500; min-width: 100px;
+.product-toggle-btn:hover { background: var(--surface-2); }
+.product-toggle-btn.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+.clear-filter-btn { background: var(--danger) !important; color: #fff !important; border-color: var(--danger) !important; padding: 0 10px !important; font-size: 0.72rem !important; height: 32px; }
+.clear-filter-btn:hover { opacity: 0.85 !important; background: var(--danger) !important; }
+.product-menu {
+  position: absolute; top: 100%; left: 0; z-index: 100; margin-top: 4px;
+  max-height: 200px; min-width: 180px; box-shadow: 0 8px 24px rgba(23,33,29,0.15);
+  display: none;
 }
+.product-menu.show { display: flex; }
+.period-checkboxes {
+  max-height: 180px; overflow-y: auto; border: 1px solid var(--line);
+  border-radius: var(--radius); background: var(--surface); padding: 6px 8px;
+  min-width: 160px; display: none; flex-direction: column; gap: 2px;
+}
+.period-checkboxes.show { display: flex; }
+.period-checkboxes label {
+  display: flex; align-items: center; gap: 6px; font-size: 0.75rem;
+  font-weight: 500; color: var(--ink); padding: 2px 4px; border-radius: 4px; cursor: pointer;
+}
+.period-checkboxes label:hover { background: var(--surface-2); }
+.period-checkboxes input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--brand); cursor: pointer; flex-shrink: 0; }
+.period-checkboxes .select-all { font-weight: 800; color: var(--brand); }
+.period-checkboxes .menu-sep { width: 100%; border: 0; border-top: 1px solid var(--line); margin: 2px 0; }
 .day-calendar {
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--surface); padding: 8px; width: 240px;
   box-shadow: 0 6px 18px rgba(23,33,29,0.1);
 }
-.cal-drop {
-  position: absolute; top: 100%; left: 0; z-index: 100; margin-top: 4px;
-}
-.cal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 2px 0 6px;
-}
+.cal-drop { position: absolute; top: 100%; left: 0; z-index: 100; margin-top: 4px; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; padding: 2px 0 6px; }
 .cal-month { font-size: 0.8rem; font-weight: 800; color: var(--ink); }
 .cal-arrow {
   width: 24px; height: 24px; border: 1px solid var(--line); border-radius: var(--radius);
@@ -80,58 +95,9 @@ body {
 .cal-day.dimmed { opacity: 0.3; }
 .cal-day.today { box-shadow: inset 0 0 0 2px var(--accent); }
 .cal-day.empty { cursor: default; }
-.cal-footer {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 1px 0; font-size: 0.65rem; color: var(--muted);
-}
+.cal-footer { display: flex; align-items: center; justify-content: space-between; padding: 6px 1px 0; font-size: 0.65rem; color: var(--muted); }
 .cal-clear { border: 0; background: none; color: var(--danger); font-size: 0.65rem; font-weight: 700; cursor: pointer; }
 .cal-clear:hover { text-decoration: underline; }
-.product-dropdown, .filter-dropdown { position: relative; }
-.product-toggle-btn {
-  height: 34px; padding: 0 14px; border: 1px solid var(--line);
-  border-radius: var(--radius); background: var(--surface); color: var(--ink);
-  font-size: 0.78rem; font-weight: 700; cursor: pointer;
-}
-.product-toggle-btn:hover { background: var(--surface-2); }
-.product-toggle-btn.active { background: var(--brand); color: #fff; border-color: var(--brand); }
-.clear-filter-btn { background: var(--danger) !important; color: #fff !important; border-color: var(--danger) !important; padding: 0 10px !important; font-size: 0.72rem !important; height: 32px; }
-.clear-filter-btn:hover { opacity: 0.85 !important; background: var(--danger) !important; }
-.product-menu {
-  position: absolute; top: 100%; left: 0; z-index: 100; margin-top: 4px;
-  max-height: 200px; min-width: 180px; box-shadow: 0 8px 24px rgba(23,33,29,0.15);
-  display: none;
-}
-.product-menu.show { display: flex; }
-.product-menu .select-all { font-weight: 800; color: var(--brand); padding: 4px; border-radius: 4px; }
-.product-menu .select-all:hover { background: var(--surface-2); }
-.product-menu .menu-sep { width: 100%; border: 0; border-top: 1px solid var(--line); margin: 2px 0; }
-.period-btns { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-.period-btns button {
-  padding: 6px 14px; border: 0; background: var(--surface); color: var(--muted);
-  font-size: 0.74rem; font-weight: 700; cursor: pointer;
-}
-.period-btns button.active { background: var(--brand); color: #fff; }
-.period-btns button:not(.active):hover { background: var(--surface-2); }
-.filter-bar .spacer { flex: 1; min-width: 10px; }
-
-.period-checkboxes {
-  max-height: 140px; overflow-y: auto; border: 1px solid var(--line);
-  border-radius: var(--radius); background: var(--surface); padding: 6px 8px;
-  min-width: 160px; display: none; flex-direction: column; gap: 2px;
-}
-.period-checkboxes.show { display: flex; }
-.period-checkboxes label {
-  display: flex; align-items: center; gap: 6px; font-size: 0.75rem;
-  font-weight: 500; color: var(--ink); padding: 2px 4px; border-radius: 4px; cursor: pointer;
-}
-.period-checkboxes label:hover { background: var(--surface-2); }
-.period-checkboxes input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--brand); cursor: pointer; flex-shrink: 0; }
-.period-clear-btn {
-  border: 0; background: none; color: var(--danger); font-size: 0.7rem;
-  font-weight: 700; cursor: pointer; padding: 2px 4px; align-self: flex-end;
-}
-.period-clear-btn:hover { text-decoration: underline; }
-
 .status-cards {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 10px; margin-bottom: 20px;
@@ -148,8 +114,7 @@ body {
 .status-card.total .value { color: var(--ink); }
 .status-card.nw .value { color: #e65100; }
 .status-card.ok .value { color: #2e7d32; }
-
-.charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 20px; }
+.charts-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin-bottom: 20px; }
 .chart-card {
   padding: 18px; border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--surface); box-shadow: 0 4px 20px rgba(23,33,29,0.05);
@@ -157,11 +122,9 @@ body {
 .chart-card.full { grid-column: 1 / -1; }
 .chart-card h3 { margin: 0 0 14px; font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
 .chart-card .chart-wrap { position: relative; width: 100%; height: 300px; }
-.donut-card .chart-wrap { height: 420px; }
 .chart-card .chart-wrap canvas { width: 100% !important; height: 100% !important; }
 .empty-state { padding: 60px 20px; text-align: center; color: var(--muted); }
 .empty-state strong { display: block; color: var(--ink); font-size: 1.1rem; margin-bottom: 8px; }
-
 .loading-bar {
   width: 100%; height: 3px; background: var(--surface-2);
   border-radius: 2px; overflow: hidden; margin-bottom: 0;
@@ -175,16 +138,34 @@ body {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(350%); }
 }
-
 .no-data-overlay {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
   color: var(--muted); font-size: 0.85rem; font-weight: 600; pointer-events: none;
 }
-.auto-refresh-hint {
-  font-size: 0.65rem; color: var(--muted); text-align: right; padding: 4px 0 0;
+.auto-refresh-hint { font-size: 0.65rem; color: var(--muted); text-align: right; padding: 4px 0 0; }
+.race-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.race-header h3 { margin: 0; }
+.race-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.race-controls label { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+.race-controls input[type="date"] {
+  height: 32px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); color: var(--ink); font-size: 0.75rem;
 }
-
+.race-btn {
+  height: 32px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); color: var(--ink); font-size: 0.78rem; font-weight: 700; cursor: pointer;
+}
+.race-btn:hover { background: var(--surface-2); }
+.race-play-btn { background: #107C41 !important; color: #fff !important; border-color: #107C41 !important; }
+.race-play-btn:hover:not(:disabled) { background: #0d6937 !important; }
+.race-btn:disabled { opacity: 0.4; cursor: default; }
+.race-date { font-size: 0.9rem; font-weight: 800; color: var(--brand); text-align: center; padding: 6px 0 0; }
+.race-card .chart-wrap { height: 350px; }
+.race-canvas { width: 100% !important; height: 100% !important; }
+.race-card .product-toggle-btn { background: #107C41; color: #fff; border-color: #107C41; }
+.race-card .product-toggle-btn:hover { background: #0d6937; }
+.race-card .product-toggle-btn.active { background: var(--brand) !important; color: #fff; border-color: var(--brand) !important; }
 @media (max-width: 720px) {
   body { padding: 12px 12px 32px; }
   .charts-grid { grid-template-columns: 1fr; }
@@ -194,9 +175,11 @@ body {
   .brand-lockup h1 { font-size: 1.2rem; }
   .brand-logo { width: 40px; height: 40px; }
   .filter-scroll { flex-wrap: wrap; }
-  .filter-bar .spacer { display: none; }
   .chart-card .chart-wrap { height: 250px; }
+  .race-card .chart-wrap { height: 280px; }
   .day-calendar { width: 220px; }
+  .race-header { flex-direction: column; align-items: flex-start; }
+  .race-controls { gap: 6px; }
 }
 </style>
 </head>
@@ -205,14 +188,13 @@ body {
   <header class="topbar">
     <div class="brand-lockup">
       <img class="brand-logo" src="image/logo.JPG" alt="LATTE LAB" />
-      <div style="display:flex;align-items:center;gap:12px;"><h1>LATTE LAB</h1></div>
+      <h1>LATTE LAB</h1>
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="back-btn" id="refreshDashBtn" style="cursor:pointer;">Refresh</button>
       <a class="back-btn" href="index.html">Back to Orders</a>
     </div>
   </header>
-
   <div class="filter-bar">
     <div class="filter-scroll">
     <div class="filter-dropdown">
@@ -242,25 +224,36 @@ body {
     </div>
     <button class="product-toggle-btn clear-filter-btn" id="clearFilterBtn">Clear</button>
     </div>
-    <div class="spacer"></div>
   </div>
-
   <div class="status-cards" id="statusCards"></div>
   <div class="loading-bar" id="loadingBar" style="display:none;"></div>
-
   <div class="charts-grid">
-    <div class="chart-card full"><h3>Orders Over Time</h3><div class="chart-wrap"><canvas id="ordersChart"></canvas></div></div>
+    <div class="chart-card full"><h3>Orders</h3><div class="chart-wrap"><canvas id="ordersChart"></canvas></div></div>
     <div class="chart-card full"><h3>Top 5 Products</h3><div class="chart-wrap"><canvas id="topProductsChart"></canvas></div></div>
     <div class="chart-card full"><h3>Top 5 Products · Daily Trend</h3><div class="chart-wrap"><canvas id="productTrendChart"></canvas></div></div>
-    <div class="chart-card full donut-card"><h3>Product Distribution</h3><div class="chart-wrap"><canvas id="productDonutChart"></canvas></div></div>
+    <div class="chart-card full race-card">
+      <div class="race-header">
+        <h3>Product Race</h3>
+        <div class="race-controls">
+          <div class="filter-dropdown">
+            <button class="product-toggle-btn" id="raceProdToggle">Products ▾</button>
+            <div id="raceProdCheckboxes" class="period-checkboxes product-menu"></div>
+          </div>
+          <label>Start <input type="date" id="raceStartDate"></label>
+          <button id="racePlay" class="race-btn race-play-btn">▶ Play</button>
+          <button id="racePause" class="race-btn" disabled><span style="color:#FFBA01;">❚❚</span> Pause</button>
+          <button id="raceStop" class="race-btn" disabled><span style="color:#b33939;">■</span> Stop</button>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="raceChart" class="race-canvas"></canvas></div>
+      <div class="race-date" id="raceDateLabel"></div>
+    </div>
   </div>
   <div class="auto-refresh-hint" id="refreshHint"></div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="config.js"></script>
-<script>
+<script src="config.js"></script><script>
 (function() {
   "use strict";
   var CFG = window.LATTE_LAB_CONFIG || {};
@@ -269,17 +262,17 @@ body {
   var allItems = [];
   var weekSelected = new Set();
   var monthSelected = new Set();
+  var calSelected = new Set();
   var activeProductValues = new Set();
-  var calMonth, calYear, calSelected = new Set();
+  var calMonth, calYear;
 
-  // ---------- date helpers ----------
   function pad(n) { return String(n).padStart(2,'0'); }
   function dparse(s) { if(!s) return null; var d=new Date(s); return isNaN(d.getTime())?null:d; }
   function dayKey(d) { return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
   function weekKey(d) {
-    var dow=d.getDay(), off=d.getDate()-dow+(dow===0?-6:1);
-    var mon=new Date(d.getFullYear(),d.getMonth(),off);
-    var t=new Date(d.valueOf()), dn=(d.getDay()+6)%7;
+    var dn=(d.getDay()+6)%7;
+    var mon=new Date(d.getFullYear(),d.getMonth(),d.getDate()-dn);
+    var t=new Date(d.valueOf());
     t.setDate(t.getDate()-dn+3);
     var ft=new Date(t.getFullYear(),0,4);
     var wk=Math.round((t.getTime()-ft.getTime())/604800000)+1;
@@ -287,17 +280,6 @@ body {
   }
   function monthKey(d) { return d.getFullYear()+'-'+pad(d.getMonth()+1); }
 
-  // ---------- group items → orders ----------
-  function getOrders(items) {
-    var map={};
-    for(var i=0;i<items.length;i++){
-      var r=items[i], k=r.client_order_id;
-      if(!map[k]) map[k]={cid:k,created_at:r.created_at,status:r.status,fm:r.fulfillment_method};
-    }
-    return Object.values(map);
-  }
-
-  // ---------- filter ----------
   function matchPeriod(r) {
     var d=dparse(r.created_at); if(!d) return false;
     if(calSelected.size>0 && !calSelected.has(dayKey(d))) return false;
@@ -323,7 +305,7 @@ body {
     }
     var sorted=Object.keys(keys).sort().reverse();
     var allChecked=sorted.every(function(v){return selSet.has(v);});
-    var h='<label class="select-all"><input type="checkbox" class="cb-sa"> Select All</label>';
+    var h='<label class="select-all"><input type="checkbox" class="cb-sa"'+ (allChecked&&sorted.length>0?' checked':'') +'> Select All</label>';
     h+='<hr class="menu-sep">';
     for(var j=0;j<sorted.length;j++){
       var v=sorted[j], lbl;
@@ -333,9 +315,6 @@ body {
       h+='<label><input type="checkbox" class="cb-item" value="'+v+'"'+ck+'> '+lbl+'</label>';
     }
     box.innerHTML=h;
-    // set select-all state
-    var sa=box.querySelector('.cb-sa');
-    if(sa) sa.checked=allChecked&&sorted.length>0;
   }
 
   function syncCheckboxSet(elId, selSet) {
@@ -345,42 +324,43 @@ body {
   }
 
   function clearAllFilters() {
-     calSelected.clear(); weekSelected.clear(); monthSelected.clear();
-     activeProductValues.clear();
-     var cal=document.getElementById('dayCalendar');
-     cal.style.display='none'; document.getElementById('dayToggle').classList.remove('active');
-     document.getElementById('weekCheckboxes').classList.remove('show'); document.getElementById('weekToggle').classList.remove('active');
-     document.getElementById('monthCheckboxes').classList.remove('show'); document.getElementById('monthToggle').classList.remove('active');
-     // uncheck all product checkboxes
-     var pCbs=document.querySelectorAll('#productCheckboxes input.product-cb');
-     for(var i=0;i<pCbs.length;i++) pCbs[i].checked=false;
-     var pSa=document.querySelector('#productCheckboxes input.select-all-cb');
-     if(pSa) pSa.checked=false;
-     activeProductValues.clear();
-     refreshAll();
-   }
+    calSelected.clear(); weekSelected.clear(); monthSelected.clear();
+    activeProductValues.clear();
+    var cal=document.getElementById('dayCalendar');
+    cal.style.display='none'; document.getElementById('dayToggle').classList.remove('active');
+    document.getElementById('weekCheckboxes').classList.remove('show'); document.getElementById('weekToggle').classList.remove('active');
+    document.getElementById('monthCheckboxes').classList.remove('show'); document.getElementById('monthToggle').classList.remove('active');
+    var pCbs=document.querySelectorAll('#productCheckboxes input.product-cb');
+    for(var i=0;i<pCbs.length;i++) pCbs[i].checked=false;
+    var pSa=document.querySelector('#productCheckboxes input.select-all-cb');
+    if(pSa) pSa.checked=false;
+    activeProductValues.clear();
+    refreshAll();
+  }
 
-  // ---------- status cards ----------
   function renderCards() {
-    var items=getFilteredItems(), orders=getOrders(items);
-    var nw=0, ok=0;
-    for(var i=0;i<orders.length;i++){
-      if(orders[i].status==='new') nw++;
-      else if(orders[i].status==='completed') ok++;
-    }
-    var aOrders=getOrders(allItems), now=new Date();
-    var td=0, wk=0, mo=0;
+    var now=new Date();
     var tk=dayKey(now), wkK=weekKey(now), mk=monthKey(now);
-    for(var i=0;i<aOrders.length;i++){
-      var d=dparse(aOrders[i].created_at); if(!d) continue;
-      if(dayKey(d)===tk) td++;
-      if(weekKey(d)===wkK) wk++;
-      if(monthKey(d)===mk) mo++;
+    var td=0, wk=0, mo=0;
+    for(var i=0;i<allItems.length;i++){
+      var d=dparse(allItems[i].created_at); if(!d) continue;
+      var q=Number(allItems[i].quantity)||0;
+      if(dayKey(d)===tk) td+=q;
+      if(weekKey(d)===wkK) wk+=q;
+      if(monthKey(d)===mk) mo+=q;
+    }
+    var items=getFilteredItems();
+    var total=0, nw=0, ok=0;
+    for(var i=0;i<items.length;i++){
+      var q=Number(items[i].quantity)||0;
+      total+=q;
+      if(items[i].status==='new') nw+=q;
+      else if(items[i].status==='completed') ok+=q;
     }
     var html='';
     var cards=[
       {l:'Today',v:td,c:'today'},{l:'This Week',v:wk,c:'week'},{l:'This Month',v:mo,c:'month'},
-      {l:'Total',v:aOrders.length,c:'total'},{l:'New',v:nw,c:'nw'},{l:'Completed',v:ok,c:'ok'}
+      {l:'Total',v:total,c:'total'},{l:'New',v:nw,c:'nw'},{l:'Completed',v:ok,c:'ok'}
     ];
     for(var i=0;i<cards.length;i++){
       html+='<div class="status-card '+cards[i].c+'"><div class="label">'+cards[i].l+'</div><div class="value">'+cards[i].v+'</div></div>';
@@ -395,7 +375,7 @@ body {
     for(var i=0;i<allItems.length;i++) names[allItems[i].name]=true;
     var ks=Object.keys(names).sort();
     var allChecked=prev.length===ks.length;
-    var h='<label class="select-all"><input type="checkbox" class="select-all-cb"'+ (allChecked?' checked':'') +'> Select All</label><hr class="menu-sep">';
+    var h='<label class="select-all"><input type="checkbox" class="select-all-cb"'+ (allChecked&&ks.length>0?' checked':'') +'> Select All</label><hr class="menu-sep">';
     for(var j=0;j<ks.length;j++){
       var ck=prev.indexOf(ks[j])>=0?' checked':'';
       h+='<label><input type="checkbox" class="product-cb" value="'+ks[j]+'"'+ck+'> '+ks[j]+'</label>';
@@ -410,7 +390,6 @@ body {
     for(var i=0;i<cbs.length;i++){if(cbs[i].checked) activeProductValues.add(cbs[i].value);}
   }
 
-  // ---------- calendar ----------
   var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
   function getDataDays() {
@@ -428,12 +407,10 @@ body {
     var hasOtherFilter=weekSelected.size>0||monthSelected.size>0;
     var label=document.getElementById('calMonthLabel');
     label.textContent=MONTHS[calMonth]+' '+calYear;
-
     var grid=document.getElementById('calGrid');
     var first=new Date(calYear,calMonth,1);
     var startDow=(first.getDay()+6)%7;
     var lastDate=new Date(calYear,calMonth+1,0).getDate();
-
     var h='';
     for(var i=0;i<startDow;i++) h+='<span class="cal-day empty"></span>';
     for(var day=1;day<=lastDate;day++){
@@ -443,7 +420,6 @@ body {
       if(dataDays.has(key)) cls.push('has-data');
       if(calSelected.has(key)) cls.push('selected');
       if(key===todayStr) cls.push('today');
-      // dim if other filters active and this date doesn't match
       if(hasOtherFilter){
         var ok=true;
         if(weekSelected.size>0&&!weekSelected.has(weekKey(d))) ok=false;
@@ -453,7 +429,6 @@ body {
       h+='<span class="'+cls.join(' ')+'" data-date="'+key+'">'+day+'</span>';
     }
     grid.innerHTML=h;
-
     var calCount=document.getElementById('calCount');
     var total=weekSelected.size+monthSelected.size+calSelected.size;
     calCount.textContent=calSelected.size+' selected'+(total>calSelected.size?' (filtered)':'');
@@ -466,7 +441,6 @@ body {
     refreshAll();
   }
 
-  // ---------- data label plugin ----------
   function barLabelPlugin() {
     return {
       id:'barLabel',
@@ -522,56 +496,6 @@ body {
     };
   }
 
-  function donutLabelPlugin() {
-    return {
-      id:'donutLabel',
-      afterDraw:function(chart){
-        var meta=chart.getDatasetMeta(0);
-        if(!meta||!meta.data||!meta.data.length) return;
-        var ds=chart.data.datasets[0], total=0;
-        for(var i=0;i<ds.data.length;i++) total+=ds.data[i]||0;
-        if(!total) return;
-        var ctx=chart.ctx;
-        for(var i=0;i<meta.data.length;i++){
-          var arc=meta.data[i], v=ds.data[i], lbl=chart.data.labels[i];
-          if(!v||!lbl) continue;
-          var pct=Math.round(v/total*100);
-          // value inside arc
-          var angle=(arc.startAngle+arc.endAngle)/2;
-          var midR=arc.outerRadius*0.6;
-          var mx=arc.x+Math.cos(angle)*midR, my=arc.y+Math.sin(angle)*midR;
-          ctx.fillStyle='#fff'; ctx.font='bold 12px Inter,sans-serif';
-          ctx.textAlign='center'; ctx.textBaseline='middle';
-          ctx.fillText(v, mx, my);
-          // line + label outside (stagger distances to avoid overlap)
-          if(pct<3) continue;
-          var stagger=(i%3)*18; // offset even/odd for spacing
-          var outerX=arc.x+Math.cos(angle)*arc.outerRadius;
-          var outerY=arc.y+Math.sin(angle)*arc.outerRadius;
-          var midX=arc.x+Math.cos(angle)*(arc.outerRadius+12+stagger);
-          var midY=arc.y+Math.sin(angle)*(arc.outerRadius+12+stagger);
-          var textX=arc.x+Math.cos(angle)*(arc.outerRadius+22+stagger);
-          var textY=arc.y+Math.sin(angle)*(arc.outerRadius+22+stagger);
-          // line
-          ctx.beginPath();
-          ctx.moveTo(outerX, outerY);
-          ctx.lineTo(midX, midY);
-          ctx.lineTo(textX, textY);
-          ctx.strokeStyle='rgba(23,33,29,0.25)';
-          ctx.lineWidth=1;
-          ctx.stroke();
-          // label
-          ctx.fillStyle='#17211d'; ctx.font='11px Inter,sans-serif';
-          var ha=textX>arc.x?'left':'right';
-          ctx.textAlign=ha; ctx.textBaseline='middle';
-          if(ha==='right') textX+=5; else textX-=5;
-          ctx.fillText(lbl+' ('+pct+'%)', textX, textY);
-        }
-      }
-    };
-  }
-
-  // ---------- legend: multi-select with single-click hide-others ----------
   function legendMultiSelect(e, legendItem, legend) {
     if(!legendItem) return;
     var chart=legend.chart;
@@ -596,25 +520,12 @@ body {
     chart.update();
   }
 
-  function legendSingleselect(e, legendItem, legend) {
-    if(!legendItem) return;
-    var chart=legend.chart;
-    var idx=legendItem.index!==undefined?legendItem.index:0;
-    var visCount=0;
-    for(var i=0;i<chart.data.labels.length;i++){if(chart.getDataVisibility(i)) visCount++;}
-    if(visCount===1&&chart.getDataVisibility(idx)){
-      for(var i=0;i<chart.data.labels.length;i++) chart.setDataVisibility(i, true);
-    }else{
-      for(var i=0;i<chart.data.labels.length;i++) chart.setDataVisibility(i, i===idx);
-    }
-    chart.update();
-  }
   function chartOrders() {
     if(charts.orders) charts.orders.destroy();
-    var orders=getOrders(getFilteredItems()), map={};
-    for(var i=0;i<orders.length;i++){
-      var d=dparse(orders[i].created_at); if(!d) continue;
-      var k=dayKey(d); map[k]=(map[k]||0)+1;
+    var items=getFilteredItems(), map={};
+    for(var i=0;i<items.length;i++){
+      var d=dparse(items[i].created_at); if(!d) continue;
+      var k=dayKey(d); map[k]=(map[k]||0)+(Number(items[i].quantity)||0);
     }
     var keys=Object.keys(map).sort();
     var labels=[], data=[];
@@ -622,10 +533,11 @@ body {
     var ctx=document.getElementById('ordersChart').getContext('2d');
     hideNoData('ordersChart');
     if(!data.length){showNoData('ordersChart');if(charts.orders){charts.orders.destroy();charts.orders=null;}return;}
+    var maxVal=Math.max.apply(null,data);
     charts.orders=new Chart(ctx,{
       type:'bar',
-      data:{labels:labels,datasets:[{label:'Orders',data:data,backgroundColor:'rgba(15,92,77,0.7)',borderColor:'#0f5c4d',borderWidth:1,borderRadius:4}]},
-      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:24}},plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}},
+      data:{labels:labels,datasets:[{label:'Qty',data:data,backgroundColor:'rgba(16,124,65,0.7)',borderColor:'#107C41',borderWidth:1,borderRadius:4}]},
+      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:24}},plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:maxVal+1}}},
       plugins:[barLabelPlugin()]
     });
   }
@@ -637,14 +549,16 @@ body {
     var ents=Object.entries(map).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
     var labels=[], data=[];
     for(var j=0;j<ents.length;j++){labels.push(ents[j][0]);data.push(ents[j][1]);}
-    var colors=['rgba(15,92,77,0.85)','rgba(30,100,85,0.78)','rgba(50,120,100,0.7)','rgba(80,140,115,0.62)','rgba(120,170,140,0.55)'];
+    var colors=['#F34F1C','#7FBC00','#FFBA01','#01A6F0','#747474'];
+    var bg=colors.slice(0,data.length).map(function(c){return c+'88';});
     var ctx=document.getElementById('topProductsChart').getContext('2d');
     hideNoData('topProductsChart');
     if(!data.length){showNoData('topProductsChart');if(charts.top5){charts.top5.destroy();charts.top5=null;}return;}
+    var maxVal=Math.max.apply(null,data);
     charts.top5=new Chart(ctx,{
       type:'bar',
-      data:{labels:labels,datasets:[{label:'Qty',data:data,backgroundColor:colors.slice(0,data.length),borderWidth:1,borderRadius:4}]},
-      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{stepSize:1}}}},
+      data:{labels:labels,datasets:[{label:'Qty',data:data,backgroundColor:bg,borderColor:colors.slice(0,data.length),borderWidth:1,borderRadius:4}]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:maxVal+2}}},
       plugins:[hBarLabelPlugin()]
     });
   }
@@ -663,7 +577,7 @@ body {
       daily[r.name][dk]=(daily[r.name][dk]||0)+(Number(r.quantity)||0);
     }
     var dArr=Array.from(days).sort();
-    var colors=['#0f5c4d','#d86f45','#1a4b8c','#a8641a','#b33939'];
+    var colors=['#F34F1C','#7FBC00','#FFBA01','#01A6F0','#747474'];
     var datasets=[];
     for(var i=0;i<top5.length;i++){
       var nm=top5[i];
@@ -678,41 +592,312 @@ body {
     charts.trend=new Chart(ctx,{
       type:'line',
       data:{labels:dArr.map(function(d){return d.slice(5);}),datasets:datasets},
-      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20,right:60,bottom:10}},plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:16,font:{size:11}},onClick:legendMultiSelect}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}},
+      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20,right:70,bottom:10}},plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:16,font:{size:11}},onClick:legendMultiSelect}},scales:{y:{beginAtZero:true}}},
       plugins:[lineLabelPlugin()]
     });
   }
 
-  function chartDonut() {
-    if(charts.donut) charts.donut.destroy();
-    var items=getFilteredItems(), map={};
-    for(var i=0;i<items.length;i++){var n=items[i].name;map[n]=(map[n]||0)+(Number(items[i].quantity)||0);}
-    var ents=Object.entries(map).sort(function(a,b){return b[1]-a[1];});
-    var labels=[], data=[];
-    for(var j=0;j<ents.length;j++){labels.push(ents[j][0]);data.push(ents[j][1]);}
-    var pcolors=['#0f5c4d','#d86f45','#1a4b8c','#a8641a','#b33939','#2e7d32','#6a1b9a','#00695c','#bf360c','#4a148c'];
-    var bg=[];
-    for(var k=0;k<data.length;k++) bg.push(pcolors[k%pcolors.length]);
-    var ctx=document.getElementById('productDonutChart').getContext('2d');
-    hideNoData('productDonutChart');
-    if(!data.length){showNoData('productDonutChart');if(charts.donut){charts.donut.destroy();charts.donut=null;}return;}
-    charts.donut=new Chart(ctx,{
-      type:'doughnut',
-      data:{labels:labels,datasets:[{data:data,backgroundColor:bg,borderWidth:1,borderColor:'#fff'}]},
-      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:30,bottom:20}},plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,font:{size:10}},onClick:legendSingleselect},tooltip:{callbacks:{label:function(c){var t=0;for(var i=0;i<c.dataset.data.length;i++)t+=c.dataset.data[i]||0;var p=t?Math.round(c.raw/t*100):0;return c.label+': '+c.raw+' ('+p+'%)';}}}}},
-      plugins:[donutLabelPlugin()]
+  var raceData=[], raceIndex=0, raceTimer=null, racePlaying=false, raceSelectedProducts=new Set();
+  var RACE_COLORS=[
+    '#F34F1C','#7FBC00','#FFBA01','#01A6F0','#747474','#107C41',
+    '#FF6700','#FF9900','#D75F28','#E91B21','#ED1C24',
+    '#B12B28','#EA4335','#9F2B32','#FF4D00','#D9004C',
+    '#0F9D58','#3DDC84','#1DB954','#76B900','#7FBA00',
+    '#53AF40','#28C08A','#3B7A57','#005A3C','#00BF7E',
+    '#0052D9','#4285F4','#3b5998','#007AFF','#00A4EF',
+    '#0071C5','#1428A0','#1B4E9B','#0530AD','#002FA7',
+    '#12355B','#0057B8','#003153','#005C8A','#0A84F4',
+    '#F4B400','#FFB900','#E3AB36','#D6A94A','#957327',
+    '#FF00FF','#9B5CFF','#7B0099','#FF69B4','#B31414',
+     '#900020','#FF7A59','#81D8D0','#38D9FF','#00F0FF',
+     '#8C8C8C','#333333','#070B1A','#A67C52','#778899',
+     '#DBDEB8'
+  ];
+
+  function buildRaceData() {
+    var startStr=document.getElementById('raceStartDate').value;
+    var startD=startStr?dparse(startStr+'T00:00:00'):null;
+    var allDaysSet=new Set();
+    for(var i=0;i<allItems.length;i++){
+      var r=allItems[i], d=dparse(r.created_at); if(!d) continue;
+      if(raceSelectedProducts.size>0&&!raceSelectedProducts.has(r.name)) continue;
+      if(startD&&d<startD) continue;
+      allDaysSet.add(dayKey(d));
+    }
+    var sortedDays=Array.from(allDaysSet).sort();
+    var prodSet=new Set();
+    for(var i=0;i<allItems.length;i++){
+      var r=allItems[i], d=dparse(r.created_at); if(!d) continue;
+      if(raceSelectedProducts.size>0&&!raceSelectedProducts.has(r.name)) continue;
+      if(startD&&d<startD) continue;
+      prodSet.add(r.name);
+    }
+    var acc={};
+    var result=[];
+    for(var di=0;di<sortedDays.length;di++){
+      var dk=sortedDays[di];
+      for(var i=0;i<allItems.length;i++){
+        var r=allItems[i], d=dparse(r.created_at); if(!d) continue;
+        if(dayKey(d)!==dk) continue;
+        if(raceSelectedProducts.size>0&&!raceSelectedProducts.has(r.name)) continue;
+        if(startD&&d<startD) continue;
+        acc[r.name]=(acc[r.name]||0)+(Number(r.quantity)||0);
+      }
+      var leaders=Object.keys(acc).filter(function(p){return acc[p];}).map(function(p){
+        return {name:p,value:acc[p]};
+      }).sort(function(a,b){return b.value-a.value;});
+      result.push({date:dk,leaders:leaders});
+    }
+    raceData=result;
+  }
+
+  function initRaceChart() {
+    // custom canvas – set size from container
+    var wrap=document.getElementById('raceChart').parentNode;
+    var canvas=document.getElementById('raceChart');
+    canvas.style.width='100%'; canvas.style.height='100%';
+    canvas.width=wrap.clientWidth; canvas.height=wrap.clientHeight;
+    raceCanvas=canvas; raceCtx=canvas.getContext('2d');
+    installRaceResize();
+  }
+
+  var raceBars=[]; // [{name,value,color,y,targetY,w,targetW,alpha}, ...]
+  var raceCanvas, raceCtx;
+  var raceAnimId=null;
+  var raceResizeObs=null;
+
+  function installRaceResize() {
+    if(raceResizeObs) raceResizeObs.disconnect();
+    var wrap=document.getElementById('raceChart').parentNode;
+    raceResizeObs=new ResizeObserver(function(){
+      var c=document.getElementById('raceChart');
+      if(c.width!==wrap.clientWidth||c.height!==wrap.clientHeight){
+        c.width=wrap.clientWidth; c.height=wrap.clientHeight;
+        raceCanvas=c; raceCtx=c.getContext('2d');
+        if(raceBars.length) drawRaceBars();
+      }
     });
+    raceResizeObs.observe(wrap);
+  }
+
+  function ensureRaceCtx(){
+    if(!raceCtx){
+      raceCanvas=document.getElementById('raceChart');
+      raceCtx=raceCanvas.getContext('2d');
+    }
+  }
+
+  function drawRaceBars(){
+    ensureRaceCtx();
+    var W=raceCanvas.width, H=raceCanvas.height;
+    if(!W||!H) return;
+    raceCtx.clearRect(0,0,W,H);
+    var n=10;
+    var gap=2;
+    var slotH=(H-gap*(n-1))/n;
+    var rankW=26; // width for rank numbers
+    var maxW=0;
+    for(var i=0;i<raceBars.length;i++){if(raceBars[i].targetW>maxW) maxW=raceBars[i].targetW;}
+    if(!maxW) maxW=1;
+    var scale=(W-rankW-60)/maxW;
+    for(var i=0;i<raceBars.length;i++){
+      var b=raceBars[i];
+      var barH=slotH-2;
+      var bw=b.w*scale;
+      var y=b.y*(slotH+gap)/slotH;
+      raceCtx.globalAlpha=b.alpha||1;
+      // rank number on the left
+      raceCtx.fillStyle='#9aa';
+      raceCtx.font='bold 12px Inter,sans-serif';
+      raceCtx.textAlign='right'; raceCtx.textBaseline='middle';
+      raceCtx.fillText(i+1,rankW-6,y+barH/2);
+      var x=rankW;
+      var c=b.color;
+      // 3D gradient bar
+      var grad=raceCtx.createLinearGradient(x,0,x+bw,0);
+      grad.addColorStop(0,c+'dd'); grad.addColorStop(0.7,c+'cc'); grad.addColorStop(1,c+'88');
+      raceCtx.fillStyle=grad;
+      roundRect(raceCtx,x,y,bw,barH,4);
+      raceCtx.fill();
+      // top highlight
+      var hgrad=raceCtx.createLinearGradient(x,y,x,y+barH*0.4);
+      hgrad.addColorStop(0,'rgba(255,255,255,0.25)'); hgrad.addColorStop(1,'rgba(255,255,255,0)');
+      raceCtx.fillStyle=hgrad;
+      roundRect(raceCtx,x,y,bw,barH,4);
+      raceCtx.fill();
+      // name (white)
+      raceCtx.fillStyle='#fff';
+      raceCtx.font='bold 11px Inter,sans-serif';
+      raceCtx.textAlign='left'; raceCtx.textBaseline='middle';
+      raceCtx.fillText(b.name,x+8,y+barH/2);
+      // value
+      raceCtx.fillStyle='#fff';
+      raceCtx.font='bold 11px Inter,sans-serif';
+      raceCtx.textAlign='right'; raceCtx.textBaseline='middle';
+      raceCtx.fillText(Math.round(b.value),x+bw-8,y+barH/2);
+    }
+    raceCtx.globalAlpha=1;
+  }
+
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+    ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.closePath();
+  }
+
+  function getProductColor(name){
+    var h=0;
+    for(var i=0;i<name.length;i++) h=((h<<5)-h)+name.charCodeAt(i);
+    return RACE_COLORS[Math.abs(h)%RACE_COLORS.length];
+  }
+
+  function syncRaceBars(target,prevMap){
+    ensureRaceCtx();
+    var H=raceCanvas.height||350;
+    var gap=2, n=10;
+    var slotH=(H-gap*(n-1))/n;
+    var newBars=[];
+    for(var i=0;i<target.length;i++){
+      var t=target[i];
+      var prev=prevMap?prevMap.get(t.name):null;
+      newBars.push({
+        name:t.name,
+        value:t.value,
+        color:RACE_COLORS[i%RACE_COLORS.length],
+        y:prev?prev.y:i*slotH,
+        targetY:i*slotH,
+        w:prev?prev.w:0,
+        targetW:t.value,
+        alpha:1
+      });
+    }
+    if(prevMap){
+      var keep=new Set(target.map(function(t){return t.name;}));
+      prevMap.forEach(function(p,name){
+        if(!keep.has(name)){
+          newBars.push({
+            name:name, value:p.value||0, color:p.color||'#999',
+            y:p.y, targetY:H+20, w:p.w||0, targetW:0, alpha:0
+          });
+        }
+      });
+    }
+    raceBars=newBars;
+  }
+
+  function animateRaceBars(){
+    var done=true;
+    for(var i=0;i<raceBars.length;i++){
+      var b=raceBars[i];
+      b.y+=0.12*(b.targetY-b.y);
+      b.w +=0.12*(b.targetW-b.w);
+      if(b.targetY>raceCanvas.height) b.alpha-=(1-b.alpha)*0.3+0.05;
+      if(Math.abs(b.targetY-b.y)>0.5||Math.abs(b.targetW-b.w)>0.5||(b.targetY>raceCanvas.height&&b.alpha>0.01)){
+        done=false;
+      }
+    }
+    // remove dead bars
+    raceBars=raceBars.filter(function(b){return !(b.targetY>raceCanvas.height&&b.alpha<0.02);});
+    drawRaceBars();
+    if(!done) raceAnimId=requestAnimationFrame(animateRaceBars);
+    else raceAnimId=null;
+  }
+
+  function applyRaceFrame(target) {
+    var prevMap=null;
+    if(raceBars.length){
+      prevMap=new Map();
+      for(var i=0;i<raceBars.length;i++){
+        prevMap.set(raceBars[i].name,{y:raceBars[i].y,w:raceBars[i].w,value:raceBars[i].value,color:raceBars[i].color});
+      }
+    }
+    syncRaceBars(target,prevMap);
+    if(raceAnimId) cancelAnimationFrame(raceAnimId);
+    animateRaceBars();
+  }
+
+  function raceStep() {
+    if(!racePlaying) return;
+    var frame=raceData[raceIndex];
+    applyRaceFrame(frame.leaders.slice(0,10));
+    document.getElementById('raceDateLabel').textContent=frame.date;
+    raceIndex++;
+    if(raceIndex>=raceData.length){raceStop();return;}
+    raceTimer=setTimeout(raceStep,900);
+  }
+
+  function racePlay() {
+    buildRaceData();
+    if(!raceData.length) return;
+    if(raceTimer) clearTimeout(raceTimer);
+    if(raceAnimId) cancelAnimationFrame(raceAnimId);
+    raceBars=[];
+    raceIndex=0;
+    racePlaying=true;
+    document.getElementById('racePlay').disabled=true;
+    document.getElementById('racePause').disabled=false;
+    document.getElementById('raceStop').disabled=false;
+    initRaceChart();
+    raceStep();
+  }
+
+  function racePause() {
+    racePlaying=false;
+    if(raceTimer) clearTimeout(raceTimer);
+    if(raceAnimId) cancelAnimationFrame(raceAnimId);
+    document.getElementById('racePlay').disabled=false;
+    document.getElementById('racePause').disabled=true;
+  }
+
+  function raceStop() {
+    racePlaying=false;
+    if(raceTimer) clearTimeout(raceTimer);
+    if(raceAnimId) cancelAnimationFrame(raceAnimId);
+    raceBars=[];
+    raceIndex=0;
+    raceCtx=null;
+    document.getElementById('racePlay').disabled=false;
+    document.getElementById('racePause').disabled=true;
+    document.getElementById('raceStop').disabled=true;
+    if(raceData.length){
+      initRaceChart();
+      raceBars=[];
+      applyRaceFrame(raceData[0].leaders.slice(0,10));
+      document.getElementById('raceDateLabel').textContent=raceData[0].date;
+    } else {document.getElementById('raceDateLabel').textContent='';ensureRaceCtx();raceCtx.clearRect(0,0,raceCanvas.width,raceCanvas.height);}
+  }
+
+  function populateRaceProducts() {
+    var names={};
+    for(var i=0;i<allItems.length;i++) names[allItems[i].name]=true;
+    var ks=Object.keys(names).sort();
+    var allChecked=raceSelectedProducts.size===0||ks.every(function(v){return raceSelectedProducts.has(v);});
+    var h='<label class="select-all"><input type="checkbox" class="cb-sa"'+ (allChecked&&ks.length>0?' checked':'') +'> Select All</label>';
+    h+='<hr class="menu-sep">';
+    for(var j=0;j<ks.length;j++){
+      var v=ks[j];
+      var ck=raceSelectedProducts.has(v)||raceSelectedProducts.size===0?' checked':'';
+      h+='<label><input type="checkbox" class="cb-item" value="'+v+'"'+ck+'> '+v+'</label>';
+    }
+    document.getElementById('raceProdCheckboxes').innerHTML=h;
+    syncRaceProducts();
+  }
+
+  function syncRaceProducts() {
+    raceSelectedProducts.clear();
+    var cbs=document.querySelectorAll('#raceProdCheckboxes input.cb-item');
+    for(var i=0;i<cbs.length;i++){if(cbs[i].checked) raceSelectedProducts.add(cbs[i].value);}
   }
 
   var refreshTimer = null;
   var lastRefresh = null;
 
-  function showLoading() {
-    document.getElementById('loadingBar').style.display = '';
-  }
-  function hideLoading() {
-    document.getElementById('loadingBar').style.display = 'none';
-  }
+  function showLoading() { document.getElementById('loadingBar').style.display = ''; }
+  function hideLoading() { document.getElementById('loadingBar').style.display = 'none'; }
   function updateRefreshHint() {
     if(!lastRefresh){document.getElementById('refreshHint').textContent='';return;}
     var ago=Math.round((Date.now()-lastRefresh.getTime())/1000);
@@ -735,10 +920,9 @@ body {
     try{chartOrders();}catch(e){console.error('orders',e);}
     try{chartTop5();}catch(e){console.error('top5',e);}
     try{chartTrend();}catch(e){console.error('trend',e);}
-    try{chartDonut();}catch(e){console.error('donut',e);}
+    try{raceStop();initRaceChart();}catch(e){console.error('race',e);}
   }
 
-  // ---------- fetch ----------
   async function fetchData() {
     if(!supabase){
       document.getElementById('statusCards').innerHTML='<div class="empty-state" style="grid-column:1/-1"><strong>Supabase not configured</strong><span>Check config.js</span></div>';
@@ -751,6 +935,7 @@ body {
       allItems=res.data||[];
       lastRefresh=new Date();
       populateProducts();
+      populateRaceProducts();
       refreshAll();
     }catch(e){
       console.error(e);
@@ -772,7 +957,6 @@ body {
     setInterval(function(){updateRefreshHint();},15000);
   }
 
-  // ---------- events ----------
   function closeAllDropdowns(except) {
     var menus=document.querySelectorAll('.product-menu.show, .cal-drop[style*="block"]');
     for(var i=0;i<menus.length;i++){
@@ -784,7 +968,6 @@ body {
     for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
   }
 
-  // Day toggle
   document.getElementById('dayToggle').addEventListener('click',function(e){
     e.stopPropagation();
     var cal=document.getElementById('dayCalendar');
@@ -793,12 +976,10 @@ body {
     if(!open){
       closeAllDropdowns(cal);
       if(!calYear){var now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();}
-      if(calSelected.size===0){var now=new Date();calSelected.add(dayKey(now));}
       renderCalendar();
     }
   });
 
-  // Week toggle
   document.getElementById('weekToggle').addEventListener('click',function(e){
     e.stopPropagation();
     var menu=document.getElementById('weekCheckboxes');
@@ -807,7 +988,6 @@ body {
     if(open){closeAllDropdowns(menu);populateCheckboxes('weekCheckboxes',weekSelected,weekKey);}
   });
 
-  // Month toggle
   document.getElementById('monthToggle').addEventListener('click',function(e){
     e.stopPropagation();
     var menu=document.getElementById('monthCheckboxes');
@@ -816,7 +996,6 @@ body {
     if(open){closeAllDropdowns(menu);populateCheckboxes('monthCheckboxes',monthSelected,monthKey);}
   });
 
-  // Week checkbox events
   document.getElementById('weekCheckboxes').addEventListener('change',function(e){
     if(e.target.classList.contains('cb-sa')){
       var cbs=document.querySelectorAll('#weekCheckboxes input.cb-item');
@@ -825,7 +1004,6 @@ body {
     if(e.target.type==='checkbox'){syncCheckboxSet('weekCheckboxes',weekSelected);refreshAll();}
   });
 
-  // Month checkbox events
   document.getElementById('monthCheckboxes').addEventListener('change',function(e){
     if(e.target.classList.contains('cb-sa')){
       var cbs=document.querySelectorAll('#monthCheckboxes input.cb-item');
@@ -833,7 +1011,7 @@ body {
     }
     if(e.target.type==='checkbox'){syncCheckboxSet('monthCheckboxes',monthSelected);refreshAll();}
   });
-  // calendar events
+
   document.getElementById('calGrid').addEventListener('click',function(e){
     var day=e.target.closest('.cal-day');
     if(!day||day.classList.contains('empty')) return;
@@ -853,12 +1031,14 @@ body {
     e.stopPropagation();
     calSelected.clear(); renderCalendar(); refreshAll();
   });
+
   document.getElementById('productToggle').addEventListener('click',function(e){
     e.stopPropagation();
     var menu=document.getElementById('productCheckboxes');
     var open=menu.classList.toggle('show');
     this.classList.toggle('active',open);
   });
+
   document.getElementById('productCheckboxes').addEventListener('change',function(e){
     if(e.target.classList.contains('select-all-cb')){
       var checked=e.target.checked;
@@ -867,9 +1047,31 @@ body {
     }
     if(e.target.type==='checkbox'){readProductChecked();refreshAll();}
   });
+
   document.getElementById('clearFilterBtn').addEventListener('click',function(e){
     e.stopPropagation(); clearAllFilters();
   });
+
+  document.getElementById('raceProdToggle').addEventListener('click',function(e){
+    e.stopPropagation();
+    var menu=document.getElementById('raceProdCheckboxes');
+    var open=menu.classList.toggle('show');
+    this.classList.toggle('active',open);
+  });
+
+  document.getElementById('raceProdCheckboxes').addEventListener('change',function(e){
+    if(e.target.classList.contains('cb-sa')){
+      var checked=e.target.checked;
+      var cbs=document.querySelectorAll('#raceProdCheckboxes input.cb-item');
+      for(var i=0;i<cbs.length;i++) cbs[i].checked=checked;
+    }
+    if(e.target.type==='checkbox') syncRaceProducts();
+  });
+
+  document.getElementById('racePlay').addEventListener('click',function(e){e.stopPropagation();racePlay();});
+  document.getElementById('racePause').addEventListener('click',function(e){e.stopPropagation();racePause();});
+  document.getElementById('raceStop').addEventListener('click',function(e){e.stopPropagation();raceStop();});
+
   document.addEventListener('click',function(e){
     var inDropdown=e.target.closest('.filter-dropdown');
     if(!inDropdown){
@@ -882,7 +1084,6 @@ body {
     }
   });
 
-  // ---------- start ----------
   document.getElementById('refreshDashBtn').addEventListener('click',function(){fetchData();});
   if(initSupabase()){fetchData();startAutoRefresh();}
   else document.getElementById('statusCards').innerHTML='<div class="empty-state" style="grid-column:1/-1"><strong>Supabase not configured</strong><span>Check config.js</span></div>';
