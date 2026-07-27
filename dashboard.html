@@ -34,9 +34,9 @@ body {
 .back-btn:hover { background: var(--surface-2); }
 
 .filter-bar {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 8px;
   margin-bottom: 16px; padding: 10px 14px; border: 1px solid var(--line);
-  border-radius: var(--radius); background: var(--surface);
+  border-radius: var(--radius); background: var(--surface); overflow-x: auto;
 }
 .filter-bar label { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
 .filter-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
@@ -48,6 +48,9 @@ body {
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--surface); padding: 8px; width: 240px;
   box-shadow: 0 6px 18px rgba(23,33,29,0.1);
+}
+.cal-drop {
+  position: absolute; top: 100%; left: 0; z-index: 10; margin-top: 4px;
 }
 .cal-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -80,7 +83,7 @@ body {
 }
 .cal-clear { border: 0; background: none; color: var(--danger); font-size: 0.65rem; font-weight: 700; cursor: pointer; }
 .cal-clear:hover { text-decoration: underline; }
-.product-dropdown { position: relative; }
+.product-dropdown, .filter-dropdown { position: relative; }
 .product-toggle-btn {
   height: 34px; padding: 0 14px; border: 1px solid var(--line);
   border-radius: var(--radius); background: var(--surface); color: var(--ink);
@@ -88,6 +91,8 @@ body {
 }
 .product-toggle-btn:hover { background: var(--surface-2); }
 .product-toggle-btn.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+.clear-filter-btn { background: var(--danger) !important; color: #fff !important; border-color: var(--danger) !important; padding: 0 10px !important; font-size: 0.72rem !important; height: 32px; }
+.clear-filter-btn:hover { opacity: 0.85 !important; background: var(--danger) !important; }
 .product-menu {
   position: absolute; top: 100%; left: 0; z-index: 10; margin-top: 4px;
   max-height: 200px; min-width: 180px; box-shadow: 0 8px 24px rgba(23,33,29,0.15);
@@ -118,6 +123,11 @@ body {
 }
 .period-checkboxes label:hover { background: var(--surface-2); }
 .period-checkboxes input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--brand); cursor: pointer; flex-shrink: 0; }
+.period-clear-btn {
+  border: 0; background: none; color: var(--danger); font-size: 0.7rem;
+  font-weight: 700; cursor: pointer; padding: 2px 4px; align-self: flex-end;
+}
+.period-clear-btn:hover { text-decoration: underline; }
 
 .status-cards {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -192,34 +202,41 @@ body {
   <header class="topbar">
     <div class="brand-lockup">
       <img class="brand-logo" src="image/logo.JPG" alt="LATTE LAB" />
-      <div><p class="eyebrow">Admin · Dashboard</p><h1>LATTE LAB</h1></div>
+      <div style="display:flex;align-items:center;gap:12px;"><h1>LATTE LAB</h1></div>
     </div>
-    <a class="back-btn" href="index.html">Back to Orders</a>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="back-btn" id="refreshDashBtn" style="cursor:pointer;">Refresh</button>
+      <a class="back-btn" href="index.html">Back to Orders</a>
+    </div>
   </header>
 
   <div class="filter-bar">
-    <span class="filter-label">Filter</span>
-    <div class="period-btns" id="periodBtns">
-      <button data-period="all" class="active">All</button>
-      <button data-period="day">Day</button>
-      <button data-period="week">Week</button>
-      <button data-period="month">Month</button>
-    </div>
-    <div id="periodCheckboxes" class="period-checkboxes"></div>
-    <div id="dayCalendar" class="day-calendar" style="display:none;">
-      <div class="cal-header">
-        <button type="button" class="cal-arrow" id="calPrev">◀</button>
-        <span class="cal-month" id="calMonthLabel"></span>
-        <button type="button" class="cal-arrow" id="calNext">▶</button>
+    <div class="filter-dropdown">
+      <button class="product-toggle-btn" id="dayToggle">Day ▾</button>
+      <div id="dayCalendar" class="day-calendar cal-drop" style="display:none;">
+        <div class="cal-header">
+          <button type="button" class="cal-arrow" id="calPrev">◀</button>
+          <span class="cal-month" id="calMonthLabel"></span>
+          <button type="button" class="cal-arrow" id="calNext">▶</button>
+        </div>
+        <div class="cal-weekdays"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-footer"><span id="calCount">0 selected</span> · <button type="button" class="cal-clear" id="calClear">Clear</button></div>
       </div>
-      <div class="cal-weekdays"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
-      <div class="cal-grid" id="calGrid"></div>
-      <div class="cal-footer"><span id="calCount">0 selected</span> · <button type="button" class="cal-clear" id="calClear">Clear</button></div>
     </div>
-    <div class="product-dropdown">
-      <button id="productToggle" class="product-toggle-btn">Product ▾</button>
+    <div class="filter-dropdown">
+      <button class="product-toggle-btn" id="weekToggle">Week ▾</button>
+      <div id="weekCheckboxes" class="period-checkboxes product-menu"></div>
+    </div>
+    <div class="filter-dropdown">
+      <button class="product-toggle-btn" id="monthToggle">Month ▾</button>
+      <div id="monthCheckboxes" class="period-checkboxes product-menu"></div>
+    </div>
+    <div class="filter-dropdown">
+      <button class="product-toggle-btn" id="productToggle">Product ▾</button>
       <div id="productCheckboxes" class="period-checkboxes product-menu"></div>
     </div>
+    <button class="product-toggle-btn clear-filter-btn" id="clearFilterBtn">Clear</button>
     <div class="spacer"></div>
   </div>
 
@@ -245,7 +262,6 @@ body {
   var supabase = null;
   var charts = {};
   var allItems = [];
-  var activePeriod = 'all';
   var weekSelected = new Set();
   var monthSelected = new Set();
   var activeProductValues = new Set();
@@ -278,9 +294,7 @@ body {
 
   // ---------- filter ----------
   function matchPeriod(r) {
-    if(activePeriod==='all') return true;
     var d=dparse(r.created_at); if(!d) return false;
-    // all active filters must allow this row
     if(calSelected.size>0 && !calSelected.has(dayKey(d))) return false;
     if(weekSelected.size>0 && !weekSelected.has(weekKey(d))) return false;
     if(monthSelected.size>0 && !monthSelected.has(monthKey(d))) return false;
@@ -294,61 +308,52 @@ body {
     });
   }
 
-  function populateCheckboxes() {
-    var box=document.getElementById('periodCheckboxes');
+  function populateCheckboxes(elId, selSet, calcKey) {
+    var box=document.getElementById(elId);
     var keys={};
-    var prevChecked=activePeriod==='week'?weekSelected:monthSelected;
     for(var i=0;i<allItems.length;i++){
       var d=dparse(allItems[i].created_at); if(!d) continue;
-      var k;
-      if(activePeriod==='week') k=weekKey(d);
-      else if(activePeriod==='month') k=monthKey(d);
-      else continue;
+      var k=calcKey(d);
       keys[k]=true;
     }
     var sorted=Object.keys(keys).sort().reverse();
-    var h='';
+    var allChecked=sorted.every(function(v){return selSet.has(v);});
+    var h='<label class="select-all"><input type="checkbox" class="cb-sa"> Select All</label>';
+    h+='<hr class="menu-sep">';
     for(var j=0;j<sorted.length;j++){
       var v=sorted[j], lbl;
-      if(activePeriod==='week') lbl=v.replace('-W',' W');
+      if(calcKey===weekKey) lbl=v.replace('-W',' W');
       else lbl=v;
-      var ck=prevChecked.has(v)?' checked':'';
-      h+='<label><input type="checkbox" value="'+v+'"'+ck+'> '+lbl+'</label>';
+      var ck=selSet.has(v)?' checked':'';
+      h+='<label><input type="checkbox" class="cb-item" value="'+v+'"'+ck+'> '+lbl+'</label>';
     }
     box.innerHTML=h;
-    readChecked();
+    // set select-all state
+    var sa=box.querySelector('.cb-sa');
+    if(sa) sa.checked=allChecked&&sorted.length>0;
   }
 
-  function readChecked() {
-    if(activePeriod==='week') weekSelected.clear(); else monthSelected.clear();
-    var cbs=document.querySelectorAll('#periodCheckboxes input[type="checkbox"]');
-    for(var i=0;i<cbs.length;i++){
-      if(cbs[i].checked){
-        if(activePeriod==='week') weekSelected.add(cbs[i].value);
-        else monthSelected.add(cbs[i].value);
-      }
-    }
+  function syncCheckboxSet(elId, selSet) {
+    selSet.clear();
+    var cbs=document.querySelectorAll('#'+elId+' input.cb-item');
+    for(var i=0;i<cbs.length;i++){if(cbs[i].checked) selSet.add(cbs[i].value);}
   }
 
-  function switchPeriod(p) {
-    if(p===activePeriod) return;
-    activePeriod=p;
-    var btns=document.querySelectorAll('#periodBtns button');
-    for(var b=0;b<btns.length;b++) btns[b].classList.toggle('active',btns[b].dataset.period===p);
-    var cb=document.getElementById('periodCheckboxes');
-    var cal=document.getElementById('dayCalendar');
-    if(p==='all'){
-      cb.classList.remove('show'); cal.style.display='none';
-      calSelected.clear(); weekSelected.clear(); monthSelected.clear();
-    }else if(p==='day'){
-      cb.classList.remove('show'); cal.style.display='';
-      if(!calYear){var now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();}
-      renderCalendar();
-    }else{
-      cal.style.display='none'; cb.classList.add('show'); populateCheckboxes();
-    }
-    refreshAll();
-  }
+  function clearAllFilters() {
+     calSelected.clear(); weekSelected.clear(); monthSelected.clear();
+     activeProductValues.clear();
+     var cal=document.getElementById('dayCalendar');
+     cal.style.display='none'; document.getElementById('dayToggle').classList.remove('active');
+     document.getElementById('weekCheckboxes').classList.remove('show'); document.getElementById('weekToggle').classList.remove('active');
+     document.getElementById('monthCheckboxes').classList.remove('show'); document.getElementById('monthToggle').classList.remove('active');
+     // uncheck all product checkboxes
+     var pCbs=document.querySelectorAll('#productCheckboxes input.product-cb');
+     for(var i=0;i<pCbs.length;i++) pCbs[i].checked=false;
+     var pSa=document.querySelector('#productCheckboxes input.select-all-cb');
+     if(pSa) pSa.checked=false;
+     activeProductValues.clear();
+     refreshAll();
+   }
 
   // ---------- status cards ----------
   function renderCards() {
@@ -719,8 +724,9 @@ body {
     var old=document.getElementById(canvasId).parentNode.querySelector('.no-data-overlay');
     if(old) old.remove();
   }
+
+  function refreshAll() {
     try{renderCards();}catch(e){console.error('cards',e);}
-    populateProducts();
     try{chartOrders();}catch(e){console.error('orders',e);}
     try{chartTop5();}catch(e){console.error('top5',e);}
     try{chartTrend();}catch(e){console.error('trend',e);}
@@ -739,7 +745,7 @@ body {
       if(res.error) throw res.error;
       allItems=res.data||[];
       lastRefresh=new Date();
-      if(activePeriod!=='all') populateCheckboxes();
+      populateProducts();
       refreshAll();
     }catch(e){
       console.error(e);
@@ -762,12 +768,65 @@ body {
   }
 
   // ---------- events ----------
-  document.getElementById('periodBtns').addEventListener('click',function(e){
-    if(e.target.tagName!=='BUTTON') return;
-    switchPeriod(e.target.dataset.period);
+  function closeAllDropdowns(except) {
+    var menus=document.querySelectorAll('.product-menu.show, .cal-drop[style*="block"]');
+    for(var i=0;i<menus.length;i++){
+      if(except&&menus[i]===except) continue;
+      menus[i].classList.remove('show');
+      menus[i].style.display='none';
+    }
+    var btns=document.querySelectorAll('.product-toggle-btn.active');
+    for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
+  }
+
+  // Day toggle
+  document.getElementById('dayToggle').addEventListener('click',function(e){
+    e.stopPropagation();
+    var cal=document.getElementById('dayCalendar');
+    var open=cal.style.display===''; cal.style.display=open?'none':'';
+    this.classList.toggle('active',!open);
+    if(!open){
+      closeAllDropdowns(cal);
+      if(!calYear){var now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();}
+      if(calSelected.size===0){var now=new Date();calSelected.add(dayKey(now));}
+      renderCalendar();
+    }
   });
-  document.getElementById('periodCheckboxes').addEventListener('change',function(e){
-    if(e.target.type==='checkbox'){readChecked();refreshAll();}
+
+  // Week toggle
+  document.getElementById('weekToggle').addEventListener('click',function(e){
+    e.stopPropagation();
+    var menu=document.getElementById('weekCheckboxes');
+    var open=menu.classList.toggle('show');
+    this.classList.toggle('active',open);
+    if(open){closeAllDropdowns(menu);populateCheckboxes('weekCheckboxes',weekSelected,weekKey);}
+  });
+
+  // Month toggle
+  document.getElementById('monthToggle').addEventListener('click',function(e){
+    e.stopPropagation();
+    var menu=document.getElementById('monthCheckboxes');
+    var open=menu.classList.toggle('show');
+    this.classList.toggle('active',open);
+    if(open){closeAllDropdowns(menu);populateCheckboxes('monthCheckboxes',monthSelected,monthKey);}
+  });
+
+  // Week checkbox events
+  document.getElementById('weekCheckboxes').addEventListener('change',function(e){
+    if(e.target.classList.contains('cb-sa')){
+      var cbs=document.querySelectorAll('#weekCheckboxes input.cb-item');
+      for(var i=0;i<cbs.length;i++) cbs[i].checked=e.target.checked;
+    }
+    if(e.target.type==='checkbox'){syncCheckboxSet('weekCheckboxes',weekSelected);refreshAll();}
+  });
+
+  // Month checkbox events
+  document.getElementById('monthCheckboxes').addEventListener('change',function(e){
+    if(e.target.classList.contains('cb-sa')){
+      var cbs=document.querySelectorAll('#monthCheckboxes input.cb-item');
+      for(var i=0;i<cbs.length;i++) cbs[i].checked=e.target.checked;
+    }
+    if(e.target.type==='checkbox'){syncCheckboxSet('monthCheckboxes',monthSelected);refreshAll();}
   });
   // calendar events
   document.getElementById('calGrid').addEventListener('click',function(e){
@@ -803,15 +862,23 @@ body {
     }
     if(e.target.type==='checkbox'){readProductChecked();refreshAll();}
   });
+  document.getElementById('clearFilterBtn').addEventListener('click',function(e){
+    e.stopPropagation(); clearAllFilters();
+  });
   document.addEventListener('click',function(e){
-    var dd=document.querySelector('.product-dropdown');
-    if(dd&&!dd.contains(e.target)){
-      document.getElementById('productCheckboxes').classList.remove('show');
-      document.getElementById('productToggle').classList.remove('active');
+    var inDropdown=e.target.closest('.filter-dropdown');
+    if(!inDropdown){
+      var menus=document.querySelectorAll('.product-menu.show');
+      for(var i=0;i<menus.length;i++) menus[i].classList.remove('show');
+      var cal=document.getElementById('dayCalendar');
+      if(cal) cal.style.display='none';
+      var btns=document.querySelectorAll('.product-toggle-btn.active');
+      for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
     }
   });
 
   // ---------- start ----------
+  document.getElementById('refreshDashBtn').addEventListener('click',function(){fetchData();});
   if(initSupabase()){fetchData();startAutoRefresh();}
   else document.getElementById('statusCards').innerHTML='<div class="empty-state" style="grid-column:1/-1"><strong>Supabase not configured</strong><span>Check config.js</span></div>';
 })();
