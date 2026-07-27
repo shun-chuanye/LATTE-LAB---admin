@@ -617,31 +617,40 @@ body {
   function buildRaceData() {
     var startStr=document.getElementById('raceStartDate').value;
     var startD=startStr?dparse(startStr+'T00:00:00'):null;
-    var allDaysSet=new Set();
-    for(var i=0;i<allItems.length;i++){
-      var r=allItems[i], d=dparse(r.created_at); if(!d) continue;
-      if(raceSelectedProducts.size>0&&!raceSelectedProducts.has(r.name)) continue;
-      if(startD&&d<startD) continue;
-      allDaysSet.add(dayKey(d));
+    var endD=new Date(); // today
+    endD.setHours(23,59,59,999);
+    // build all days from start to today
+    var allDays=[];
+    if(startD){
+      var cursor=new Date(startD.getTime());
+      while(cursor<=endD){
+        allDays.push(dayKey(cursor));
+        cursor.setDate(cursor.getDate()+1);
+      }
     }
-    var sortedDays=Array.from(allDaysSet).sort();
+    // group data by day + product
+    var daily={};
     var prodSet=new Set();
     for(var i=0;i<allItems.length;i++){
       var r=allItems[i], d=dparse(r.created_at); if(!d) continue;
       if(raceSelectedProducts.size>0&&!raceSelectedProducts.has(r.name)) continue;
       if(startD&&d<startD) continue;
+      if(d>endD) continue;
+      var dk=dayKey(d);
+      if(!daily[dk]) daily[dk]={};
+      daily[dk][r.name]=(daily[dk][r.name]||0)+(Number(r.quantity)||0);
       prodSet.add(r.name);
+    }
+    // if no start date, use days with data
+    if(!allDays.length){
+      allDays=Object.keys(daily).sort();
     }
     var acc={};
     var result=[];
-    for(var di=0;di<sortedDays.length;di++){
-      var dk=sortedDays[di];
-      for(var i=0;i<allItems.length;i++){
-        var r=allItems[i], d=dparse(r.created_at); if(!d) continue;
-        if(dayKey(d)!==dk) continue;
-        if(raceSelectedProducts.size>0&&!raceSelectedProducts.has(r.name)) continue;
-        if(startD&&d<startD) continue;
-        acc[r.name]=(acc[r.name]||0)+(Number(r.quantity)||0);
+    for(var di=0;di<allDays.length;di++){
+      var dk=allDays[di];
+      if(daily[dk]){
+        for(var n in daily[dk]) acc[n]=(acc[n]||0)+daily[dk][n];
       }
       var leaders=Object.keys(acc).filter(function(p){return acc[p];}).map(function(p){
         return {name:p,value:acc[p]};
@@ -692,26 +701,41 @@ body {
     var W=raceCanvas.width, H=raceCanvas.height;
     if(!W||!H) return;
     raceCtx.clearRect(0,0,W,H);
-    var n=10;
-    var gap=2;
-    var slotH=(H-gap*(n-1))/n;
-    var rankW=26; // width for rank numbers
+    // sort by current y to keep visual order correct
+    var sorted=raceBars.slice().sort(function(a,b){return a.y-b.y;});
+    var n=8;
+    var gap=4;
+    var barH=(H-gap*(n-1))/n;
+    var step=barH+gap;
+    var rankW=26;
     var maxW=0;
-    for(var i=0;i<raceBars.length;i++){if(raceBars[i].targetW>maxW) maxW=raceBars[i].targetW;}
+    for(var i=0;i<sorted.length;i++){if(sorted[i].targetW>maxW) maxW=sorted[i].targetW;}
     if(!maxW) maxW=1;
-    var scale=(W-rankW-60)/maxW;
-    for(var i=0;i<raceBars.length;i++){
-      var b=raceBars[i];
-      var barH=slotH-2;
+    var labelW=110;
+    var scale=(W-labelW-10)/maxW;
+    for(var i=0;i<sorted.length;i++){
+      var b=sorted[i];
       var bw=b.w*scale;
-      var y=b.y*(slotH+gap)/slotH;
+      var y=b.y;
       raceCtx.globalAlpha=b.alpha||1;
-      // rank number on the left
-      raceCtx.fillStyle='#9aa';
-      raceCtx.font='bold 12px Inter,sans-serif';
-      raceCtx.textAlign='right'; raceCtx.textBaseline='middle';
-      raceCtx.fillText(i+1,rankW-6,y+barH/2);
-      var x=rankW;
+      // Y-axis product name with wrapping
+       raceCtx.fillStyle='#17211d';
+       raceCtx.font='11px Inter, sans-serif';
+       raceCtx.textAlign='right'; raceCtx.textBaseline='middle';
+       var words=b.name.split(' ');
+       var line1='', line2='';
+       for(var wi=0;wi<words.length;wi++){
+         var test=line1?(line1+' '+words[wi]):words[wi];
+         if(raceCtx.measureText(test).width<labelW-8||!line1) line1=test;
+         else line2=line2?(line2+' '+words[wi]):words[wi];
+       }
+       if(line2){
+         raceCtx.fillText(line1,labelW-4,y+barH/2-6);
+         raceCtx.fillText(line2,labelW-4,y+barH/2+6);
+       }else{
+         raceCtx.fillText(line1,labelW-4,y+barH/2);
+       }
+       var x=labelW+6;
       var c=b.color;
       // 3D gradient bar
       var grad=raceCtx.createLinearGradient(x,0,x+bw,0);
@@ -725,11 +749,6 @@ body {
       raceCtx.fillStyle=hgrad;
       roundRect(raceCtx,x,y,bw,barH,4);
       raceCtx.fill();
-      // name (white)
-      raceCtx.fillStyle='#fff';
-      raceCtx.font='bold 11px Inter,sans-serif';
-      raceCtx.textAlign='left'; raceCtx.textBaseline='middle';
-      raceCtx.fillText(b.name,x+8,y+barH/2);
       // value
       raceCtx.fillStyle='#fff';
       raceCtx.font='bold 11px Inter,sans-serif';
@@ -758,8 +777,9 @@ body {
   function syncRaceBars(target,prevMap){
     ensureRaceCtx();
     var H=raceCanvas.height||350;
-    var gap=2, n=10;
-    var slotH=(H-gap*(n-1))/n;
+    var gap=4, n=8;
+    var barH=(H-gap*(n-1))/n;
+    var step=barH+gap;
     var newBars=[];
     for(var i=0;i<target.length;i++){
       var t=target[i];
@@ -768,8 +788,8 @@ body {
         name:t.name,
         value:t.value,
         color:RACE_COLORS[i%RACE_COLORS.length],
-        y:prev?prev.y:i*slotH,
-        targetY:i*slotH,
+        y:prev?prev.y:i*step,
+        targetY:i*step,
         w:prev?prev.w:0,
         targetW:t.value,
         alpha:1
@@ -791,17 +811,30 @@ body {
 
   function animateRaceBars(){
     var done=true;
+    var H=raceCanvas.height||350;
+    var gap=4, n=8, barH=(H-gap*(n-1))/n, step=barH+gap;
     for(var i=0;i<raceBars.length;i++){
       var b=raceBars[i];
-      b.y+=0.12*(b.targetY-b.y);
-      b.w +=0.12*(b.targetW-b.w);
-      if(b.targetY>raceCanvas.height) b.alpha-=(1-b.alpha)*0.3+0.05;
-      if(Math.abs(b.targetY-b.y)>0.5||Math.abs(b.targetW-b.w)>0.5||(b.targetY>raceCanvas.height&&b.alpha>0.01)){
+      b.y+=0.08*(b.targetY-b.y);
+      b.w +=0.08*(b.targetW-b.w);
+      if(b.targetY>H) b.alpha-=(1-b.alpha)*0.3+0.05;
+    }
+    // sort by targetY and assign distinct positions
+    raceBars.sort(function(a,b){return a.targetY-b.targetY;});
+    for(var i=0;i<raceBars.length;i++){
+      var targetY=i<8?i*step:H+step;
+      raceBars[i].targetY=targetY;
+      // soft nudge only if extremely close
+      if(i>0){
+        var minY=raceBars[i-1].y+2;
+        if(raceBars[i].y<minY) raceBars[i].y+=(minY-raceBars[i].y)*0.5;
+      }
+      if(raceBars[i].targetY>H) raceBars[i].alpha-=(1-raceBars[i].alpha)*0.3+0.05;
+      if(Math.abs(targetY-raceBars[i].y)>0.5||Math.abs(raceBars[i].targetW-raceBars[i].w)>0.5||(targetY>H&&raceBars[i].alpha>0.01)){
         done=false;
       }
     }
-    // remove dead bars
-    raceBars=raceBars.filter(function(b){return !(b.targetY>raceCanvas.height&&b.alpha<0.02);});
+    raceBars=raceBars.filter(function(b){return !(b.targetY>H&&b.alpha<0.02);});
     drawRaceBars();
     if(!done) raceAnimId=requestAnimationFrame(animateRaceBars);
     else raceAnimId=null;
@@ -823,10 +856,10 @@ body {
   function raceStep() {
     if(!racePlaying) return;
     var frame=raceData[raceIndex];
-    applyRaceFrame(frame.leaders.slice(0,10));
+    applyRaceFrame(frame.leaders.slice(0,8));
     document.getElementById('raceDateLabel').textContent=frame.date;
     raceIndex++;
-    if(raceIndex>=raceData.length){raceStop();return;}
+    if(raceIndex>=raceData.length){racePause();return;}
     raceTimer=setTimeout(raceStep,900);
   }
 
@@ -848,7 +881,15 @@ body {
   function racePause() {
     racePlaying=false;
     if(raceTimer) clearTimeout(raceTimer);
-    if(raceAnimId) cancelAnimationFrame(raceAnimId);
+    // snap bars to target
+    if(raceBars.length){
+      for(var i=0;i<raceBars.length;i++){
+        raceBars[i].y=raceBars[i].targetY;
+        raceBars[i].w=raceBars[i].targetW;
+      }
+      drawRaceBars();
+    }
+    if(raceAnimId){cancelAnimationFrame(raceAnimId);raceAnimId=null;}
     document.getElementById('racePlay').disabled=false;
     document.getElementById('racePause').disabled=true;
   }
@@ -866,7 +907,7 @@ body {
     if(raceData.length){
       initRaceChart();
       raceBars=[];
-      applyRaceFrame(raceData[0].leaders.slice(0,10));
+      applyRaceFrame(raceData[0].leaders.slice(0,8));
       document.getElementById('raceDateLabel').textContent=raceData[0].date;
     } else {document.getElementById('raceDateLabel').textContent='';ensureRaceCtx();raceCtx.clearRect(0,0,raceCanvas.width,raceCanvas.height);}
   }
@@ -936,6 +977,9 @@ body {
       lastRefresh=new Date();
       populateProducts();
       populateRaceProducts();
+      if(!document.getElementById('raceStartDate').value){
+        document.getElementById('raceStartDate').value=dayKey(new Date());
+      }
       refreshAll();
     }catch(e){
       console.error(e);
