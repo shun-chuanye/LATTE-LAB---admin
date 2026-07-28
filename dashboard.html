@@ -1,187 +1,187 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>LATTE LAB · Dashboard</title>
-<link rel="icon" href="image/logo.JPG" />
-<style>
-:root {
-  --bg: #f7f8f4; --surface: #ffffff; --surface-2: #edf5f0; --ink: #17211d;
-  --muted: #66746c; --line: #dce5dd; --brand: #0f5c4d; --accent: #d86f45;
-  --danger: #b33939; --radius: 8px;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-* { box-sizing: border-box; }
-html { min-height: 100%; background: var(--bg); }
-body {
-  min-height: 100%; margin: 0;
-  background: linear-gradient(180deg, rgba(15,92,77,0.06), transparent 360px), var(--bg);
-  color: var(--ink); padding: 18px 18px 48px;
-}
-.app-shell { width: min(1280px, 100%); margin: 0 auto; }
-.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 0 18px; flex-wrap: wrap; }
-.brand-lockup { display: flex; align-items: center; gap: 12px; }
-.brand-logo { width: 50px; height: 50px; border-radius: var(--radius); object-fit: cover; border: 1px solid rgba(23,33,29,0.12); background: var(--surface); }
-.brand-lockup h1 { margin: 0; font-size: 1.5rem; line-height: 1; }
-.back-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 42px; padding: 0 18px; border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface); color: var(--brand); text-decoration: none;
-  font-size: 0.82rem; font-weight: 800; box-shadow: 0 4px 14px rgba(23,33,29,0.06);
-}
-.back-btn:hover { background: var(--surface-2); }
-.filter-bar {
-  display: flex; align-items: center; gap: 0;
-  margin-bottom: 16px; padding: 10px 14px; border: 1px solid var(--line);
-  border-radius: var(--radius); background: var(--surface);
-}
-.filter-scroll { display: flex; align-items: center; gap: 8px; }
-.filter-dropdown { position: relative; }
-.product-toggle-btn {
-  height: 34px; padding: 0 14px; border: 1px solid var(--line);
-  border-radius: var(--radius); background: var(--surface); color: var(--ink);
-  font-size: 0.78rem; font-weight: 700; cursor: pointer;
-}
-.product-toggle-btn:hover { background: var(--surface-2); }
-.product-toggle-btn.active { background: var(--brand); color: #fff; border-color: var(--brand); }
-.clear-filter-btn { background: var(--danger) !important; color: #fff !important; border-color: var(--danger) !important; padding: 0 10px !important; font-size: 0.72rem !important; height: 32px; }
-.clear-filter-btn:hover { opacity: 0.85 !important; background: var(--danger) !important; }
-.product-menu {
-  position: absolute; top: 100%; left: 0; z-index: 100; margin-top: 4px;
-  max-height: 200px; min-width: 180px; box-shadow: 0 8px 24px rgba(23,33,29,0.15);
-  display: none;
-}
-.product-menu.show { display: flex; }
-.period-checkboxes {
-  max-height: 180px; overflow-y: auto; border: 1px solid var(--line);
-  border-radius: var(--radius); background: var(--surface); padding: 6px 8px;
-  min-width: 160px; display: none; flex-direction: column; gap: 2px;
-}
-.period-checkboxes.show { display: flex; }
-.period-checkboxes label {
-  display: flex; align-items: center; gap: 6px; font-size: 0.75rem;
-  font-weight: 500; color: var(--ink); padding: 2px 4px; border-radius: 4px; cursor: pointer;
-}
-.period-checkboxes label:hover { background: var(--surface-2); }
-.period-checkboxes input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--brand); cursor: pointer; flex-shrink: 0; }
-.period-checkboxes .select-all { font-weight: 800; color: var(--brand); }
-.period-checkboxes .menu-sep { width: 100%; border: 0; border-top: 1px solid var(--line); margin: 2px 0; }
-.day-calendar {
-  border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface); padding: 8px; width: 240px;
-  box-shadow: 0 6px 18px rgba(23,33,29,0.1);
-}
-.cal-drop { position: absolute; top: 100%; left: 0; z-index: 100; margin-top: 4px; }
-.cal-header { display: flex; align-items: center; justify-content: space-between; padding: 2px 0 6px; }
-.cal-month { font-size: 0.8rem; font-weight: 800; color: var(--ink); }
-.cal-arrow {
-  width: 24px; height: 24px; border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface); color: var(--ink); font-size: 0.7rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-}
-.cal-arrow:hover { background: var(--surface-2); }
-.cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; padding: 2px 0 4px; }
-.cal-weekdays span { font-size: 0.6rem; font-weight: 800; color: var(--muted); }
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
-.cal-day {
-  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 600; border-radius: 4px; cursor: pointer;
-  color: var(--muted); border: 1px solid transparent; min-height: 28px;
-}
-.cal-day:hover { background: var(--surface-2); border-color: var(--line); }
-.cal-day.has-data { color: var(--ink); font-weight: 700; }
-.cal-day.selected { background: var(--brand); color: #fff; border-color: var(--brand); }
-.cal-day.dimmed { opacity: 0.3; }
-.cal-day.today { box-shadow: inset 0 0 0 2px var(--accent); }
-.cal-day.empty { cursor: default; }
-.cal-footer { display: flex; align-items: center; justify-content: space-between; padding: 6px 1px 0; font-size: 0.65rem; color: var(--muted); }
-.cal-clear { border: 0; background: none; color: var(--danger); font-size: 0.65rem; font-weight: 700; cursor: pointer; }
-.cal-clear:hover { text-decoration: underline; }
-.status-cards {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 10px; margin-bottom: 20px;
-}
-.status-card {
-  padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface); box-shadow: 0 4px 14px rgba(23,33,29,0.04); text-align: center;
-}
-.status-card .label { color: var(--muted); font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
-.status-card .value { font-size: 1.6rem; font-weight: 900; color: var(--brand); line-height: 1.2; margin-top: 2px; }
-.status-card.today .value { color: #1a4b8c; }
-.status-card.week .value { color: #0f5c4d; }
-.status-card.month .value { color: #d86f45; }
-.status-card.total .value { color: var(--ink); }
-.status-card.nw .value { color: #e65100; }
-.status-card.ok .value { color: #2e7d32; }
-.charts-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin-bottom: 20px; }
-.chart-card {
-  padding: 18px; border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface); box-shadow: 0 4px 20px rgba(23,33,29,0.05);
-}
-.chart-card.full { grid-column: 1 / -1; }
-.chart-card h3 { margin: 0 0 14px; font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
-.chart-card .chart-wrap { position: relative; width: 100%; height: 300px; }
-.chart-card .chart-wrap canvas { width: 100% !important; height: 100% !important; }
-.empty-state { padding: 60px 20px; text-align: center; color: var(--muted); }
-.empty-state strong { display: block; color: var(--ink); font-size: 1.1rem; margin-bottom: 8px; }
-.loading-bar {
-  width: 100%; height: 3px; background: var(--surface-2);
-  border-radius: 2px; overflow: hidden; margin-bottom: 0;
-}
-.loading-bar::after {
-  content: ''; display: block; width: 40%; height: 100%;
-  background: var(--brand); border-radius: 2px;
-  animation: loading 1.2s ease-in-out infinite;
-}
-@keyframes loading {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(350%); }
-}
-.no-data-overlay {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); font-size: 0.85rem; font-weight: 600; pointer-events: none;
-}
-.auto-refresh-hint { font-size: 0.65rem; color: var(--muted); text-align: right; padding: 4px 0 0; }
-.race-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
-.race-header h3 { margin: 0; }
-.race-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.race-controls label { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
-.race-controls input[type="date"] {
-  height: 32px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface); color: var(--ink); font-size: 0.75rem;
-}
-.race-btn {
-  height: 32px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface); color: var(--ink); font-size: 0.78rem; font-weight: 700; cursor: pointer;
-}
-.race-btn:hover { background: var(--surface-2); }
-.race-play-btn { background: #107C41 !important; color: #fff !important; border-color: #107C41 !important; }
-.race-play-btn:hover:not(:disabled) { background: #0d6937 !important; }
-.race-btn:disabled { opacity: 0.4; cursor: default; }
-.race-date { font-size: 0.9rem; font-weight: 800; color: var(--brand); text-align: center; padding: 6px 0 0; }
-.race-card .chart-wrap { height: 350px; }
-.race-canvas { width: 100% !important; height: 100% !important; }
-.race-card .product-toggle-btn { background: #107C41; color: #fff; border-color: #107C41; }
-.race-card .product-toggle-btn:hover { background: #0d6937; }
-.race-card .product-toggle-btn.active { background: var(--brand) !important; color: #fff; border-color: var(--brand) !important; }
-@media (max-width: 720px) {
-  body { padding: 12px 12px 32px; }
-  .charts-grid { grid-template-columns: 1fr; }
-  .status-cards { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .status-card { padding: 10px 12px; }
-  .status-card .value { font-size: 1.2rem; }
-  .brand-lockup h1 { font-size: 1.2rem; }
-  .brand-logo { width: 40px; height: 40px; }
-  .filter-scroll { flex-wrap: wrap; }
-  .chart-card .chart-wrap { height: 250px; }
-  .race-card .chart-wrap { height: 280px; }
-  .day-calendar { width: 220px; }
-  .race-header { flex-direction: column; align-items: flex-start; }
-  .race-controls { gap: 6px; }
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>LATTE LAB · Dashboard</title>
+  <link rel="icon" href="image/logo.JPG" />
+  <style>
+    :root {
+      --bg: #f7f8f4; --surface: #ffffff; --surface-2: #edf5f0; --ink: #17211d;
+      --muted: #66746c; --line: #dce5dd; --brand: #0f5c4d; --accent: #d86f45;
+      --danger: #b33939; --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); }
+    body {
+      min-height: 100%; margin: 0;
+      background: linear-gradient(180deg, rgba(15,92,77,0.06), transparent 360px), var(--bg);
+      color: var(--ink); padding: 18px 18px 48px;
+    }
+    .app-shell { width: min(1280px, 100%); margin: 0 auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 0 18px; flex-wrap: wrap; }
+    .brand-lockup { display: flex; align-items: center; gap: 12px; }
+    .brand-logo { width: 50px; height: 50px; border-radius: var(--radius); object-fit: cover; border: 1px solid rgba(23,33,29,0.12); background: var(--surface); }
+    .brand-lockup h1 { margin: 0; font-size: 1.5rem; line-height: 1; }
+    .back-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 42px; padding: 0 18px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); color: var(--brand); text-decoration: none;
+      font-size: 0.82rem; font-weight: 800; box-shadow: 0 4px 14px rgba(23,33,29,0.06);
+    }
+    .back-btn:hover { background: var(--surface-2); }
+    .filter-bar {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 16px; padding: 10px 14px; border: 1px solid var(--line);
+      border-radius: var(--radius); background: var(--surface);
+    }
+    .filter-scroll { display: flex; align-items: center; gap: 8px; }
+    .filter-dropdown { position: relative; }
+    .product-toggle-btn {
+      height: 34px; padding: 0 14px; border: 1px solid var(--line);
+      border-radius: var(--radius); background: var(--surface); color: var(--ink);
+      font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    }
+    .product-toggle-btn:hover { background: var(--surface-2); }
+    .product-toggle-btn.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .clear-filter-btn { background: var(--danger) !important; color: #fff !important; border-color: var(--danger) !important; padding: 0 10px !important; font-size: 0.72rem !important; height: 32px; }
+    .clear-filter-btn:hover { opacity: 0.85 !important; background: var(--danger) !important; }
+    .product-menu {
+      position: absolute; top: 100%; left: 0; z-index: 100; margin-top: 4px;
+      max-height: 200px; min-width: 180px; box-shadow: 0 8px 24px rgba(23,33,29,0.15);
+      display: none;
+    }
+    .product-menu.show { display: flex; }
+    .period-checkboxes {
+      max-height: 180px; overflow-y: auto; border: 1px solid var(--line);
+      border-radius: var(--radius); background: var(--surface); padding: 6px 8px;
+      min-width: 160px; display: none; flex-direction: column; gap: 2px;
+    }
+    .period-checkboxes.show { display: flex; }
+    .period-checkboxes label {
+      display: flex; align-items: center; gap: 6px; font-size: 0.75rem;
+      font-weight: 500; color: var(--ink); padding: 2px 4px; border-radius: 4px; cursor: pointer;
+    }
+    .period-checkboxes label:hover { background: var(--surface-2); }
+    .period-checkboxes input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--brand); cursor: pointer; flex-shrink: 0; }
+    .period-checkboxes .select-all { font-weight: 800; color: var(--brand); }
+    .period-checkboxes .menu-sep { width: 100%; border: 0; border-top: 1px solid var(--line); margin: 2px 0; }
+    .day-calendar {
+      border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); padding: 8px; width: 240px;
+      box-shadow: 0 6px 18px rgba(23,33,29,0.1);
+    }
+    .cal-drop { position: absolute; top: 100%; left: 0; z-index: 100; margin-top: 4px; }
+    .cal-header { display: flex; align-items: center; justify-content: space-between; padding: 2px 0 6px; }
+    .cal-month { font-size: 0.8rem; font-weight: 800; color: var(--ink); }
+    .cal-arrow {
+      width: 24px; height: 24px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); color: var(--ink); font-size: 0.7rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cal-arrow:hover { background: var(--surface-2); }
+    .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; padding: 2px 0 4px; }
+    .cal-weekdays span { font-size: 0.6rem; font-weight: 800; color: var(--muted); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+    .cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 600; border-radius: 4px; cursor: pointer;
+      color: var(--muted); border: 1px solid transparent; min-height: 28px;
+    }
+    .cal-day:hover { background: var(--surface-2); border-color: var(--line); }
+    .cal-day.has-data { color: var(--ink); font-weight: 700; }
+    .cal-day.selected { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .cal-day.dimmed { opacity: 0.3; }
+    .cal-day.today { box-shadow: inset 0 0 0 2px var(--accent); }
+    .cal-day.empty { cursor: default; }
+    .cal-footer { display: flex; align-items: center; justify-content: space-between; padding: 6px 1px 0; font-size: 0.65rem; color: var(--muted); }
+    .cal-clear { border: 0; background: none; color: var(--danger); font-size: 0.65rem; font-weight: 700; cursor: pointer; }
+    .cal-clear:hover { text-decoration: underline; }
+    .status-cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px; margin-bottom: 20px;
+    }
+    .status-card {
+      padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); box-shadow: 0 4px 14px rgba(23,33,29,0.04); text-align: center;
+    }
+    .status-card .label { color: var(--muted); font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+    .status-card .value { font-size: 1.6rem; font-weight: 900; color: var(--brand); line-height: 1.2; margin-top: 2px; }
+    .status-card.today .value { color: #1a4b8c; }
+    .status-card.week .value { color: #0f5c4d; }
+    .status-card.month .value { color: #d86f45; }
+    .status-card.total .value { color: var(--ink); }
+    .status-card.nw .value { color: #e65100; }
+    .status-card.ok .value { color: #2e7d32; }
+    .charts-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin-bottom: 20px; }
+    .chart-card {
+      padding: 18px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); box-shadow: 0 4px 20px rgba(23,33,29,0.05);
+    }
+    .chart-card.full { grid-column: 1 / -1; }
+    .chart-card h3 { margin: 0 0 14px; font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+    .chart-card .chart-wrap { position: relative; width: 100%; height: 300px; }
+    .chart-card .chart-wrap canvas { width: 100% !important; height: 100% !important; }
+    .empty-state { padding: 60px 20px; text-align: center; color: var(--muted); }
+    .empty-state strong { display: block; color: var(--ink); font-size: 1.1rem; margin-bottom: 8px; }
+    .loading-bar {
+      width: 100%; height: 3px; background: var(--surface-2);
+      border-radius: 2px; overflow: hidden; margin-bottom: 0;
+    }
+    .loading-bar::after {
+      content: ''; display: block; width: 40%; height: 100%;
+      background: var(--brand); border-radius: 2px;
+      animation: loading 1.2s ease-in-out infinite;
+    }
+    @keyframes loading {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+    .no-data-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 0.85rem; font-weight: 600; pointer-events: none;
+    }
+    .auto-refresh-hint { font-size: 0.65rem; color: var(--muted); text-align: right; padding: 4px 0 0; }
+    .race-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+    .race-header h3 { margin: 0; }
+    .race-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .race-controls label { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+    .race-controls input[type="date"] {
+      height: 32px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); color: var(--ink); font-size: 0.75rem;
+    }
+    .race-btn {
+      height: 32px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--surface); color: var(--ink); font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    }
+    .race-btn:hover { background: var(--surface-2); }
+    .race-play-btn { background: #107C41 !important; color: #fff !important; border-color: #107C41 !important; }
+    .race-play-btn:hover:not(:disabled) { background: #0d6937 !important; }
+    .race-btn:disabled { opacity: 0.4; cursor: default; }
+    .race-date { font-size: 0.9rem; font-weight: 800; color: var(--brand); text-align: center; padding: 6px 0 0; }
+    .race-card .chart-wrap { height: 350px; }
+    .race-canvas { width: 100% !important; height: 100% !important; }
+    .race-card .product-toggle-btn { background: #107C41; color: #fff; border-color: #107C41; }
+    .race-card .product-toggle-btn:hover { background: #0d6937; }
+    .race-card .product-toggle-btn.active { background: var(--brand) !important; color: #fff; border-color: var(--brand) !important; }
+    @media (max-width: 720px) {
+      body { padding: 12px 12px 32px; }
+      .charts-grid { grid-template-columns: 1fr; }
+      .status-cards { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .status-card { padding: 10px 12px; }
+      .status-card .value { font-size: 1.2rem; }
+      .brand-lockup h1 { font-size: 1.2rem; }
+      .brand-logo { width: 40px; height: 40px; }
+      .filter-scroll { flex-wrap: wrap; }
+      .chart-card .chart-wrap { height: 250px; }
+      .race-card .chart-wrap { height: 280px; }
+      .day-calendar { width: 220px; }
+      .race-header { flex-direction: column; align-items: flex-start; }
+      .race-controls { gap: 6px; }
+    }
+  </style>
 </head>
 <body>
 <div class="app-shell">
@@ -251,887 +251,1233 @@ body {
   </div>
   <div class="auto-refresh-hint" id="refreshHint"></div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/dist/umd/supabase.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="config.js"></script><script>
-(function() {
-  "use strict";
-  var CFG = window.LATTE_LAB_CONFIG || {};
-  var supabase = null;
-  var charts = {};
-  var allItems = [];
-  var weekSelected = new Set();
-  var monthSelected = new Set();
-  var calSelected = new Set();
-  var activeProductValues = new Set();
-  var calMonth, calYear;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/dist/umd/supabase.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js">
+</script>
+<script src="config.js">
+</script>
+<script>
+  (function() {
+    "use strict";
 
-  function pad(n) { return String(n).padStart(2,'0'); }
-  function dparse(s) { if(!s) return null; var d=new Date(s); return isNaN(d.getTime())?null:d; }
-  function dayKey(d) { return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
-  function weekKey(d) {
-    var dn=(d.getDay()+6)%7;
-    var mon=new Date(d.getFullYear(),d.getMonth(),d.getDate()-dn);
-    var t=new Date(d.valueOf());
-    t.setDate(t.getDate()-dn+3);
-    var ft=new Date(t.getFullYear(),0,4);
-    var wk=Math.round((t.getTime()-ft.getTime())/604800000)+1;
-    return mon.getFullYear()+'-W'+pad(wk);
-  }
-  function monthKey(d) { return d.getFullYear()+'-'+pad(d.getMonth()+1); }
-
-  function matchPeriod(r) {
-    var d=dparse(r.created_at); if(!d) return false;
-    if(calSelected.size>0 && !calSelected.has(dayKey(d))) return false;
-    if(weekSelected.size>0 && !weekSelected.has(weekKey(d))) return false;
-    if(monthSelected.size>0 && !monthSelected.has(monthKey(d))) return false;
-    return true;
-  }
-
-  function getFilteredItems() {
-    return allItems.filter(function(r){
-      if(activeProductValues.size>0&&!activeProductValues.has(r.name)) return false;
-      return matchPeriod(r);
-    });
-  }
-
-  function populateCheckboxes(elId, selSet, calcKey) {
-    var box=document.getElementById(elId);
-    var keys={};
-    for(var i=0;i<allItems.length;i++){
-      var d=dparse(allItems[i].created_at); if(!d) continue;
-      var k=calcKey(d);
-      keys[k]=true;
-    }
-    var sorted=Object.keys(keys).sort().reverse();
-    var allChecked=sorted.every(function(v){return selSet.has(v);});
-    var h='<label class="select-all"><input type="checkbox" class="cb-sa"'+ (allChecked&&sorted.length>0?' checked':'') +'> Select All</label>';
-    h+='<hr class="menu-sep">';
-    for(var j=0;j<sorted.length;j++){
-      var v=sorted[j], lbl;
-      if(calcKey===weekKey) lbl=v.replace('-W',' W');
-      else lbl=v;
-      var ck=selSet.has(v)?' checked':'';
-      h+='<label><input type="checkbox" class="cb-item" value="'+v+'"'+ck+'> '+lbl+'</label>';
-    }
-    box.innerHTML=h;
-  }
-
-  function syncCheckboxSet(elId, selSet) {
-    selSet.clear();
-    var cbs=document.querySelectorAll('#'+elId+' input.cb-item');
-    for(var i=0;i<cbs.length;i++){if(cbs[i].checked) selSet.add(cbs[i].value);}
-  }
-
-  function clearAllFilters() {
-    calSelected.clear(); weekSelected.clear(); monthSelected.clear();
-    activeProductValues.clear();
-    var cal=document.getElementById('dayCalendar');
-    cal.style.display='none'; document.getElementById('dayToggle').classList.remove('active');
-    document.getElementById('weekCheckboxes').classList.remove('show'); document.getElementById('weekToggle').classList.remove('active');
-    document.getElementById('monthCheckboxes').classList.remove('show'); document.getElementById('monthToggle').classList.remove('active');
-    var pCbs=document.querySelectorAll('#productCheckboxes input.product-cb');
-    for(var i=0;i<pCbs.length;i++) pCbs[i].checked=false;
-    var pSa=document.querySelector('#productCheckboxes input.select-all-cb');
-    if(pSa) pSa.checked=false;
-    activeProductValues.clear();
-    refreshAll();
-  }
-
-  function renderCards() {
-    var now=new Date();
-    var tk=dayKey(now), wkK=weekKey(now), mk=monthKey(now);
-    var td=0, wk=0, mo=0;
-    for(var i=0;i<allItems.length;i++){
-      var d=dparse(allItems[i].created_at); if(!d) continue;
-      var q=Number(allItems[i].quantity)||0;
-      if(dayKey(d)===tk) td+=q;
-      if(weekKey(d)===wkK) wk+=q;
-      if(monthKey(d)===mk) mo+=q;
-    }
-    var items=getFilteredItems();
-    var total=0, nw=0, ok=0;
-    for(var i=0;i<items.length;i++){
-      var q=Number(items[i].quantity)||0;
-      total+=q;
-      if(items[i].status==='new') nw+=q;
-      else if(items[i].status==='completed') ok+=q;
-    }
-    var html='';
-    var cards=[
-      {l:'Today',v:td,c:'today'},{l:'This Week',v:wk,c:'week'},{l:'This Month',v:mo,c:'month'},
-      {l:'Total',v:total,c:'total'},{l:'New',v:nw,c:'nw'},{l:'Completed',v:ok,c:'ok'}
+    // ========================================================================
+    // 0. CONFIG & STATE
+    // ========================================================================
+    const CFG = window.LATTE_LAB_CONFIG || {};
+    const RACE_COLORS = [
+      '#F34F1C', '#7FBC00', '#FFBA01', '#01A6F0', '#747474', '#107C41',
+      '#FF6700', '#FF9900', '#D75F28', '#E91B21', '#ED1C24',
+      '#B12B28', '#EA4335', '#9F2B32', '#FF4D00', '#D9004C',
+      '#0F9D58', '#3DDC84', '#1DB954', '#76B900', '#7FBA00',
+      '#53AF40', '#28C08A', '#3B7A57', '#005A3C', '#00BF7E',
+      '#0052D9', '#4285F4', '#3b5998', '#007AFF', '#00A4EF',
+      '#0071C5', '#1428A0', '#1B4E9B', '#0530AD', '#002FA7',
+      '#12355B', '#0057B8', '#003153', '#005C8A', '#0A84F4',
+      '#F4B400', '#FFB900', '#E3AB36', '#D6A94A', '#957327',
+      '#FF00FF', '#9B5CFF', '#7B0099', '#FF69B4', '#B31414',
+      '#900020', '#FF7A59', '#81D8D0', '#38D9FF', '#00F0FF',
+      '#8C8C8C', '#333333', '#070B1A', '#A67C52', '#778899',
+      '#DBDEB8'
     ];
-    for(var i=0;i<cards.length;i++){
-      html+='<div class="status-card '+cards[i].c+'"><div class="label">'+cards[i].l+'</div><div class="value">'+cards[i].v+'</div></div>';
-    }
-    document.getElementById('statusCards').innerHTML=html;
-  }
 
-  function populateProducts() {
-    var names={}, prev=[];
-    var existing=document.querySelectorAll('#productCheckboxes input.product-cb');
-    for(var i=0;i<existing.length;i++){if(existing[i].checked) prev.push(existing[i].value);}
-    for(var i=0;i<allItems.length;i++) names[allItems[i].name]=true;
-    var ks=Object.keys(names).sort();
-    var allChecked=prev.length===ks.length;
-    var h='<label class="select-all"><input type="checkbox" class="select-all-cb"'+ (allChecked&&ks.length>0?' checked':'') +'> Select All</label><hr class="menu-sep">';
-    for(var j=0;j<ks.length;j++){
-      var ck=prev.indexOf(ks[j])>=0?' checked':'';
-      h+='<label><input type="checkbox" class="product-cb" value="'+ks[j]+'"'+ck+'> '+ks[j]+'</label>';
-    }
-    document.getElementById('productCheckboxes').innerHTML=h;
-    readProductChecked();
-  }
-
-  function readProductChecked() {
-    activeProductValues.clear();
-    var cbs=document.querySelectorAll('#productCheckboxes input.product-cb');
-    for(var i=0;i<cbs.length;i++){if(cbs[i].checked) activeProductValues.add(cbs[i].value);}
-  }
-
-  var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-  function getDataDays() {
-    var set=new Set();
-    for(var i=0;i<allItems.length;i++){
-      var d=dparse(allItems[i].created_at); if(!d) continue;
-      set.add(dayKey(d));
-    }
-    return set;
-  }
-
-  function renderCalendar() {
-    var dataDays=getDataDays();
-    var todayStr=dayKey(new Date());
-    var hasOtherFilter=weekSelected.size>0||monthSelected.size>0;
-    var label=document.getElementById('calMonthLabel');
-    label.textContent=MONTHS[calMonth]+' '+calYear;
-    var grid=document.getElementById('calGrid');
-    var first=new Date(calYear,calMonth,1);
-    var startDow=(first.getDay()+6)%7;
-    var lastDate=new Date(calYear,calMonth+1,0).getDate();
-    var h='';
-    for(var i=0;i<startDow;i++) h+='<span class="cal-day empty"></span>';
-    for(var day=1;day<=lastDate;day++){
-      var d=new Date(calYear,calMonth,day);
-      var key=dayKey(d);
-      var cls=['cal-day'];
-      if(dataDays.has(key)) cls.push('has-data');
-      if(calSelected.has(key)) cls.push('selected');
-      if(key===todayStr) cls.push('today');
-      if(hasOtherFilter){
-        var ok=true;
-        if(weekSelected.size>0&&!weekSelected.has(weekKey(d))) ok=false;
-        if(monthSelected.size>0&&!monthSelected.has(monthKey(d))) ok=false;
-        if(!ok) cls.push('dimmed');
-      }
-      h+='<span class="'+cls.join(' ')+'" data-date="'+key+'">'+day+'</span>';
-    }
-    grid.innerHTML=h;
-    var calCount=document.getElementById('calCount');
-    var total=weekSelected.size+monthSelected.size+calSelected.size;
-    calCount.textContent=calSelected.size+' selected'+(total>calSelected.size?' (filtered)':'');
-  }
-
-  function toggleCalDate(dateKey) {
-    if(calSelected.has(dateKey)) calSelected.delete(dateKey);
-    else calSelected.add(dateKey);
-    renderCalendar();
-    refreshAll();
-  }
-
-  function barLabelPlugin() {
-    return {
-      id:'barLabel',
-      afterDraw:function(chart){
-        var ctx=chart.ctx, ds=chart.data.datasets[0];
-        if(!ds) return;
-        var meta=chart.getDatasetMeta(0);
-        if(!meta||!meta.data) return;
-        for(var i=0;i<meta.data.length;i++){
-          var b=meta.data[i], v=ds.data[i];
-          if(!v) continue;
-          ctx.fillStyle='#17211d'; ctx.font='bold 11px Inter,sans-serif'; ctx.textAlign='center';
-          ctx.fillText(v, b.x, b.y-8);
-        }
-      }
+    // --- DOM Cache (Phase 5) ---
+    const $ = (id) => document.getElementById(id);
+    const dom = {
+      statusCards: $('statusCards'),
+      loadingBar: $('loadingBar'),
+      refreshHint: $('refreshHint'),
+      ordersChart: $('ordersChart'),
+      topProductsChart: $('topProductsChart'),
+      productTrendChart: $('productTrendChart'),
+      raceChart: $('raceChart'),
+      raceDateLabel: $('raceDateLabel'),
+      dayToggle: $('dayToggle'),
+      dayCalendar: $('dayCalendar'),
+      calGrid: $('calGrid'),
+      calMonthLabel: $('calMonthLabel'),
+      calPrev: $('calPrev'),
+      calNext: $('calNext'),
+      calClear: $('calClear'),
+      calCount: $('calCount'),
+      weekToggle: $('weekToggle'),
+      weekCheckboxes: $('weekCheckboxes'),
+      monthToggle: $('monthToggle'),
+      monthCheckboxes: $('monthCheckboxes'),
+      productToggle: $('productToggle'),
+      productCheckboxes: $('productCheckboxes'),
+      clearFilterBtn: $('clearFilterBtn'),
+      raceProdToggle: $('raceProdToggle'),
+      raceProdCheckboxes: $('raceProdCheckboxes'),
+      raceStartDate: $('raceStartDate'),
+      racePlay: $('racePlay'),
+      racePause: $('racePause'),
+      raceStop: $('raceStop'),
+      refreshDashBtn: $('refreshDashBtn'),
     };
-  }
 
-  function hBarLabelPlugin() {
-    return {
-      id:'hBarLabel',
-      afterDraw:function(chart){
-        var ctx=chart.ctx, ds=chart.data.datasets[0];
-        if(!ds) return;
-        var meta=chart.getDatasetMeta(0);
-        if(!meta||!meta.data) return;
-        for(var i=0;i<meta.data.length;i++){
-          var b=meta.data[i], v=ds.data[i];
-          if(!v) continue;
-          ctx.fillStyle='#17211d'; ctx.font='bold 11px Inter,sans-serif'; ctx.textAlign='left';
-          ctx.fillText(v, b.x+8, b.y+5);
-        }
-      }
+    // --- State & Cache (Phase 1) ---
+    let supabase = null;
+    let charts = { orders: null, top5: null, trend: null };
+
+    // Raw data
+    let allItems = [];
+
+    // Filter state
+    const filters = {
+      days: new Set(),
+      weeks: new Set(),
+      months: new Set(),
+      products: new Set(),
     };
-  }
 
-  function lineLabelPlugin() {
-    return {
-      id:'lineLabel',
-      afterDraw:function(chart){
-        var ctx=chart.ctx, meta0=chart.getDatasetMeta(0);
-        if(!meta0||!meta0.data||!meta0.data.length) return;
-        var last=meta0.data.length-1;
-        for(var i=0;i<chart.data.datasets.length;i++){
-          var ds=chart.data.datasets[i], meta=chart.getDatasetMeta(i);
-          if(!meta||!meta.data||!meta.data[last]) continue;
-          var pt=meta.data[last], v=ds.data[last];
-          if(!v) continue;
-          ctx.fillStyle=ds.borderColor||'#333'; ctx.font='bold 10px Inter,sans-serif'; ctx.textAlign='left';
-          ctx.fillText(ds.label+' '+v, pt.x+6, pt.y);
-        }
-      }
+    // Derived cache
+    let cacheVersion = 0;
+    let cachedFilteredItems = null;
+    let cachedStats = null;
+    let cachedChartData = { orders: null, top5: null, trend: null };
+    let cachedRaceData = null;
+    let raceDataVersion = 0;
+
+    // Race state
+    let raceState = {
+      bars: [],
+      playing: false,
+      index: 0,
+      timer: null,
+      animId: null,
+      ctx: null,
+      canvas: null,
+      resizeObs: null,
+      resizePending: false,
+      data: [],
     };
-  }
 
-  function legendMultiSelect(e, legendItem, legend) {
-    if(!legendItem) return;
-    var chart=legend.chart;
-    var vis=[];
-    for(var i=0;i<chart.data.datasets.length;i++){
-      var meta=chart.getDatasetMeta(i);
-      vis.push(!meta.hidden);
-    }
-    var allVisible=vis.every(function(v){return v;});
-    var idx=legendItem.datasetIndex!==undefined?legendItem.datasetIndex:legendItem.index;
-    if(allVisible){
-      for(var i=0;i<chart.data.datasets.length;i++) chart.setDatasetVisibility(i, i===idx);
-    }else{
-      var meta=chart.getDatasetMeta(idx);
-      chart.setDatasetVisibility(idx, !!meta.hidden);
-      var anyVisible=false;
-      for(var i=0;i<chart.data.datasets.length;i++){if(chart.getDatasetMeta(i).visible!==false) anyVisible=true;}
-      if(!anyVisible){
-        for(var i=0;i<chart.data.datasets.length;i++) chart.setDatasetVisibility(i, true);
-      }
-    }
-    chart.update();
-  }
+    // Calendar state
+    let calMonth, calYear;
 
-  function chartOrders() {
-    if(charts.orders) charts.orders.destroy();
-    var items=getFilteredItems(), map={};
-    for(var i=0;i<items.length;i++){
-      var d=dparse(items[i].created_at); if(!d) continue;
-      var k=dayKey(d); map[k]=(map[k]||0)+(Number(items[i].quantity)||0);
-    }
-    var keys=Object.keys(map).sort();
-    var labels=[], data=[];
-    for(var j=0;j<keys.length;j++){labels.push(keys[j].slice(5));data.push(map[keys[j]]);}
-    var ctx=document.getElementById('ordersChart').getContext('2d');
-    hideNoData('ordersChart');
-    if(!data.length){showNoData('ordersChart');if(charts.orders){charts.orders.destroy();charts.orders=null;}return;}
-    var maxVal=Math.max.apply(null,data);
-    charts.orders=new Chart(ctx,{
-      type:'bar',
-      data:{labels:labels,datasets:[{label:'Qty',data:data,backgroundColor:'rgba(16,124,65,0.7)',borderColor:'#107C41',borderWidth:1,borderRadius:4}]},
-      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:24}},plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:maxVal+1}}},
-      plugins:[barLabelPlugin()]
-    });
-  }
+    // ========================================================================
+    // 1. UTILITY FUNCTIONS
+    // ========================================================================
+    function pad(n) { return String(n).padStart(2, '0'); }
 
-  function chartTop5() {
-    if(charts.top5) charts.top5.destroy();
-    var items=getFilteredItems(), map={};
-    for(var i=0;i<items.length;i++){var n=items[i].name;map[n]=(map[n]||0)+(Number(items[i].quantity)||0);}
-    var ents=Object.entries(map).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
-    var labels=[], data=[];
-    for(var j=0;j<ents.length;j++){labels.push(ents[j][0]);data.push(ents[j][1]);}
-    var colors=['#F34F1C','#7FBC00','#FFBA01','#01A6F0','#747474'];
-    var bg=colors.slice(0,data.length).map(function(c){return c+'88';});
-    var ctx=document.getElementById('topProductsChart').getContext('2d');
-    hideNoData('topProductsChart');
-    if(!data.length){showNoData('topProductsChart');if(charts.top5){charts.top5.destroy();charts.top5=null;}return;}
-    var maxVal=Math.max.apply(null,data);
-    charts.top5=new Chart(ctx,{
-      type:'bar',
-      data:{labels:labels,datasets:[{label:'Qty',data:data,backgroundColor:bg,borderColor:colors.slice(0,data.length),borderWidth:1,borderRadius:4}]},
-      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:maxVal+2}}},
-      plugins:[hBarLabelPlugin()]
-    });
-  }
+    function dparse(s) { if (!s) return null; var d = new Date(s); return isNaN(d.getTime()) ? null : d; }
 
-  function chartTrend() {
-    if(charts.trend) charts.trend.destroy();
-    var qty={};
-    for(var i=0;i<allItems.length;i++){var n=allItems[i].name;qty[n]=(qty[n]||0)+(Number(allItems[i].quantity)||0);}
-    var top5=Object.entries(qty).sort(function(a,b){return b[1]-a[1];}).slice(0,5).map(function(e){return e[0];});
-    var items=getFilteredItems(), daily={}, days=new Set();
-    for(var i=0;i<items.length;i++){
-      var r=items[i], d=dparse(r.created_at); if(!d) continue;
-      var dk=dayKey(d); days.add(dk);
-      if(top5.indexOf(r.name)<0) continue;
-      if(!daily[r.name]) daily[r.name]={};
-      daily[r.name][dk]=(daily[r.name][dk]||0)+(Number(r.quantity)||0);
+    function dayKey(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+
+    function weekKey(d) {
+      var dn = (d.getDay() + 6) % 7;
+      var mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dn);
+      var t = new Date(d.valueOf());
+      t.setDate(t.getDate() - dn + 3);
+      var ft = new Date(t.getFullYear(), 0, 4);
+      var wk = Math.round((t.getTime() - ft.getTime()) / 604800000) + 1;
+      return mon.getFullYear() + '-W' + pad(wk);
     }
-    var dArr=Array.from(days).sort();
-    var colors=['#F34F1C','#7FBC00','#FFBA01','#01A6F0','#747474'];
-    var datasets=[];
-    for(var i=0;i<top5.length;i++){
-      var nm=top5[i];
-      datasets.push({
-        label:nm,data:dArr.map(function(d){return daily[nm]&&daily[nm][d]||0;}),
-        borderColor:colors[i],backgroundColor:colors[i]+'22',borderWidth:2,tension:0.3,fill:false,pointRadius:3
+
+    function monthKey(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1); }
+
+    function matchPeriod(r) {
+      var d = dparse(r.created_at);
+      if (!d) return false;
+      if (filters.days.size > 0 && !filters.days.has(dayKey(d))) return false;
+      if (filters.weeks.size > 0 && !filters.weeks.has(weekKey(d))) return false;
+      if (filters.months.size > 0 && !filters.months.has(monthKey(d))) return false;
+      return true;
+    }
+
+    function getProductColor(name) {
+      var h = 0;
+      for (var i = 0; i < name.length; i++) h = ((h << 5) - h) + name.charCodeAt(i);
+      return RACE_COLORS[Math.abs(h) % RACE_COLORS.length];
+    }
+
+    // ========================================================================
+    // 2. DATA LAYER (Phase 1)
+    // ========================================================================
+    function getFilteredItems() {
+      if (cachedFilteredItems !== null) return cachedFilteredItems;
+
+      const result = allItems.filter(function(r) {
+        if (filters.products.size > 0 && !filters.products.has(r.name)) return false;
+        return matchPeriod(r);
       });
+
+      cachedFilteredItems = result;
+      return result;
     }
-    var ctx=document.getElementById('productTrendChart').getContext('2d');
-    hideNoData('productTrendChart');
-    if(!datasets.length||!dArr.length){showNoData('productTrendChart');if(charts.trend){charts.trend.destroy();charts.trend=null;}return;}
-    charts.trend=new Chart(ctx,{
-      type:'line',
-      data:{labels:dArr.map(function(d){return d.slice(5);}),datasets:datasets},
-      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20,right:70,bottom:10}},plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:16,font:{size:11}},onClick:legendMultiSelect}},scales:{y:{beginAtZero:true}}},
-      plugins:[lineLabelPlugin()]
-    });
-  }
 
-  var raceData=[], raceIndex=0, raceTimer=null, racePlaying=false, raceSelectedProducts=new Set();
-  var RACE_COLORS=[
-    '#F34F1C','#7FBC00','#FFBA01','#01A6F0','#747474','#107C41',
-    '#FF6700','#FF9900','#D75F28','#E91B21','#ED1C24',
-    '#B12B28','#EA4335','#9F2B32','#FF4D00','#D9004C',
-    '#0F9D58','#3DDC84','#1DB954','#76B900','#7FBA00',
-    '#53AF40','#28C08A','#3B7A57','#005A3C','#00BF7E',
-    '#0052D9','#4285F4','#3b5998','#007AFF','#00A4EF',
-    '#0071C5','#1428A0','#1B4E9B','#0530AD','#002FA7',
-    '#12355B','#0057B8','#003153','#005C8A','#0A84F4',
-    '#F4B400','#FFB900','#E3AB36','#D6A94A','#957327',
-    '#FF00FF','#9B5CFF','#7B0099','#FF69B4','#B31414',
-     '#900020','#FF7A59','#81D8D0','#38D9FF','#00F0FF',
-     '#8C8C8C','#333333','#070B1A','#A67C52','#778899',
-     '#DBDEB8'
-  ];
+    function computeStats() {
+      if (cachedStats !== null) return cachedStats;
 
-  function buildRaceData() {
-    var startStr=document.getElementById('raceStartDate').value;
-    var startD=startStr?dparse(startStr+'T00:00:00'):null;
-    var endD=new Date(); // today
-    endD.setHours(23,59,59,999);
-    // build all days from start to today
-    var allDays=[];
-    if(startD){
-      var cursor=new Date(startD.getTime());
-      while(cursor<=endD){
-        allDays.push(dayKey(cursor));
-        cursor.setDate(cursor.getDate()+1);
+      var now = new Date();
+      var tk = dayKey(now),
+        wkK = weekKey(now),
+        mk = monthKey(now);
+      var td = 0,
+        wk = 0,
+        mo = 0;
+
+      for (var i = 0; i < allItems.length; i++) {
+        var d = dparse(allItems[i].created_at);
+        if (!d) continue;
+        var q = Number(allItems[i].quantity) || 0;
+        if (dayKey(d) === tk) td += q;
+        if (weekKey(d) === wkK) wk += q;
+        if (monthKey(d) === mk) mo += q;
       }
-    }
-    // group data by day + product
-    var daily={};
-    var prodSet=new Set();
-    for(var i=0;i<allItems.length;i++){
-      var r=allItems[i], d=dparse(r.created_at); if(!d) continue;
-      if(raceSelectedProducts.size>0&&!raceSelectedProducts.has(r.name)) continue;
-      if(startD&&d<startD) continue;
-      if(d>endD) continue;
-      var dk=dayKey(d);
-      if(!daily[dk]) daily[dk]={};
-      daily[dk][r.name]=(daily[dk][r.name]||0)+(Number(r.quantity)||0);
-      prodSet.add(r.name);
-    }
-    // if no start date, use days with data
-    if(!allDays.length){
-      allDays=Object.keys(daily).sort();
-    }
-    var acc={};
-    var result=[];
-    for(var di=0;di<allDays.length;di++){
-      var dk=allDays[di];
-      if(daily[dk]){
-        for(var n in daily[dk]) acc[n]=(acc[n]||0)+daily[dk][n];
+
+      var items = getFilteredItems();
+      var total = 0,
+        nw = 0,
+        ok = 0;
+      for (var i = 0; i < items.length; i++) {
+        var q = Number(items[i].quantity) || 0;
+        total += q;
+        if (items[i].status === 'new') nw += q;
+        else if (items[i].status === 'completed') ok += q;
       }
-      var leaders=Object.keys(acc).filter(function(p){return acc[p];}).map(function(p){
-        return {name:p,value:acc[p]};
-      }).sort(function(a,b){return b.value-a.value;});
-      result.push({date:dk,leaders:leaders});
+
+      cachedStats = { today: td, week: wk, month: mo, total: total, new: nw, completed: ok };
+      return cachedStats;
     }
-    raceData=result;
-  }
 
-  function initRaceChart() {
-    // custom canvas – set size from container
-    var wrap=document.getElementById('raceChart').parentNode;
-    var canvas=document.getElementById('raceChart');
-    canvas.style.width='100%'; canvas.style.height='100%';
-    canvas.width=wrap.clientWidth; canvas.height=wrap.clientHeight;
-    raceCanvas=canvas; raceCtx=canvas.getContext('2d');
-    installRaceResize();
-  }
-
-  var raceBars=[]; // [{name,value,color,y,targetY,w,targetW,alpha}, ...]
-  var raceCanvas, raceCtx;
-  var raceAnimId=null;
-  var raceResizeObs=null;
-
-  function installRaceResize() {
-    if(raceResizeObs) raceResizeObs.disconnect();
-    var wrap=document.getElementById('raceChart').parentNode;
-    raceResizeObs=new ResizeObserver(function(){
-      var c=document.getElementById('raceChart');
-      if(c.width!==wrap.clientWidth||c.height!==wrap.clientHeight){
-        c.width=wrap.clientWidth; c.height=wrap.clientHeight;
-        raceCanvas=c; raceCtx=c.getContext('2d');
-        if(raceBars.length) drawRaceBars();
-      }
-    });
-    raceResizeObs.observe(wrap);
-  }
-
-  function ensureRaceCtx(){
-    if(!raceCtx){
-      raceCanvas=document.getElementById('raceChart');
-      raceCtx=raceCanvas.getContext('2d');
+    function invalidateCache() {
+      cacheVersion++;
+      cachedFilteredItems = null;
+      cachedStats = null;
+      cachedChartData = { orders: null, top5: null, trend: null };
+      raceDataVersion++;
+      cachedRaceData = null;
     }
-  }
 
-  function drawRaceBars(){
-    ensureRaceCtx();
-    var W=raceCanvas.width, H=raceCanvas.height;
-    if(!W||!H) return;
-    raceCtx.clearRect(0,0,W,H);
-    // sort by current y to keep visual order correct
-    var sorted=raceBars.slice().sort(function(a,b){return a.y-b.y;});
-    var n=8;
-    var gap=4;
-    var barH=(H-gap*(n-1))/n;
-    var step=barH+gap;
-    var rankW=26;
-    var maxW=0;
-    for(var i=0;i<sorted.length;i++){if(sorted[i].targetW>maxW) maxW=sorted[i].targetW;}
-    if(!maxW) maxW=1;
-    var labelW=110;
-    var scale=(W-labelW-10)/maxW;
-    for(var i=0;i<sorted.length;i++){
-      var b=sorted[i];
-      var bw=b.w*scale;
-      var y=b.y;
-      raceCtx.globalAlpha=b.alpha||1;
-      // Y-axis product name with wrapping
-       raceCtx.fillStyle='#17211d';
-       raceCtx.font='11px Inter, sans-serif';
-       raceCtx.textAlign='right'; raceCtx.textBaseline='middle';
-       var words=b.name.split(' ');
-       var line1='', line2='';
-       for(var wi=0;wi<words.length;wi++){
-         var test=line1?(line1+' '+words[wi]):words[wi];
-         if(raceCtx.measureText(test).width<labelW-8||!line1) line1=test;
-         else line2=line2?(line2+' '+words[wi]):words[wi];
-       }
-       if(line2){
-         raceCtx.fillText(line1,labelW-4,y+barH/2-6);
-         raceCtx.fillText(line2,labelW-4,y+barH/2+6);
-       }else{
-         raceCtx.fillText(line1,labelW-4,y+barH/2);
-       }
-       var x=labelW+6;
-      var c=b.color;
-      // 3D gradient bar
-      var grad=raceCtx.createLinearGradient(x,0,x+bw,0);
-      grad.addColorStop(0,c+'dd'); grad.addColorStop(0.7,c+'cc'); grad.addColorStop(1,c+'88');
-      raceCtx.fillStyle=grad;
-      roundRect(raceCtx,x,y,bw,barH,4);
-      raceCtx.fill();
-      // top highlight
-      var hgrad=raceCtx.createLinearGradient(x,y,x,y+barH*0.4);
-      hgrad.addColorStop(0,'rgba(255,255,255,0.25)'); hgrad.addColorStop(1,'rgba(255,255,255,0)');
-      raceCtx.fillStyle=hgrad;
-      roundRect(raceCtx,x,y,bw,barH,4);
-      raceCtx.fill();
-      // value
-      raceCtx.fillStyle='#fff';
-      raceCtx.font='bold 11px Inter,sans-serif';
-      raceCtx.textAlign='right'; raceCtx.textBaseline='middle';
-      raceCtx.fillText(Math.round(b.value),x+bw-8,y+barH/2);
-    }
-    raceCtx.globalAlpha=1;
-  }
-
-  function roundRect(ctx,x,y,w,h,r){
-    ctx.beginPath();
-    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
-    ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-    ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-    ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-    ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
-    ctx.closePath();
-  }
-
-  function getProductColor(name){
-    var h=0;
-    for(var i=0;i<name.length;i++) h=((h<<5)-h)+name.charCodeAt(i);
-    return RACE_COLORS[Math.abs(h)%RACE_COLORS.length];
-  }
-
-  function syncRaceBars(target,prevMap){
-    ensureRaceCtx();
-    var H=raceCanvas.height||350;
-    var gap=4, n=8;
-    var barH=(H-gap*(n-1))/n;
-    var step=barH+gap;
-    var newBars=[];
-    for(var i=0;i<target.length;i++){
-      var t=target[i];
-      var prev=prevMap?prevMap.get(t.name):null;
-      newBars.push({
-        name:t.name,
-        value:t.value,
-        color:RACE_COLORS[i%RACE_COLORS.length],
-        y:prev?prev.y:i*step,
-        targetY:i*step,
-        w:prev?prev.w:0,
-        targetW:t.value,
-        alpha:1
-      });
-    }
-    if(prevMap){
-      var keep=new Set(target.map(function(t){return t.name;}));
-      prevMap.forEach(function(p,name){
-        if(!keep.has(name)){
-          newBars.push({
-            name:name, value:p.value||0, color:p.color||'#999',
-            y:p.y, targetY:H+20, w:p.w||0, targetW:0, alpha:0
-          });
+    // ========================================================================
+    // 3. CHART LAYER (Phase 2)
+    // ========================================================================
+    function barLabelPlugin() {
+      return {
+        id: 'barLabel',
+        afterDraw: function(chart) {
+          var ctx = chart.ctx,
+            ds = chart.data.datasets[0];
+          if (!ds) return;
+          var meta = chart.getDatasetMeta(0);
+          if (!meta || !meta.data) return;
+          ctx.fillStyle = '#17211d';
+          ctx.font = 'bold 11px Inter,sans-serif';
+          ctx.textAlign = 'center';
+          for (var i = 0; i < meta.data.length; i++) {
+            var b = meta.data[i],
+              v = ds.data[i];
+            if (!v) continue;
+            ctx.fillText(v, b.x, b.y - 8);
+          }
         }
-      });
+      };
     }
-    raceBars=newBars;
-  }
 
-  function animateRaceBars(){
-    var done=true;
-    var H=raceCanvas.height||350;
-    var gap=4, n=8, barH=(H-gap*(n-1))/n, step=barH+gap;
-    for(var i=0;i<raceBars.length;i++){
-      var b=raceBars[i];
-      b.y+=0.08*(b.targetY-b.y);
-      b.w +=0.08*(b.targetW-b.w);
-      if(b.targetY>H) b.alpha-=(1-b.alpha)*0.3+0.05;
+    function hBarLabelPlugin() {
+      return {
+        id: 'hBarLabel',
+        afterDraw: function(chart) {
+          var ctx = chart.ctx,
+            ds = chart.data.datasets[0];
+          if (!ds) return;
+          var meta = chart.getDatasetMeta(0);
+          if (!meta || !meta.data) return;
+          ctx.fillStyle = '#17211d';
+          ctx.font = 'bold 11px Inter,sans-serif';
+          ctx.textAlign = 'left';
+          for (var i = 0; i < meta.data.length; i++) {
+            var b = meta.data[i],
+              v = ds.data[i];
+            if (!v) continue;
+            ctx.fillText(v, b.x + 8, b.y + 5);
+          }
+        }
+      };
     }
-    // sort by targetY and assign distinct positions
-    raceBars.sort(function(a,b){return a.targetY-b.targetY;});
-    for(var i=0;i<raceBars.length;i++){
-      var targetY=i<8?i*step:H+step;
-      raceBars[i].targetY=targetY;
-      // soft nudge only if extremely close
-      if(i>0){
-        var minY=raceBars[i-1].y+2;
-        if(raceBars[i].y<minY) raceBars[i].y+=(minY-raceBars[i].y)*0.5;
+
+    function lineLabelPlugin() {
+      return {
+        id: 'lineLabel',
+        afterDraw: function(chart) {
+          var ctx = chart.ctx,
+            meta0 = chart.getDatasetMeta(0);
+          if (!meta0 || !meta0.data || !meta0.data.length) return;
+          var last = meta0.data.length - 1;
+          for (var i = 0; i < chart.data.datasets.length; i++) {
+            var ds = chart.data.datasets[i],
+              meta = chart.getDatasetMeta(i);
+            if (!meta || !meta.data || !meta.data[last]) continue;
+            var pt = meta.data[last],
+              v = ds.data[last];
+            if (!v) continue;
+            ctx.fillStyle = ds.borderColor || '#333';
+            ctx.font = 'bold 10px Inter,sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(ds.label + ' ' + v, pt.x + 6, pt.y);
+          }
+        }
+      };
+    }
+
+    function legendMultiSelect(e, legendItem, legend) {
+      if (!legendItem) return;
+      var chart = legend.chart;
+      var vis = [];
+      for (var i = 0; i < chart.data.datasets.length; i++) {
+        var meta = chart.getDatasetMeta(i);
+        vis.push(!meta.hidden);
       }
-      if(raceBars[i].targetY>H) raceBars[i].alpha-=(1-raceBars[i].alpha)*0.3+0.05;
-      if(Math.abs(targetY-raceBars[i].y)>0.5||Math.abs(raceBars[i].targetW-raceBars[i].w)>0.5||(targetY>H&&raceBars[i].alpha>0.01)){
-        done=false;
+      var allVisible = vis.every(function(v) { return v; });
+      var idx = legendItem.datasetIndex !== undefined ? legendItem.datasetIndex : legendItem.index;
+      if (allVisible) {
+        for (var i = 0; i < chart.data.datasets.length; i++) chart.setDatasetVisibility(i, i === idx);
+      } else {
+        var meta = chart.getDatasetMeta(idx);
+        chart.setDatasetVisibility(idx, !!meta.hidden);
+        var anyVisible = false;
+        for (var i = 0; i < chart.data.datasets.length; i++) { if (chart.getDatasetMeta(i).visible !== false) anyVisible =
+          true; }
+        if (!anyVisible) {
+          for (var i = 0; i < chart.data.datasets.length; i++) chart.setDatasetVisibility(i, true);
+        }
+      }
+      chart.update();
+    }
+
+    function updateOrdersChart() {
+      var items = getFilteredItems();
+      var map = {};
+      for (var i = 0; i < items.length; i++) {
+        var d = dparse(items[i].created_at);
+        if (!d) continue;
+        var k = dayKey(d);
+        map[k] = (map[k] || 0) + (Number(items[i].quantity) || 0);
+      }
+      var keys = Object.keys(map).sort();
+      var labels = [],
+        data = [];
+      for (var j = 0; j < keys.length; j++) { labels.push(keys[j].slice(5));
+        data.push(map[keys[j]]); }
+
+      var ctx = dom.ordersChart.getContext('2d');
+      hideNoData('ordersChart');
+      if (!data.length) { showNoData('ordersChart'); if (charts.orders) { charts.orders.destroy();
+          charts.orders = null; } return; }
+
+      var maxVal = Math.max.apply(null, data);
+      if (charts.orders) {
+        charts.orders.data.labels = labels;
+        charts.orders.data.datasets[0].data = data;
+        charts.orders.update();
+      } else {
+        charts.orders = new Chart(ctx, {
+          type: 'bar',
+          data: { labels: labels, datasets: [{ label: 'Qty', data: data, backgroundColor: 'rgba(16,124,65,0.7)',
+              borderColor: '#107C41', borderWidth: 1, borderRadius: 4 }] },
+          options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 24 } },
+            plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: maxVal + 1 } } },
+          plugins: [barLabelPlugin()]
+        });
       }
     }
-    raceBars=raceBars.filter(function(b){return !(b.targetY>H&&b.alpha<0.02);});
-    drawRaceBars();
-    if(!done) raceAnimId=requestAnimationFrame(animateRaceBars);
-    else raceAnimId=null;
-  }
 
-  function applyRaceFrame(target) {
-    var prevMap=null;
-    if(raceBars.length){
-      prevMap=new Map();
-      for(var i=0;i<raceBars.length;i++){
-        prevMap.set(raceBars[i].name,{y:raceBars[i].y,w:raceBars[i].w,value:raceBars[i].value,color:raceBars[i].color});
+    function updateTop5Chart() {
+      var items = getFilteredItems();
+      var map = {};
+      for (var i = 0; i < items.length; i++) { var n = items[i].name;
+        map[n] = (map[n] || 0) + (Number(items[i].quantity) || 0); }
+      var ents = Object.entries(map).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 5);
+      var labels = [],
+        data = [];
+      for (var j = 0; j < ents.length; j++) { labels.push(ents[j][0]);
+        data.push(ents[j][1]); }
+      var colors = ['#F34F1C', '#7FBC00', '#FFBA01', '#01A6F0', '#747474'];
+      var bg = colors.slice(0, data.length).map(function(c) { return c + '88'; });
+
+      var ctx = dom.topProductsChart.getContext('2d');
+      hideNoData('topProductsChart');
+      if (!data.length) { showNoData('topProductsChart'); if (charts.top5) { charts.top5.destroy();
+          charts.top5 = null; } return; }
+
+      var maxVal = Math.max.apply(null, data);
+      if (charts.top5) {
+        charts.top5.data.labels = labels;
+        charts.top5.data.datasets[0].data = data;
+        charts.top5.update();
+      } else {
+        charts.top5 = new Chart(ctx, {
+          type: 'bar',
+          data: { labels: labels, datasets: [{ label: 'Qty', data: data, backgroundColor: bg,
+              borderColor: colors.slice(0, data.length), borderWidth: 1, borderRadius: 4 }] },
+          options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, max: maxVal + 2 } } },
+          plugins: [hBarLabelPlugin()]
+        });
       }
     }
-    syncRaceBars(target,prevMap);
-    if(raceAnimId) cancelAnimationFrame(raceAnimId);
-    animateRaceBars();
-  }
 
-  function raceStep() {
-    if(!racePlaying) return;
-    var frame=raceData[raceIndex];
-    applyRaceFrame(frame.leaders.slice(0,8));
-    document.getElementById('raceDateLabel').textContent=frame.date;
-    raceIndex++;
-    if(raceIndex>=raceData.length){racePause();return;}
-    raceTimer=setTimeout(raceStep,900);
-  }
-
-  function racePlay() {
-    buildRaceData();
-    if(!raceData.length) return;
-    if(raceTimer) clearTimeout(raceTimer);
-    if(raceAnimId) cancelAnimationFrame(raceAnimId);
-    raceBars=[];
-    raceIndex=0;
-    racePlaying=true;
-    document.getElementById('racePlay').disabled=true;
-    document.getElementById('racePause').disabled=false;
-    document.getElementById('raceStop').disabled=false;
-    initRaceChart();
-    raceStep();
-  }
-
-  function racePause() {
-    racePlaying=false;
-    if(raceTimer) clearTimeout(raceTimer);
-    // snap bars to target
-    if(raceBars.length){
-      for(var i=0;i<raceBars.length;i++){
-        raceBars[i].y=raceBars[i].targetY;
-        raceBars[i].w=raceBars[i].targetW;
+    function updateTrendChart() {
+      var qty = {};
+      for (var i = 0; i < allItems.length; i++) { var n = allItems[i].name;
+        qty[n] = (qty[n] || 0) + (Number(allItems[i].quantity) || 0); }
+      var top5 = Object.entries(qty).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 5).map(function(e) { return e[0]; });
+      var items = getFilteredItems();
+      var daily = {},
+        days = new Set();
+      for (var i = 0; i < items.length; i++) {
+        var r = items[i],
+          d = dparse(r.created_at);
+        if (!d) continue;
+        var dk = dayKey(d);
+        days.add(dk);
+        if (top5.indexOf(r.name) < 0) continue;
+        if (!daily[r.name]) daily[r.name] = {};
+        daily[r.name][dk] = (daily[r.name][dk] || 0) + (Number(r.quantity) || 0);
       }
-      drawRaceBars();
-    }
-    if(raceAnimId){cancelAnimationFrame(raceAnimId);raceAnimId=null;}
-    document.getElementById('racePlay').disabled=false;
-    document.getElementById('racePause').disabled=true;
-  }
-
-  function raceStop() {
-    racePlaying=false;
-    if(raceTimer) clearTimeout(raceTimer);
-    if(raceAnimId) cancelAnimationFrame(raceAnimId);
-    raceBars=[];
-    raceIndex=0;
-    raceCtx=null;
-    document.getElementById('racePlay').disabled=false;
-    document.getElementById('racePause').disabled=true;
-    document.getElementById('raceStop').disabled=true;
-    if(raceData.length){
-      initRaceChart();
-      raceBars=[];
-      applyRaceFrame(raceData[0].leaders.slice(0,8));
-      document.getElementById('raceDateLabel').textContent=raceData[0].date;
-    } else {document.getElementById('raceDateLabel').textContent='';ensureRaceCtx();raceCtx.clearRect(0,0,raceCanvas.width,raceCanvas.height);}
-  }
-
-  function populateRaceProducts() {
-    var names={};
-    for(var i=0;i<allItems.length;i++) names[allItems[i].name]=true;
-    var ks=Object.keys(names).sort();
-    var allChecked=raceSelectedProducts.size===0||ks.every(function(v){return raceSelectedProducts.has(v);});
-    var h='<label class="select-all"><input type="checkbox" class="cb-sa"'+ (allChecked&&ks.length>0?' checked':'') +'> Select All</label>';
-    h+='<hr class="menu-sep">';
-    for(var j=0;j<ks.length;j++){
-      var v=ks[j];
-      var ck=raceSelectedProducts.has(v)||raceSelectedProducts.size===0?' checked':'';
-      h+='<label><input type="checkbox" class="cb-item" value="'+v+'"'+ck+'> '+v+'</label>';
-    }
-    document.getElementById('raceProdCheckboxes').innerHTML=h;
-    syncRaceProducts();
-  }
-
-  function syncRaceProducts() {
-    raceSelectedProducts.clear();
-    var cbs=document.querySelectorAll('#raceProdCheckboxes input.cb-item');
-    for(var i=0;i<cbs.length;i++){if(cbs[i].checked) raceSelectedProducts.add(cbs[i].value);}
-  }
-
-  var refreshTimer = null;
-  var lastRefresh = null;
-
-  function showLoading() { document.getElementById('loadingBar').style.display = ''; }
-  function hideLoading() { document.getElementById('loadingBar').style.display = 'none'; }
-  function updateRefreshHint() {
-    if(!lastRefresh){document.getElementById('refreshHint').textContent='';return;}
-    var ago=Math.round((Date.now()-lastRefresh.getTime())/1000);
-    document.getElementById('refreshHint').textContent='Updated '+(ago<60?ago+'s ago':Math.round(ago/60)+'m ago')+' · auto-refresh 60s';
-  }
-
-  function showNoData(canvasId) {
-    var wrap=document.getElementById(canvasId).parentNode;
-    var old=wrap.querySelector('.no-data-overlay');
-    if(!old){old=document.createElement('div');old.className='no-data-overlay';wrap.appendChild(old);}
-    old.textContent='No data';
-  }
-  function hideNoData(canvasId) {
-    var old=document.getElementById(canvasId).parentNode.querySelector('.no-data-overlay');
-    if(old) old.remove();
-  }
-
-  function refreshAll() {
-    try{renderCards();}catch(e){console.error('cards',e);}
-    try{chartOrders();}catch(e){console.error('orders',e);}
-    try{chartTop5();}catch(e){console.error('top5',e);}
-    try{chartTrend();}catch(e){console.error('trend',e);}
-    try{raceStop();initRaceChart();}catch(e){console.error('race',e);}
-  }
-
-  async function fetchData() {
-    if(!supabase){
-      document.getElementById('statusCards').innerHTML='<div class="empty-state" style="grid-column:1/-1"><strong>Supabase not configured</strong><span>Check config.js</span></div>';
-      return;
-    }
-    showLoading();
-    try{
-      var res=await supabase.from('order_items').select('*').order('created_at',{ascending:false});
-      if(res.error) throw res.error;
-      allItems=res.data||[];
-      lastRefresh=new Date();
-      populateProducts();
-      populateRaceProducts();
-      if(!document.getElementById('raceStartDate').value){
-        document.getElementById('raceStartDate').value=dayKey(new Date());
+      var dArr = Array.from(days).sort();
+      var colors = ['#F34F1C', '#7FBC00', '#FFBA01', '#01A6F0', '#747474'];
+      var datasets = [];
+      for (var i = 0; i < top5.length; i++) {
+        var nm = top5[i];
+        datasets.push({
+          label: nm,
+          data: dArr.map(function(d) { return daily[nm] && daily[nm][d] || 0; }),
+          borderColor: colors[i],
+          backgroundColor: colors[i] + '22',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: false,
+          pointRadius: 3
+        });
       }
-      refreshAll();
-    }catch(e){
-      console.error(e);
-      document.getElementById('statusCards').innerHTML='<div class="empty-state" style="grid-column:1/-1"><strong>Failed to load</strong><span>'+(e.message||e.code||'Error')+'</span></div>';
+
+      var ctx = dom.productTrendChart.getContext('2d');
+      hideNoData('productTrendChart');
+      if (!datasets.length || !dArr.length) { showNoData('productTrendChart'); if (charts.trend) { charts.trend.destroy();
+          charts.trend = null; } return; }
+
+      if (charts.trend) {
+        charts.trend.data.labels = dArr.map(function(d) { return d.slice(5); });
+        charts.trend.data.datasets = datasets;
+        charts.trend.update();
+      } else {
+        charts.trend = new Chart(ctx, {
+          type: 'line',
+          data: { labels: dArr.map(function(d) { return d.slice(5); }), datasets: datasets },
+          options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20, right: 70,
+                bottom: 10 } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16,
+                  font: { size: 11 } }, onClick: legendMultiSelect } }, scales: { y: { beginAtZero: true } } },
+          plugins: [lineLabelPlugin()]
+        });
+      }
     }
-    hideLoading();
-    updateRefreshHint();
-  }
 
-  function initSupabase(){
-    var u=CFG.supabaseUrl||'', k=CFG.supabaseAnonKey||'';
-    if(!u||!k||!window.supabase) return false;
-    try{supabase=window.supabase.createClient(u,k);return true;}catch(e){console.error(e);return false;}
-  }
-
-  function startAutoRefresh() {
-    if(refreshTimer) clearInterval(refreshTimer);
-    refreshTimer=setInterval(function(){fetchData();},60000);
-    setInterval(function(){updateRefreshHint();},15000);
-  }
-
-  function closeAllDropdowns(except) {
-    var menus=document.querySelectorAll('.product-menu.show, .cal-drop[style*="block"]');
-    for(var i=0;i<menus.length;i++){
-      if(except&&menus[i]===except) continue;
-      menus[i].classList.remove('show');
-      menus[i].style.display='none';
+    // ========================================================================
+    // 4. UI RENDERERS (Cards, Calendar, Filters)
+    // ========================================================================
+    function renderCards() {
+      var stats = computeStats();
+      var html = '';
+      var cards = [
+        { l: 'Today', v: stats.today, c: 'today' }, { l: 'This Week', v: stats.week, c: 'week' }, { l: 'This Month',
+          v: stats.month, c: 'month' },
+        { l: 'Total', v: stats.total, c: 'total' }, { l: 'New', v: stats.new, c: 'nw' }, { l: 'Completed',
+          v: stats.completed, c: 'ok' }
+      ];
+      for (var i = 0; i < cards.length; i++) {
+        html += '<div class="status-card ' + cards[i].c + '"><div class="label">' + cards[i].l +
+          '</div><div class="value">' + cards[i].v + '</div></div>';
+      }
+      dom.statusCards.innerHTML = html;
     }
-    var btns=document.querySelectorAll('.product-toggle-btn.active');
-    for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
-  }
 
-  document.getElementById('dayToggle').addEventListener('click',function(e){
-    e.stopPropagation();
-    var cal=document.getElementById('dayCalendar');
-    var open=cal.style.display===''; cal.style.display=open?'none':'';
-    this.classList.toggle('active',!open);
-    if(!open){
-      closeAllDropdowns(cal);
-      if(!calYear){var now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();}
+    function populateCheckboxes(elId, selSet, calcKey) {
+      var box = document.getElementById(elId);
+      var keys = {};
+      for (var i = 0; i < allItems.length; i++) {
+        var d = dparse(allItems[i].created_at);
+        if (!d) continue;
+        var k = calcKey(d);
+        keys[k] = true;
+      }
+      var sorted = Object.keys(keys).sort().reverse();
+      var allChecked = sorted.every(function(v) { return selSet.has(v); });
+      var h = '<label class="select-all"><input type="checkbox" class="cb-sa"' + (allChecked && sorted.length > 0 ?
+        ' checked' : '') + '> Select All</label>';
+      h += '<hr class="menu-sep">';
+      for (var j = 0; j < sorted.length; j++) {
+        var v = sorted[j],
+          lbl;
+        if (calcKey === weekKey) lbl = v.replace('-W', ' W');
+        else lbl = v;
+        var ck = selSet.has(v) ? ' checked' : '';
+        h += '<label><input type="checkbox" class="cb-item" value="' + v + '"' + ck + '> ' + lbl + '</label>';
+      }
+      box.innerHTML = h;
+    }
+
+    function syncCheckboxSet(elId, selSet) {
+      selSet.clear();
+      var cbs = document.querySelectorAll('#' + elId + ' input.cb-item');
+      for (var i = 0; i < cbs.length; i++) { if (cbs[i].checked) selSet.add(cbs[i].value); }
+    }
+
+    function populateProducts() {
+      var names = {},
+        prev = [];
+      var existing = document.querySelectorAll('#productCheckboxes input.product-cb');
+      for (var i = 0; i < existing.length; i++) { if (existing[i].checked) prev.push(existing[i].value); }
+      for (var i = 0; i < allItems.length; i++) names[allItems[i].name] = true;
+      var ks = Object.keys(names).sort();
+      var allChecked = prev.length === ks.length;
+      var h = '<label class="select-all"><input type="checkbox" class="select-all-cb"' + (allChecked && ks.length > 0 ?
+        ' checked' : '') + '> Select All</label><hr class="menu-sep">';
+      for (var j = 0; j < ks.length; j++) {
+        var ck = prev.indexOf(ks[j]) >= 0 ? ' checked' : '';
+        h += '<label><input type="checkbox" class="product-cb" value="' + ks[j] + '"' + ck + '> ' + ks[j] + '</label>';
+      }
+      dom.productCheckboxes.innerHTML = h;
+      readProductChecked();
+    }
+
+    function readProductChecked() {
+      filters.products.clear();
+      var cbs = document.querySelectorAll('#productCheckboxes input.product-cb');
+      for (var i = 0; i < cbs.length; i++) { if (cbs[i].checked) filters.products.add(cbs[i].value); }
+    }
+
+    function getDataDays() {
+      var set = new Set();
+      for (var i = 0; i < allItems.length; i++) {
+        var d = dparse(allItems[i].created_at);
+        if (!d) continue;
+        set.add(dayKey(d));
+      }
+      return set;
+    }
+
+    function renderCalendar() {
+      var dataDays = getDataDays();
+      var todayStr = dayKey(new Date());
+      var hasOtherFilter = filters.weeks.size > 0 || filters.months.size > 0;
+      dom.calMonthLabel.textContent = MONTHS[calMonth] + ' ' + calYear;
+      var grid = dom.calGrid;
+      var first = new Date(calYear, calMonth, 1);
+      var startDow = (first.getDay() + 6) % 7;
+      var lastDate = new Date(calYear, calMonth + 1, 0).getDate();
+      var h = '';
+      for (var i = 0; i < startDow; i++) h += '<span class="cal-day empty"></span>';
+      for (var day = 1; day <= lastDate; day++) {
+        var d = new Date(calYear, calMonth, day);
+        var key = dayKey(d);
+        var cls = ['cal-day'];
+        if (dataDays.has(key)) cls.push('has-data');
+        if (filters.days.has(key)) cls.push('selected');
+        if (key === todayStr) cls.push('today');
+        if (hasOtherFilter) {
+          var ok = true;
+          if (filters.weeks.size > 0 && !filters.weeks.has(weekKey(d))) ok = false;
+          if (filters.months.size > 0 && !filters.months.has(monthKey(d))) ok = false;
+          if (!ok) cls.push('dimmed');
+        }
+        h += '<span class="' + cls.join(' ') + '" data-date="' + key + '">' + day + '</span>';
+      }
+      grid.innerHTML = h;
+      var total = filters.weeks.size + filters.months.size + filters.days.size;
+      dom.calCount.textContent = filters.days.size + ' selected' + (total > filters.days.size ? ' (filtered)' : '');
+    }
+
+    function toggleCalDate(dateKey) {
+      if (filters.days.has(dateKey)) filters.days.delete(dateKey);
+      else filters.days.add(dateKey);
+      invalidateCache();
       renderCalendar();
+      refreshAll();
     }
-  });
 
-  document.getElementById('weekToggle').addEventListener('click',function(e){
-    e.stopPropagation();
-    var menu=document.getElementById('weekCheckboxes');
-    var open=menu.classList.toggle('show');
-    this.classList.toggle('active',open);
-    if(open){closeAllDropdowns(menu);populateCheckboxes('weekCheckboxes',weekSelected,weekKey);}
-  });
-
-  document.getElementById('monthToggle').addEventListener('click',function(e){
-    e.stopPropagation();
-    var menu=document.getElementById('monthCheckboxes');
-    var open=menu.classList.toggle('show');
-    this.classList.toggle('active',open);
-    if(open){closeAllDropdowns(menu);populateCheckboxes('monthCheckboxes',monthSelected,monthKey);}
-  });
-
-  document.getElementById('weekCheckboxes').addEventListener('change',function(e){
-    if(e.target.classList.contains('cb-sa')){
-      var cbs=document.querySelectorAll('#weekCheckboxes input.cb-item');
-      for(var i=0;i<cbs.length;i++) cbs[i].checked=e.target.checked;
+    function populateRaceProducts() {
+      var names = {};
+      for (var i = 0; i < allItems.length; i++) names[allItems[i].name] = true;
+      var ks = Object.keys(names).sort();
+      var allChecked = raceSelectedProducts.size === 0 || ks.every(function(v) { return raceSelectedProducts.has(v); });
+      var h = '<label class="select-all"><input type="checkbox" class="cb-sa"' + (allChecked && ks.length > 0 ?
+        ' checked' : '') + '> Select All</label>';
+      h += '<hr class="menu-sep">';
+      for (var j = 0; j < ks.length; j++) {
+        var v = ks[j];
+        var ck = raceSelectedProducts.has(v) || raceSelectedProducts.size === 0 ? ' checked' : '';
+        h += '<label><input type="checkbox" class="cb-item" value="' + v + '"' + ck + '> ' + v + '</label>';
+      }
+      dom.raceProdCheckboxes.innerHTML = h;
+      syncRaceProducts();
     }
-    if(e.target.type==='checkbox'){syncCheckboxSet('weekCheckboxes',weekSelected);refreshAll();}
-  });
 
-  document.getElementById('monthCheckboxes').addEventListener('change',function(e){
-    if(e.target.classList.contains('cb-sa')){
-      var cbs=document.querySelectorAll('#monthCheckboxes input.cb-item');
-      for(var i=0;i<cbs.length;i++) cbs[i].checked=e.target.checked;
+    let raceSelectedProducts = new Set();
+
+    function syncRaceProducts() {
+      raceSelectedProducts.clear();
+      var cbs = document.querySelectorAll('#raceProdCheckboxes input.cb-item');
+      for (var i = 0; i < cbs.length; i++) { if (cbs[i].checked) raceSelectedProducts.add(cbs[i].value); }
+      raceDataVersion++;
+      cachedRaceData = null;
     }
-    if(e.target.type==='checkbox'){syncCheckboxSet('monthCheckboxes',monthSelected);refreshAll();}
-  });
 
-  document.getElementById('calGrid').addEventListener('click',function(e){
-    var day=e.target.closest('.cal-day');
-    if(!day||day.classList.contains('empty')) return;
-    toggleCalDate(day.dataset.date);
-  });
-  document.getElementById('calPrev').addEventListener('click',function(e){
-    e.stopPropagation();
-    if(calMonth===0){calMonth=11;calYear--;}else calMonth--;
-    renderCalendar();
-  });
-  document.getElementById('calNext').addEventListener('click',function(e){
-    e.stopPropagation();
-    if(calMonth===11){calMonth=0;calYear++;}else calMonth++;
-    renderCalendar();
-  });
-  document.getElementById('calClear').addEventListener('click',function(e){
-    e.stopPropagation();
-    calSelected.clear(); renderCalendar(); refreshAll();
-  });
-
-  document.getElementById('productToggle').addEventListener('click',function(e){
-    e.stopPropagation();
-    var menu=document.getElementById('productCheckboxes');
-    var open=menu.classList.toggle('show');
-    this.classList.toggle('active',open);
-  });
-
-  document.getElementById('productCheckboxes').addEventListener('change',function(e){
-    if(e.target.classList.contains('select-all-cb')){
-      var checked=e.target.checked;
-      var cbs=document.querySelectorAll('#productCheckboxes input.product-cb');
-      for(var i=0;i<cbs.length;i++) cbs[i].checked=checked;
+    function showNoData(canvasId) {
+      var wrap = document.getElementById(canvasId).parentNode;
+      var old = wrap.querySelector('.no-data-overlay');
+      if (!old) { old = document.createElement('div');
+        old.className = 'no-data-overlay';
+        wrap.appendChild(old); }
+      old.textContent = 'No data';
     }
-    if(e.target.type==='checkbox'){readProductChecked();refreshAll();}
-  });
 
-  document.getElementById('clearFilterBtn').addEventListener('click',function(e){
-    e.stopPropagation(); clearAllFilters();
-  });
-
-  document.getElementById('raceProdToggle').addEventListener('click',function(e){
-    e.stopPropagation();
-    var menu=document.getElementById('raceProdCheckboxes');
-    var open=menu.classList.toggle('show');
-    this.classList.toggle('active',open);
-  });
-
-  document.getElementById('raceProdCheckboxes').addEventListener('change',function(e){
-    if(e.target.classList.contains('cb-sa')){
-      var checked=e.target.checked;
-      var cbs=document.querySelectorAll('#raceProdCheckboxes input.cb-item');
-      for(var i=0;i<cbs.length;i++) cbs[i].checked=checked;
+    function hideNoData(canvasId) {
+      var old = document.getElementById(canvasId).parentNode.querySelector('.no-data-overlay');
+      if (old) old.remove();
     }
-    if(e.target.type==='checkbox') syncRaceProducts();
-  });
 
-  document.getElementById('racePlay').addEventListener('click',function(e){e.stopPropagation();racePlay();});
-  document.getElementById('racePause').addEventListener('click',function(e){e.stopPropagation();racePause();});
-  document.getElementById('raceStop').addEventListener('click',function(e){e.stopPropagation();raceStop();});
+    function clearAllFilters() {
+      filters.days.clear();
+      filters.weeks.clear();
+      filters.months.clear();
+      filters.products.clear();
 
-  document.addEventListener('click',function(e){
-    var inDropdown=e.target.closest('.filter-dropdown');
-    if(!inDropdown){
-      var menus=document.querySelectorAll('.product-menu.show');
-      for(var i=0;i<menus.length;i++) menus[i].classList.remove('show');
-      var cal=document.getElementById('dayCalendar');
-      if(cal) cal.style.display='none';
-      var btns=document.querySelectorAll('.product-toggle-btn.active');
-      for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
+      dom.dayCalendar.style.display = 'none';
+      dom.dayToggle.classList.remove('active');
+      dom.weekCheckboxes.classList.remove('show');
+      dom.weekToggle.classList.remove('active');
+      dom.monthCheckboxes.classList.remove('show');
+      dom.monthToggle.classList.remove('active');
+
+      var pCbs = document.querySelectorAll('#productCheckboxes input.product-cb');
+      for (var i = 0; i < pCbs.length; i++) pCbs[i].checked = false;
+      var pSa = document.querySelector('#productCheckboxes input.select-all-cb');
+      if (pSa) pSa.checked = false;
+      filters.products.clear();
+
+      invalidateCache();
+      refreshAll();
     }
-  });
 
-  document.getElementById('refreshDashBtn').addEventListener('click',function(){fetchData();});
-  if(initSupabase()){fetchData();startAutoRefresh();}
-  else document.getElementById('statusCards').innerHTML='<div class="empty-state" style="grid-column:1/-1"><strong>Supabase not configured</strong><span>Check config.js</span></div>';
-})();
+    // ========================================================================
+    // 5. PRODUCT RACE (Phase 3 & 4)
+    // ========================================================================
+    function buildRaceData() {
+      if (cachedRaceData !== null) return cachedRaceData;
+
+      var startStr = dom.raceStartDate.value;
+      var startD = startStr ? dparse(startStr + 'T00:00:00') : null;
+      var endD = new Date();
+      endD.setHours(23, 59, 59, 999);
+
+      var allDays = [];
+      if (startD) {
+        var cursor = new Date(startD.getTime());
+        while (cursor <= endD) {
+          allDays.push(dayKey(cursor));
+          cursor.setDate(cursor.getDate() + 1);
+        }
+      }
+
+      var daily = {};
+      var prodSet = new Set();
+      for (var i = 0; i < allItems.length; i++) {
+        var r = allItems[i],
+          d = dparse(r.created_at);
+        if (!d) continue;
+        if (raceSelectedProducts.size > 0 && !raceSelectedProducts.has(r.name)) continue;
+        if (startD && d < startD) continue;
+        if (d > endD) continue;
+        var dk = dayKey(d);
+        if (!daily[dk]) daily[dk] = {};
+        daily[dk][r.name] = (daily[dk][r.name] || 0) + (Number(r.quantity) || 0);
+        prodSet.add(r.name);
+      }
+
+      if (!allDays.length) {
+        allDays = Object.keys(daily).sort();
+      }
+
+      var acc = {};
+      var result = [];
+      for (var di = 0; di < allDays.length; di++) {
+        var dk = allDays[di];
+        if (daily[dk]) {
+          for (var n in daily[dk]) acc[n] = (acc[n] || 0) + daily[dk][n];
+        }
+        var leaders = Object.keys(acc).filter(function(p) { return acc[p]; }).map(function(p) {
+          return { name: p, value: acc[p] };
+        }).sort(function(a, b) { return b.value - a.value; });
+        result.push({ date: dk, leaders: leaders });
+      }
+
+      cachedRaceData = result;
+      return result;
+    }
+
+    function initRaceCanvas() {
+      var wrap = dom.raceChart.parentNode;
+      var canvas = dom.raceChart;
+      var rect = wrap.getBoundingClientRect();
+      var dpr = window.devicePixelRatio || 1;
+
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+
+      raceState.canvas = canvas;
+      raceState.ctx = canvas.getContext('2d');
+      raceState.ctx.scale(dpr, dpr);
+
+      installRaceResize();
+    }
+
+    function installRaceResize() {
+      if (raceState.resizeObs) raceState.resizeObs.disconnect();
+      var wrap = dom.raceChart.parentNode;
+      raceState.resizeObs = new ResizeObserver(function() {
+        if (raceState.resizePending) return;
+        raceState.resizePending = true;
+        requestAnimationFrame(function() {
+          raceState.resizePending = false;
+          var canvas = dom.raceChart;
+          var rect = wrap.getBoundingClientRect();
+          var dpr = window.devicePixelRatio || 1;
+          if (canvas.width !== rect.width * dpr || canvas.height !== rect.height * dpr) {
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+            raceState.ctx = canvas.getContext('2d');
+            raceState.ctx.scale(dpr, dpr);
+            if (raceState.bars.length) drawRaceBars();
+          }
+        });
+      });
+      raceState.resizeObs.observe(wrap);
+    }
+
+    function drawRaceBars() {
+      var ctx = raceState.ctx;
+      var canvas = raceState.canvas;
+      if (!ctx || !canvas) return;
+      var dpr = window.devicePixelRatio || 1;
+      var W = canvas.width / dpr,
+        H = canvas.height / dpr;
+      if (!W || !H) return;
+
+      ctx.clearRect(0, 0, W, H);
+
+      var sorted = raceState.bars.slice().sort(function(a, b) { return a.y - b.y; });
+      var n = 8;
+      var gap = 4;
+      var barH = (H - gap * (n - 1)) / n;
+      var step = barH + gap;
+      var rankW = 26;
+      var maxW = 0;
+      for (var i = 0; i < sorted.length; i++) { if (sorted[i].targetW > maxW) maxW = sorted[i].targetW; }
+      if (!maxW) maxW = 1;
+      var labelW = 110;
+      var scale = (W - labelW - 10) / maxW;
+
+      // Cached measureText (Phase 3)
+      ctx.textBaseline = 'middle';
+
+      for (var i = 0; i < sorted.length; i++) {
+        var b = sorted[i];
+        var bw = b.w * scale;
+        var y = b.y;
+        ctx.globalAlpha = b.alpha || 1;
+
+        // Product Name
+        ctx.fillStyle = '#17211d';
+        ctx.font = '11px Inter, sans-serif';
+        ctx.textAlign = 'right';
+        var name = b.name;
+        if (ctx.measureText(name).width > labelW - 8) {
+          // Simple truncation or wrap (keeping it simple for performance)
+          var truncated = name;
+          while (ctx.measureText(truncated + '…').width > labelW - 8 && truncated.length > 1) {
+            truncated = truncated.slice(0, -1);
+          }
+          name = truncated + '…';
+        }
+        ctx.fillText(name, labelW - 4, y + barH / 2);
+
+        // Bar
+        var x = labelW + 6;
+        var c = b.color;
+
+        // Cached Gradient (Phase 3)
+        var gradKey = c + '_' + bw;
+        if (!b.gradCache || b.gradCacheKey !== gradKey) {
+          var grad = ctx.createLinearGradient(x, 0, x + bw, 0);
+          grad.addColorStop(0, c + 'dd');
+          grad.addColorStop(0.7, c + 'cc');
+          grad.addColorStop(1, c + '88');
+          b.gradCache = grad;
+          b.gradCacheKey = gradKey;
+        }
+        ctx.fillStyle = b.gradCache;
+        roundRect(ctx, x, y, bw, barH, 4);
+        ctx.fill();
+
+        // Top highlight
+        var hgrad = ctx.createLinearGradient(x, y, x, y + barH * 0.4);
+        hgrad.addColorStop(0, 'rgba(255,255,255,0.25)');
+        hgrad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = hgrad;
+        roundRect(ctx, x, y, bw, barH, 4);
+        ctx.fill();
+
+        // Value
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 11px Inter,sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(Math.round(b.value), x + bw - 8, y + barH / 2);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function syncRaceBars(target, prevMap) {
+      var H = raceState.canvas.height / (window.devicePixelRatio || 1) || 350;
+      var gap = 4,
+        n = 8;
+      var barH = (H - gap * (n - 1)) / n;
+      var step = barH + gap;
+
+      var newBars = [];
+      for (var i = 0; i < target.length; i++) {
+        var t = target[i];
+        var prev = prevMap ? prevMap.get(t.name) : null;
+        var color = getProductColor(t.name);
+        newBars.push({
+          name: t.name,
+          value: t.value,
+          color: color,
+          y: prev ? prev.y : i * step,
+          targetY: i * step,
+          w: prev ? prev.w : 0,
+          targetW: t.value,
+          alpha: 1,
+          gradCache: prev ? prev.gradCache : null,
+          gradCacheKey: prev ? prev.gradCacheKey : null,
+        });
+      }
+
+      if (prevMap) {
+        var keep = new Set(target.map(function(t) { return t.name; }));
+        prevMap.forEach(function(p, name) {
+          if (!keep.has(name)) {
+            newBars.push({
+              name: name,
+              value: p.value || 0,
+              color: p.color || '#999',
+              y: p.y,
+              targetY: H + 20,
+              w: p.w || 0,
+              targetW: 0,
+              alpha: 0,
+              gradCache: p.gradCache || null,
+              gradCacheKey: p.gradCacheKey || null,
+            });
+          }
+        });
+      }
+
+      raceState.bars = newBars;
+    }
+
+    function animateRaceBars() {
+      var done = true;
+      var H = raceState.canvas.height / (window.devicePixelRatio || 1) || 350;
+      var gap = 4,
+        n = 8;
+      var barH = (H - gap * (n - 1)) / n;
+      var step = barH + gap;
+
+      for (var i = 0; i < raceState.bars.length; i++) {
+        var b = raceState.bars[i];
+        b.y += 0.08 * (b.targetY - b.y);
+        b.w += 0.08 * (b.targetW - b.w);
+        if (b.targetY > H) b.alpha -= (1 - b.alpha) * 0.3 + 0.05;
+      }
+
+      raceState.bars.sort(function(a, b) { return a.targetY - b.targetY; });
+      for (var i = 0; i < raceState.bars.length; i++) {
+        var targetY = i < 8 ? i * step : H + step;
+        raceState.bars[i].targetY = targetY;
+        if (i > 0) {
+          var minY = raceState.bars[i - 1].y + 2;
+          if (raceState.bars[i].y < minY) raceState.bars[i].y += (minY - raceState.bars[i].y) * 0.5;
+        }
+        if (raceState.bars[i].targetY > H) raceState.bars[i].alpha -= (1 - raceState.bars[i].alpha) * 0.3 + 0.05;
+        if (Math.abs(targetY - raceState.bars[i].y) > 0.5 || Math.abs(raceState.bars[i].targetW - raceState.bars[i].w) >
+          0.5 || (targetY > H && raceState.bars[i].alpha > 0.01)) {
+          done = false;
+        }
+      }
+
+      raceState.bars = raceState.bars.filter(function(b) { return !(b.targetY > H && b.alpha < 0.02); });
+      drawRaceBars();
+
+      if (!done) {
+        raceState.animId = requestAnimationFrame(animateRaceBars);
+      } else {
+        raceState.animId = null;
+      }
+    }
+
+    function applyRaceFrame(target) {
+      var prevMap = null;
+      if (raceState.bars.length) {
+        prevMap = new Map();
+        for (var i = 0; i < raceState.bars.length; i++) {
+          var b = raceState.bars[i];
+          prevMap.set(b.name, { y: b.y, w: b.w, value: b.value, color: b.color, gradCache: b.gradCache,
+            gradCacheKey: b.gradCacheKey });
+        }
+      }
+      syncRaceBars(target, prevMap);
+      if (raceState.animId) cancelAnimationFrame(raceState.animId);
+      animateRaceBars();
+    }
+
+    function raceStep() {
+      if (!raceState.playing) return;
+      var data = buildRaceData();
+      var frame = data[raceState.index];
+      if (!frame) { racePause(); return; }
+      applyRaceFrame(frame.leaders.slice(0, 8));
+      dom.raceDateLabel.textContent = frame.date;
+      raceState.index++;
+      if (raceState.index >= data.length) { racePause(); return; }
+      raceState.timer = setTimeout(raceStep, 900);
+    }
+
+    function racePlay() {
+      var data = buildRaceData();
+      if (!data.length) return;
+      if (raceState.timer) clearTimeout(raceState.timer);
+      if (raceState.animId) cancelAnimationFrame(raceState.animId);
+      raceState.bars = [];
+      raceState.index = 0;
+      raceState.playing = true;
+      dom.racePlay.disabled = true;
+      dom.racePause.disabled = false;
+      dom.raceStop.disabled = false;
+      initRaceCanvas();
+      raceStep();
+    }
+
+    function racePause() {
+      raceState.playing = false;
+      if (raceState.timer) clearTimeout(raceState.timer);
+      if (raceState.bars.length) {
+        for (var i = 0; i < raceState.bars.length; i++) {
+          raceState.bars[i].y = raceState.bars[i].targetY;
+          raceState.bars[i].w = raceState.bars[i].targetW;
+        }
+        drawRaceBars();
+      }
+      if (raceState.animId) { cancelAnimationFrame(raceState.animId);
+        raceState.animId = null; }
+      dom.racePlay.disabled = false;
+      dom.racePause.disabled = true;
+    }
+
+    function raceStop() {
+      raceState.playing = false;
+      if (raceState.timer) clearTimeout(raceState.timer);
+      if (raceState.animId) cancelAnimationFrame(raceState.animId);
+      raceState.bars = [];
+      raceState.index = 0;
+      raceState.ctx = null;
+      dom.racePlay.disabled = false;
+      dom.racePause.disabled = true;
+      dom.raceStop.disabled = true;
+
+      var data = buildRaceData();
+      if (data.length) {
+        initRaceCanvas();
+        raceState.bars = [];
+        applyRaceFrame(data[0].leaders.slice(0, 8));
+        dom.raceDateLabel.textContent = data[0].date;
+      } else {
+        dom.raceDateLabel.textContent = '';
+        var ctx = raceState.ctx;
+        if (ctx) {
+          var canvas = raceState.canvas;
+          var dpr = window.devicePixelRatio || 1;
+          ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+        }
+      }
+    }
+
+    // ========================================================================
+    // 6. MAIN REFRESH & DATA FETCH (Phase 6)
+    // ========================================================================
+    let refreshTimer = null;
+    let lastRefresh = null;
+
+    function showLoading() { dom.loadingBar.style.display = ''; }
+
+    function hideLoading() { dom.loadingBar.style.display = 'none'; }
+
+    function updateRefreshHint() {
+      if (!lastRefresh) { dom.refreshHint.textContent = ''; return; }
+      var ago = Math.round((Date.now() - lastRefresh.getTime()) / 1000);
+      dom.refreshHint.textContent = 'Updated ' + (ago < 60 ? ago + 's ago' : Math.round(ago / 60) + 'm ago') +
+        ' · auto-refresh 60s';
+    }
+
+    function refreshAll() {
+      renderCards();
+      updateOrdersChart();
+      updateTop5Chart();
+      updateTrendChart();
+      // Race will be reset by fetchData, or we can let it be.
+    }
+
+    async function fetchData() {
+      if (!supabase) {
+        dom.statusCards.innerHTML =
+          '<div class="empty-state" style="grid-column:1/-1"><strong>Supabase not configured</strong><span>Check config.js</span></div>';
+        return;
+      }
+      showLoading();
+      try {
+        var res = await supabase.from('order_items').select('*').order('created_at', { ascending: false });
+        if (res.error) throw res.error;
+        allItems = res.data || [];
+        lastRefresh = new Date();
+
+        // Invalidate all caches
+        invalidateCache();
+
+        populateProducts();
+        populateRaceProducts();
+        if (!dom.raceStartDate.value) {
+          dom.raceStartDate.value = dayKey(new Date());
+        }
+
+        // Reset race
+        raceStop();
+
+        refreshAll();
+      } catch (e) {
+        console.error(e);
+        dom.statusCards.innerHTML =
+          '<div class="empty-state" style="grid-column:1/-1"><strong>Failed to load</strong><span>' + (e.message || e
+            .code || 'Error') + '</span></div>';
+      }
+      hideLoading();
+      updateRefreshHint();
+    }
+
+    function initSupabase() {
+      var u = CFG.supabaseUrl || '',
+        k = CFG.supabaseAnonKey || '';
+      if (!u || !k || !window.supabase) return false;
+      try { supabase = window.supabase.createClient(u, k); return true; } catch (e) { console.error(e); return false; }
+    }
+
+    function startAutoRefresh() {
+      if (refreshTimer) clearInterval(refreshTimer);
+      refreshTimer = setInterval(function() { fetchData(); }, 60000);
+      setInterval(function() { updateRefreshHint(); }, 15000);
+    }
+
+    // ========================================================================
+    // 7. EVENT BINDING (Phase 5)
+    // ========================================================================
+    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+      'November', 'December'
+    ];
+
+    function closeAllDropdowns(except) {
+      var menus = document.querySelectorAll('.product-menu.show, .cal-drop[style*="block"]');
+      for (var i = 0; i < menus.length; i++) {
+        if (except && menus[i] === except) continue;
+        menus[i].classList.remove('show');
+        menus[i].style.display = 'none';
+      }
+      var btns = document.querySelectorAll('.product-toggle-btn.active');
+      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+    }
+
+    // Day toggle
+    dom.dayToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var cal = dom.dayCalendar;
+      var open = cal.style.display === '';
+      cal.style.display = open ? 'none' : '';
+      this.classList.toggle('active', !open);
+      if (!open) {
+        closeAllDropdowns(cal);
+        if (!calYear) { var now = new Date();
+          calYear = now.getFullYear();
+          calMonth = now.getMonth(); }
+        renderCalendar();
+      }
+    });
+
+    dom.weekToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var menu = dom.weekCheckboxes;
+      var open = menu.classList.toggle('show');
+      this.classList.toggle('active', open);
+      if (open) { closeAllDropdowns(menu);
+        populateCheckboxes('weekCheckboxes', filters.weeks, weekKey); }
+    });
+
+    dom.monthToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var menu = dom.monthCheckboxes;
+      var open = menu.classList.toggle('show');
+      this.classList.toggle('active', open);
+      if (open) { closeAllDropdowns(menu);
+        populateCheckboxes('monthCheckboxes', filters.months, monthKey); }
+    });
+
+    dom.weekCheckboxes.addEventListener('change', function(e) {
+      if (e.target.classList.contains('cb-sa')) {
+        var cbs = document.querySelectorAll('#weekCheckboxes input.cb-item');
+        for (var i = 0; i < cbs.length; i++) cbs[i].checked = e.target.checked;
+      }
+      if (e.target.type === 'checkbox') { syncCheckboxSet('weekCheckboxes', filters.weeks);
+        invalidateCache();
+        refreshAll(); }
+    });
+
+    dom.monthCheckboxes.addEventListener('change', function(e) {
+      if (e.target.classList.contains('cb-sa')) {
+        var cbs = document.querySelectorAll('#monthCheckboxes input.cb-item');
+        for (var i = 0; i < cbs.length; i++) cbs[i].checked = e.target.checked;
+      }
+      if (e.target.type === 'checkbox') { syncCheckboxSet('monthCheckboxes', filters.months);
+        invalidateCache();
+        refreshAll(); }
+    });
+
+    dom.calGrid.addEventListener('click', function(e) {
+      var day = e.target.closest('.cal-day');
+      if (!day || day.classList.contains('empty')) return;
+      toggleCalDate(day.dataset.date);
+    });
+
+    dom.calPrev.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (calMonth === 0) { calMonth = 11;
+        calYear--; } else calMonth--;
+      renderCalendar();
+    });
+
+    dom.calNext.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (calMonth === 11) { calMonth = 0;
+        calYear++; } else calMonth++;
+      renderCalendar();
+    });
+
+    dom.calClear.addEventListener('click', function(e) {
+      e.stopPropagation();
+      filters.days.clear();
+      invalidateCache();
+      renderCalendar();
+      refreshAll();
+    });
+
+    dom.productToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var menu = dom.productCheckboxes;
+      var open = menu.classList.toggle('show');
+      this.classList.toggle('active', open);
+    });
+
+    dom.productCheckboxes.addEventListener('change', function(e) {
+      if (e.target.classList.contains('select-all-cb')) {
+        var checked = e.target.checked;
+        var cbs = document.querySelectorAll('#productCheckboxes input.product-cb');
+        for (var i = 0; i < cbs.length; i++) cbs[i].checked = checked;
+      }
+      if (e.target.type === 'checkbox') { readProductChecked();
+        invalidateCache();
+        refreshAll(); }
+    });
+
+    dom.clearFilterBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      clearAllFilters();
+    });
+
+    dom.raceProdToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var menu = dom.raceProdCheckboxes;
+      var open = menu.classList.toggle('show');
+      this.classList.toggle('active', open);
+    });
+
+    dom.raceProdCheckboxes.addEventListener('change', function(e) {
+      if (e.target.classList.contains('cb-sa')) {
+        var checked = e.target.checked;
+        var cbs = document.querySelectorAll('#raceProdCheckboxes input.cb-item');
+        for (var i = 0; i < cbs.length; i++) cbs[i].checked = checked;
+      }
+      if (e.target.type === 'checkbox') syncRaceProducts();
+    });
+
+    dom.racePlay.addEventListener('click', function(e) { e.stopPropagation();
+      racePlay(); });
+    dom.racePause.addEventListener('click', function(e) { e.stopPropagation();
+      racePause(); });
+    dom.raceStop.addEventListener('click', function(e) { e.stopPropagation();
+      raceStop(); });
+
+    dom.refreshDashBtn.addEventListener('click', function() { fetchData(); });
+
+    document.addEventListener('click', function(e) {
+      var inDropdown = e.target.closest('.filter-dropdown');
+      if (!inDropdown) {
+        var menus = document.querySelectorAll('.product-menu.show');
+        for (var i = 0; i < menus.length; i++) menus[i].classList.remove('show');
+        var cal = dom.dayCalendar;
+        if (cal) cal.style.display = 'none';
+        var btns = document.querySelectorAll('.product-toggle-btn.active');
+        for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+      }
+    });
+
+    // ========================================================================
+    // 8. INIT
+    // ========================================================================
+    if (initSupabase()) {
+      fetchData();
+      startAutoRefresh();
+    } else {
+      dom.statusCards.innerHTML =
+        '<div class="empty-state" style="grid-column:1/-1"><strong>Supabase not configured</strong><span>Check config.js</span></div>';
+    }
+
+  })();
 </script>
 </body>
 </html>
